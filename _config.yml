@@ -1,8 +1,8 @@
 # Site settings
 title: Bobs Blog
 description: 'Jekyll-Uno - a minimal, responsive theme for Jekyll'
-url: 'https://brobertsaz.github.io/blog/'
-baseurl: '/blog'
+url: 'http://brobertsaz.github.io/blog/'
+baseurl: 'http://brobertsaz.github.io/blog/'
 # google_analytics: 'UA-XXXXXX-X'
 # disqus_shortname: 'your-disqus-name'
 
