@@ -1,0 +1,28 @@
+---
+layout: post
+title: Rails Rspec total test time error
+date: 2013-03-04 19:04:29.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _edit_last: '15714693'
+  _zemanta_has_recommendations: '1'
+  publicize_reach: a:2:{s:7:"twitter";a:1:{i:482036;i:240;}s:2:"wp";a:1:{i:0;i:27;}}
+  publicize_twitter_user: broberts_az
+  _wpas_done_482036: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:199393780;b:1;}}
+  _wpas_skip_482036: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>So I was getting this crazy value for the total time to run my <a class="zem_slink" title="RSpec" href="http://rspec.info/" target="_blank" rel="homepage">Rspec</a> tests.  It was like a bizarre decimal.  I never really cared until I started to try to speed up my tests.</p>
+<p>It took me longer to find the solution than it took to fix it.  If you are not getting a actual positive number in Rspec tests it might be Timecop.  We are using Timecop and the time was frozen, hence the crazy total time.  After running a test using Timecop, just add Timecop.return.</p>
+<p>Piece of cake!!</p>

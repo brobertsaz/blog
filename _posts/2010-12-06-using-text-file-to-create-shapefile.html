@@ -1,0 +1,51 @@
+---
+layout: post
+title: Using text file to create Shapefile
+date: 2010-12-06 16:21:48.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Geoprocessing with Python
+tags: []
+meta:
+  _edit_last: '15714693'
+  _wp_old_slug: ''
+  _wpas_skip_twitter: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p style="text-align:justify;">Well, it seems as though all of the things we learn, are learned due to necessity.  I have always worked with either layers or <a class="zem_slink" title="Table (database)" rel="wikipedia" href="http://en.wikipedia.org/wiki/Table_%28database%29">database tables</a> in my <a class="zem_slink" title="Python (programming language)" rel="homepage" href="http://www.python.org/">Python</a> Geoprocessing scripts.  It has always worked so there has not been a need to try something different, until last week.</p>
+<p style="text-align:justify;">Working on a Python tool for importing a file I requested a .dbf table.  I kept running into issues with the formatting or the header names or what have you.  I was asked if I can take a .csv for an input file.  I assumed this was possible so off I went to solve my new issue.  After a couple of quick Google searches I found what I needed and the ESRI thread that I found was answered by a friend of mine named R.D. and if you spend ANY time on the forums, you will see his name.</p>
+<p>CODE</p>
+<p>[sourcecode language="Python"]</p>
+<p>import sys, os, glob<br />
+import arcgisscripting</p>
+<p># Create the geoprocessor object<br />
+gp = arcgisscripting.create()</p>
+<p># Create the geoprocessor object</p>
+<p>## System arguments<br />
+# Input Customer .csv<br />
+Stops = sys.argv[1]<br />
+# Output Stops &lt;a class=&quot;zem_slink&quot; title=&quot;Shapefile&quot; rel=&quot;wikipedia&quot; href=&quot;http://en.wikipedia.org/wiki/Shapefile&quot;&gt;shapefile&lt;/a&gt;<br />
+Stops_output = sys.argv[2]</p>
+<p># Set the workspace for the processing files<br />
+gp.workspace = os.path.dirname(sys.argv[3])</p>
+<p>import arcgisscripting, os<br />
+gp = arcgisscripting.create()<br />
+gp.AddMessage(&quot;\nCreating processing .dbf from .csv...&quot;)<br />
+gp.TableToDbase_conversion(Stops, os.path.dirname(sys.argv[3]))            #1<br />
+gp.AddMessage(&quot;\nCreating Event Layer&quot;)<br />
+gp.MakeXYEventLayer_management(Stops[:-4]+&quot;.dbf&quot;, &quot;X&quot;, &quot;Y&quot;, Stops[:-4])            #2</p>
+<p># Create a prj file for Stops_output.shp            #3<br />
+coordsys = &quot;Coordinate Systems/Geographic Coordinate Systems/World/WGS 1984.prj&quot;<br />
+gp.defineprojection(Stops[:-4], coordsys)</p>
+<p>[/sourcecode]</p>
+<p style="text-align:justify;">Obviously that is just a snippet of the code but you should get the idea.  #1 shows using the TableToDbase_conversion geoprocessing function.  I have found very little info on this function so I do not know what possible arguments that can be used.  What I do know is that you will get a .dbf file with the exact same name as the original file and the .dbf extension.  #2 Then takes the resulting .dbf from #1 by using the input Stops[:-4] to take the original name and remove the .csv (4 spaces back) and then concatenated it together with ".dbf".  This then uses the X and Y coordinates to create the new layer and assigns it to the original Stops input name.</p>
+<p>In order for the new resulting shapefile to work, you will need to define the projection to the correct <a class="zem_slink" title="Coordinate system" rel="wikipedia" href="http://en.wikipedia.org/wiki/Coordinate_system">coordinate system</a> as seen in #4.</p>
+<p>Hope this helps :)</p>
+<p style="text-align:justify;">BR</p>

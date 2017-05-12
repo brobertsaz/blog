@@ -1,0 +1,101 @@
+---
+layout: post
+title: How to easily create a simple static page on a Ruby on Rails Website
+date: 2014-12-26 17:48:46.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _publicize_pending: '1'
+  publicize_twitter_user: bobr_az
+  is_reblog: '1'
+  post_id: '85'
+  blog_id: '80331159'
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:68:\"How to easily create
+    a simple static page on a Ruby on Rails Website\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2014-12-24
+    00:49:42\";s:9:\"permalink\";s:103:\"http://rubywarriors.com/2014/12/24/how-to-easily-create-a-simple-static-page-on-a-ruby-on-rails-website\";s:7:\"content\";s:6160:\"<div
+    class=\"reblogged-content\">\n\n<span style=\"color:#333333;\">I don't know about
+    you, but I've done a few tutorials, studied a few materials, and none of them
+    just put this all into one place. </span><!--more-->\r\n\r\n<span style=\"color:#333333;\">All
+    you want to do is create a new page, right? Well, as always, I do highly recommend
+    learning the \"why's\" of anything you do in Ruby on Rails, and I will explain
+    <em>some</em> of the why's in this post, but not all. </span>\r\n\r\n<span style=\"color:#333333;\">If
+    you want to fill in any gaps in your knowledge, <a title=\"Michael Hartl's &quot;Ruby
+    On Rails Tutorial&quot;\" href=\"https://www.railstutorial.org/book/\" target=\"_blank\">here</a>
+    is a good place to start.  However, I hope this serves as a useful starting point
+    for you, or a good reference document for now and in the future.</span>\r\n<h3>1.
+    <span style=\"text-decoration:underline;\">Setup a Branch (optional)</span>\n</h3>\r\n<span
+    style=\"color:#333333;\">You may or may not want to start a branch for this. However,
+    I recommend it, because adding a static page shouldn't create any conflicts when
+    merging back into your master branch; it's a simple, clean branch. The branch/merge
+    procedure I describe in <a title=\"How to Branch with Git\" href=\"http://rubywarriors.com/2014/12/21/how-to-branch-with-git/\"
+    target=\"_blank\">this post</a> should work perfectly for this exercise.</span>\r\n<h3>2.
+    <span style=\"text-decoration:underline;\">Make a Controller using the 'generate'
+    command</span>\n</h3>\r\n<span style=\"color:#333333;\">In this situation, the
+    \"PagesController\" is going to be the thing that contains the <em>actions </em>'home'
+    and 'about', because we want to create a page called 'home' and a page called
+    'about'.</span>\r\n\r\n<span style=\"color:#333333;\">To accomplish this, we use
+    the 'generate' command:</span>\r\n<p style=\"padding-left:30px;\"><strong><span
+    style=\"color:#008000;\"><code>$ rails generate controller Pages home about</code></span></strong></p>\r\n<span
+    style=\"color:#333333;\">Like many things in Rails, many things are done for us,
+    but it's much better if you actually understand what those things are. So...</span>\r\n\r\n<span
+    style=\"color:#333333;\">First of all, this command has created a file, <em>app/controllers/<strong>pages_controller.rb</strong></em> ,
+    which looks like this:</span>\r\n<p style=\"padding-left:30px;\"><span style=\"color:#333333;\"><code>class
+    Pages &lt; ApplicationController</code></span></p>\r\n<p style=\"padding-left:60px;\"><span
+    style=\"color:#333333;\"><code>def home</code></span></p>\r\n<p style=\"padding-left:60px;\"><span
+    style=\"color:#333333;\"><code>end</code></span></p>\r\n<p style=\"padding-left:60px;\"><span
+    style=\"color:#333333;\"><code>def about</code></span></p>\r\n<p style=\"padding-left:60px;\"><span
+    style=\"color:#333333;\"><code>end</code></span></p>\r\n<p style=\"padding-left:30px;\"><span
+    style=\"color:#333333;\"><code>end</code></span></p>\r\n<span style=\"color:#333333;\">The
+    two <em>actions</em>: 'home' and 'about', actually carry a load of invisible functionality;
+    basically they render the views <em>app/views/pages/<strong>home.html.erb</strong> </em>and <em>app/views/pages/<strong>about.html.erb</strong>
+    .</em>The 'generate' command you did earlier created these files.</span>\r\n<h3><span
+    style=\"text-decoration:underline;\">Display the Pages on your Website</span></h3>\r\n<span
+    style=\"color:#333333;\">You can already see these pages by going to localhost:3000<em>/pages/home</em>
+    and <em>localhost:3000/pages/about </em>in your browser. This is because the 'generate'
+    command also placed the appropriate lines of code in your <em>config/routes.rb</em>
+    file. They will look something like this:</span>\r\n<p style=\"padding-left:30px;\"><span
+    style=\"color:#333333;\"><code>get 'pages/home'</code></span></p>\r\n<p style=\"padding-left:30px;\"><span
+    style=\"color:#333333;\"><code>get 'pages/about'</code></span></p>\r\n<span style=\"color:#333333;\">To
+    link to one of these pages in your html, all you have to do is use a piece of
+    embedded Ruby, using the appropriate path. For example: </span>\r\n<p style=\"padding-left:30px;\"><span
+    style=\"color:#333333;\"><code>&lt;%= link_to \"About\", about_path %&gt;</code></span></p>\r\n<span
+    style=\"color:#333333;\">For a typical example of how this might be used:</span>\r\n<p
+    style=\"padding-left:30px;\"><span style=\"color:#333333;\"><code>&lt;nav&gt;</code></span></p>\r\n<p
+    style=\"padding-left:60px;\"><span style=\"color:#333333;\"><code>&lt;li&gt;&lt;%=
+    link_to \"About\", about_path %&gt;&lt;/li&gt;</code></span></p>\r\n<p style=\"padding-left:30px;\"><span
+    style=\"color:#333333;\"><code>&lt;/nav&gt;</code></span></p>\r\n\r\n<h3><span
+    style=\"text-decoration:underline;\">How to <em>add</em> a page when pages already
+    exist</span></h3>\r\n<span style=\"color:#333333;\">In most cases, this is dead
+    simple.</span>\r\n\r\n<span style=\"color:#333333;\">1. Locate your pages controller.
+    It will probably be named similarly to the above example. Then, just add an extra
+    method, with a name of your choosing. For example:</span>\r\n<p style=\"padding-left:30px;\"><span
+    style=\"color:#333333;\"><code>class Pages &lt; ApplicationController</code></span></p>\r\n<p
+    style=\"padding-left:60px;\"><span style=\"color:#333333;\"><code>def home</code></span></p>\r\n<p
+    style=\"padding-left:60px;\"><span style=\"color:#333333;\"><code>end</code></span></p>\r\n<p
+    style=\"padding-left:60px;\"><span style=\"color:#333333;\"><code>def about</code></span></p>\r\n<p
+    style=\"padding-left:60px;\"><span style=\"color:#333333;\"><code>end</code></span></p>\r\n<p
+    style=\"padding-left:60px;\"><span style=\"color:#333333;\"><code>def contact</code></span></p>\r\n<p
+    style=\"padding-left:60px;\"><span style=\"color:#333333;\"><code>end</code></span></p>\r\n<p
+    style=\"padding-left:30px;\"><span style=\"color:#333333;\"><code>end</code></span></p>\r\n <span
+    style=\"color:#333333;\">2. Add a line to your routes.rb file, such as:</span>\r\n<p
+    style=\"padding-left:30px;\"><span style=\"color:#333333;\"><code>get 'pages/contact'</code></span></p>\r\n<span
+    style=\"color:#333333;\">3. Create a new file in your <em>app/views/pages/ </em>folder
+    called \"<em>contact.html.erb</em>\". </span>\r\n\r\n<span style=\"color:#333333;\">4.
+    Put whatever html you like in that file.<em> </em></span>\n</div>\";}"
+  publicize_twitter_url: http://t.co/zDjS401FdE
+  _wpas_done_7641025: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:2516516912;b:1;}}
+  publicize_linkedin_url: ''
+  _wpas_done_7777887: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>Simple and easy.  I have seen this over thought majorly before.</p>

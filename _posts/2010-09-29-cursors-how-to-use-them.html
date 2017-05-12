@@ -1,0 +1,56 @@
+---
+layout: post
+title: Search and Update Cursors
+date: 2010-09-29 18:10:24.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Geoprocessing with Python
+tags: []
+meta:
+  _edit_last: '15714693'
+  _wp_old_slug: ''
+  _wpas_skip_twitter: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p style="text-align:justify;">There are three types of cursors that can be used in <a class="zem_slink" title="Geoprocessing" rel="wikipedia" href="http://en.wikipedia.org/wiki/Geoprocessing">geoprocessing</a>. The three types of cursors are Search, Insert and Update.  The most commonly used cursor is the Search Cursor.  The Search Cursor is used to run through a set of data to find values to make calculations on another set of data.  That is, a Search Cursor is read only and cannot be used to update or overwrite the original data.  The Insert Cursor is used to insert a new record into a table.  The Update Cursor is used to update values in a dataset.</p>
+<p style="text-align:justify;">I will show snippets for using the Update Cursor as well as the Search Cursor.</p>
+<p style="text-align:justify;"><strong>The Search Cursor</strong></p>
+<p style="text-align:justify;">The Search Cursor can be used to read through a dataset and search for specific information that can then be written out or printed.  I recently used this to select values from a shapefile to write out to a .csv file.</p>
+<p style="text-align:justify;">&nbsp;</p>
+<p>[sourcecode language="Python"]</p>
+<p>## The geoprocessing command is gp.SearchCursor() and requires at least one argument.</p>
+<p>cursor=gp.SearchCursor(Input) #Assuming that Input is a sys.argv[]</p>
+<p>row=cursor.Next()<br />
+while row:<br />
+line=[]<br />
+for fld in header:<br />
+value=row.GetValue(fld)<br />
+line.append(value)<br />
+linewriter.writerow(line)<br />
+row=cursor.Next()</p>
+<p>del cursor</p>
+<p>[/sourcecode]</p>
+<p style="text-align:justify;">So in this case i read through my input lines to write out to a .csv.  Obviously I performed other functions on the data prior to writing out my text file.  There are a multitude of uses for the Search Cursor and this is just one example.</p>
+<p style="text-align:justify;"><strong>The Update Cursor</strong></p>
+<p style="text-align:justify;">An example of the use for an Update Cursor is an export process to a customer database that requires an updated date and time.  I have a customer table that gets exported and when it does I want it to update the current date and time.  Now there are a million ways to write an Update Cursor but this techniques works best for me.</p>
+<p style="text-align:justify;">&nbsp;</p>
+<p>[sourcecode language="Python"]</p>
+<p>## The geoprocessing command is gp.UpdateCursor() and requires at least one argument.</p>
+<p>cursor=gp.UpdateCursor(Input) #Assuming that Input is a sys.argv[]</p>
+<p>row=cursor.Next()</p>
+<p>while row:<br />
+row.Updated = datetime.today().isoformat()<br />
+cursor.UpdateRow(row)<br />
+row = cursor.Next()</p>
+<p>del cursor</p>
+<p>[/sourcecode]</p>
+<p style="text-align:justify;">This iterates through the "Input" and updates in each row the field Updated with the current date and time.  You must also have in the beginning of your script:</p>
+<p style="text-align:justify;">from datetime import datetime</p>
+<p style="text-align:justify;">I think that the biggest difference in the Update Cursor from the Search Cursor is that each iteration through the rows you must use UpdateRow to write the value.</p>

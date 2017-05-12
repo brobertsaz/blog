@@ -1,0 +1,48 @@
+---
+layout: post
+title: Create a Ruby on Rails TODO application pt. 2
+date: 2011-12-29 19:25:04.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags:
+- bdd
+- pivotal story
+- test driven development
+meta:
+  publicize_results: a:1:{s:7:"twitter";a:1:{i:199393780;a:2:{s:7:"user_id";s:11:"broberts_az";s:7:"post_id";s:18:"152575918886490112";}}}
+  _wpas_done_twitter: '1'
+  _edit_last: '15714693'
+  _oembed_bcc4e43cb4a03495c28909068e853fd5: "{{unknown}}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p style="text-align:justify;">Ok, well with Christmas behind us it is time to get on with our project...</p>
+<p style="text-align:justify;">I use <a class="zem_slink" title="Pivotal Tracker" href="http://www.pivotaltracker.com/" rel="homepage">Pivotal Tracker</a> for creating stories.  Creating stories is a new thing for me but it really helps to plan out your app.  In fact, if you write your stories well, it make writing our tests easier.</p>
+<p style="text-align:justify;">As with any programmer worth their weight in code, I will be creating this app using TDD or BDD depending on how you view those two terms.  In my opinion, <a class="zem_slink" title="Test-driven development" href="http://en.wikipedia.org/wiki/Test-driven_development" rel="wikipedia">Test Driven Development</a> consists of writing the tests before writing the code whereas <a class="zem_slink" title="Behavior Driven Development" href="http://en.wikipedia.org/wiki/Behavior_Driven_Development" rel="wikipedia">Behavior Driven Development</a> is writing tests to describe the desired behavior that you want.  With BDD, it is more that you test what an object does and not so much what it is.</p>
+<p style="text-align:justify;">On to Pivotal Tracker..  In pt.1 I listed four stories that I added to my Pivotal Tracker account. (<a title="https://www.pivotaltracker.com/projects/441447" href="https://www.pivotaltracker.com/projects/441447">https://www.pivotaltracker.com/projects/441447</a>).  One thing that I will not get into is the point estimation for stories in Pivotal Tracker.  That is what Google is for.</p>
+<p style="text-align:justify;">Lets start with the first story; As a visitor ISBAT create a note.  Before we do anything, lets think what it is that we want to do.  We want our visitor to be able to create a note.  Now I know that a true TODO app would require user registration or just be for myself only but for this we are going to leave it open for all to use.  So, lets think through the process..</p>
+<ul style="text-align:justify;">
+<li>Visit the main page</li>
+<li>Click on link 'Create Note'</li>
+<li>Fill in title with 'Clean the Garage'</li>
+<li>Fill in description with 'Get rid of junk and clean out the clutter'</li>
+<li>Select 'Due by:' as 2/1/2012</li>
+<li>Click on 'Save'</li>
+</ul>
+<p style="text-align:justify;">Pretty simple, isn't it?  We that is what I will fill in for my Pivotal story under tasks.  Now we are looking and thinking about what we want the user experience to be.  We have not really concerned ourselves with the workflow and have not written a line of code.</p>
+<p style="text-align:justify;">The next thing we need to think of is "what do I expect to happen?" if I follow the above steps.</p>
+<ul style="text-align:justify;">
+<li>I should see 'Note created successfully'</li>
+<li>I should not see any error messages</li>
+<li>The number of notes should increase by 1</li>
+</ul>
+<p style="text-align:justify;">Now we know what we expect to do to create a new note and we know what we expect to happen afterwards.  For testing I mentioned that I use <a class="zem_slink" title="RSpec" href="http://rspec.info/" rel="homepage">Rspec</a> and Capybara.  I am not saying that other testing tools are not good; I just have never used anything but.  Capybara just continues to amaze me.  There are so many different ways to use it that it seems like there is always a solution.  It works great with clicking links, making queries, testing Ajax , and more.  There once was a time that I tried to learn Selenium for automating tests in Firefox but I found it too cumbersome.  Capybara uses Selenium without having to write it!!</p>
+<p style="text-align:justify;">I will write my test and post the code in pt.3.</p>
+<p style="text-align:justify;">

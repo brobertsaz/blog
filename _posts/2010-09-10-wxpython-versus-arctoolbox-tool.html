@@ -1,0 +1,29 @@
+---
+layout: post
+title: wxPython versus ArcToolbox tool
+date: 2010-09-10 17:52:49.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Geoprocessing with Python
+tags:
+- GIS Geoprocessing in Python
+- Python
+- wxPython
+meta:
+  _edit_last: '15714693'
+  _wp_old_slug: ''
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p style="text-align:justify;">It started out to be simple stuff that I wanted to accomplish with <a class="zem_slink" title="Python (programming language)" rel="homepage" href="http://www.python.org/">Python</a> and geoprocessing.  A lot of the tools that I created or wanted to create were quite easy to do in ArcToolbox but I soon found that I wanted to have more flexibility and more input options.  The ArcToolbox tools work great but they are limited in their uses and functions.  So in walked <a href="http://www.wxpython.org/" target="_blank">wxPython</a>.  I tried messing around with several different options but after the dust settled it was wxPython that I went with.</p>
+<p style="text-align:justify;">Tinkter was ok but lacked a lot of options.  I tried <a href="http://boa-constructor.sourceforge.net/" target="_blank">Boa-Constructor</a> but found that it was confusing to get going.  I tried <a href="http://pythoncard.sourceforge.net/" target="_blank">Python-Card</a> and although it seemed easier that Boa-Constructor, I was left with the nagging question of now what when I finished the "window."  So back to wxPython.  As it is based on <a class="zem_slink" title="WxWidgets" rel="homepage" href="http://www.wxwidgets.org/">wxWidgets</a> there is a lot of information on the web and tutorials as well.  So my mind was made up and then I had to figure out what it was that I wanted to do.</p>
+<p style="text-align:justify;">Being new to programming, I quickly learned that there are two stages to programming.  The first stage is "what am I trying to do" followed by the second stage of "OK, now how the heck do I do it!"  I know for all of you programmer gurus or those with formal programming training, this is quite obvious but for me it wasn't obvious at all.  Now that I have gotten better at both Python and wxPython, I see that it sometimes takes longer to understand what I want to accomplish than it does to code it once my mind is made up.</p>
+<p style="text-align:justify;">So back to wxPython.......One of the functions that I soon found lacking in the ArcToolbox tools is taking inputed data and allowing user to perform functions based on the actual data that was imported.  What I am trying to say here is that I wanted to input a point file and then based on the data in the file, decide what processes I wanted to perform.  Another example of this is that I can input a shapefile and get a list of field names but I cannot choose a field and decide what to do with it.  The ArcToolbox allows minimal input and output but that is it.  I wanted more interaction such as input a shapefile, create a list of fields, allow the user to choose a field, and then make calculations based off of that.  This back and forth interaction wasn't possible so off the wxPython I went.</p>
+<p style="text-align:justify;">Now by creating "wizard" like interfaces, I can accept inputed data, create lists and dropdown choices of those lists and further functions.  Don't get me wrong, I have more ArcToolbox tools than I have wxPython GUI's but they each serve a different function.</p>
+<p style="text-align:justify;">BR</p>

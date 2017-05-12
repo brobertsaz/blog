@@ -1,0 +1,89 @@
+---
+layout: post
+title: Create a Ruby on Rails TODO application pt. 3
+date: 2012-01-04 18:37:04.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags:
+- Capybara
+- JavaScript
+- RSpec
+- Ruby
+meta:
+  _wpas_done_twitter: '1'
+  _wpas_skip_fb: '1'
+  publicize_results: a:1:{s:7:"twitter";a:1:{i:199393780;a:2:{s:7:"user_id";s:11:"broberts_az";s:7:"post_id";s:18:"154738198919131137";}}}
+  _edit_last: '15714693'
+  _oembed_60f352d01e64d054397dd9e29adf0f47: "{{unknown}}"
+  _oembed_34b1b7d7e515f48766b6de0c029dac8d: "{{unknown}}"
+  _oembed_cb6d88ac205cd8e759e3804137fa547e: "{{unknown}}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p style="text-align:justify;">On with the test....</p>
+<p style="text-align:justify;">I found something the other day that I was not aware of.  A major major kudos to Jeffrey Way and his tutorial "<a href="http://net.tutsplus.com/tutorials/ruby/the-intro-to-rails-screencast-i-wish-i-had/">The Intro to Rails Screencast I Wish I Had</a>" which is the easiest to understand and best explanation of a Rails project creation and setup that I have seen.  I did not know that there was a Rails generator for integration_test.</p>
+<p style="text-align:justify;">After I created my app from the Rebel-Foundation clone, and did my bundle install, the next thing that I did was run 'rails g integration_test notes'.  This then created the notes_spec.rb file in the spec/requests directory.  I then cleaned out the mess and now my test looks like:</p>
+<p>[sourcecode language="ruby"]<br />
+require 'spec_helper'<br />
+describe &quot;Notes&quot; do<br />
+  it 'should be able to create a new note', js: true do<br />
+    visit notes_path<br />
+    click_link 'New Note'<br />
+    fill_in 'Title',        with: 'Clean out the Garage'<br />
+    fill_in 'Description',  with: 'Get rid of the junk and clean out the clutter'<br />
+    fill_in 'Due by',       with: '2/1/2012'<br />
+    click_link 'Save'</p>
+<p>    page.should have_content 'Note created successfully'<br />
+    page.should_not have_content 'Error'<br />
+  end<br />
+end<br />
+[/sourcecode]</p>
+<p style="text-align:justify;">That was pretty easy to write seeing as we had this all listed in the story already.  Now it is easy to see that writing good stories is helpful for when you need to write the tests for them.</p>
+<p style="text-align:justify;">So with using <a class="zem_slink" title="RSpec" href="http://rspec.info/" rel="homepage">Rspec</a> and Capybara we can create the actual steps that the user wil need to take to create a note.  On line 05, I added the js: true so that Capybara will launch Firefox and use Selenium for our tests.  I don't think that this is really needed for this test as we are not using any Javascript but it is nice to see our efforts in the browser.</p>
+<p style="text-align:justify;">The first thing that we do is "visit notes_path", and then we follow the rest of the steps.  After clicking on 'Save' we EXPECT to see 'Note created successfully' on our page and not 'Error'.  When writing tests, think about what you are trying to do and what you expect to happen if you do that.  As we have not written any other code, we pretty much have a clean slate to work with.</p>
+<p>[sourcecode language="bash"]<br />
+Failures:</p>
+<p>  1) Notes should be able to create a new note<br />
+     Failure/Error: visit notes_path<br />
+     NameError:<br />
+   undefined local variable or method `notes_path' for #&lt;RSpec::Core::ExampleGroup::Nested_1:0x007f8da8070458&gt;<br />
+ # ./spec/requests/notes_spec.rb:6:in `block (2 levels) in &lt;top (required)&gt;'</p>
+<p>Finished in 22.4 seconds<br />
+1 example, 1 failure<br />
+[/sourcecode]</p>
+<p style="text-align:justify;">From here, we start down our path of sometimes absolutely useless error messages.  The issue here is not that there is not a variable or method but rather that there is not any routes created.  So we need to add "resources :notes" to our config/routes.rb file.  After adding that to our routes, we can run "rake routes" to see our <a class="zem_slink" title="Representational State Transfer" href="http://en.wikipedia.org/wiki/Representational_State_Transfer" rel="wikipedia">RESTful</a> routes:</p>
+<p>[sourcecode language="bash"]<br />
+[master] ⚡$ rake routes<br />
+    notes GET    /notes(.:format)          notes#index<br />
+          POST   /notes(.:format)          notes#create<br />
+ new_note GET    /notes/new(.:format)      notes#new<br />
+edit_note GET    /notes/:id/edit(.:format) notes#edit<br />
+     note GET    /notes/:id(.:format)      notes#show<br />
+          PUT    /notes/:id(.:format)      notes#update<br />
+          DELETE /notes/:id(.:format)      notes#destroy<br />
+[/sourcecode]</p>
+<p>With our Routes, we see that the index is notes. All we need to do to get to the index is add "_path" and we have "notes_path". We will also need to use the "new_note_path" when we go to create a new note. If we run our "rspec spec" test we now get:</p>
+<p>[sourcecode language="bash"]<br />
+Failures:</p>
+<p>1) Notes should be able to create a new note<br />
+ Failure/Error: click_link 'New Note'<br />
+ Capybara::ElementNotFound:<br />
+ no link with title, id or text 'New Note' found<br />
+ # (eval):2:in `click_link'<br />
+ # ./spec/requests/notes_spec.rb:7:in `block (2 levels) in &lt;top (required)&gt;'</p>
+<p>Finished in 19.59 seconds<br />
+1 example, 1 failure<br />
+[/sourcecode]</p>
+<p>Well, at least this time we get an error message that make sense to us; there is no link 'New Note' for us to click on.  Sounds like a good thing to get into for our next post.</p>
+<p>By the way, all of my code is available at git@github.com:brobertsaz/todo_application.git</p>
+<h6 class="zemanta-related-title" style="font-size:1em;">Related articles</h6>
+<ul class="zemanta-article-ul">
+<li class="zemanta-article-ul-li"><a href="http://technikhil.wordpress.com/2011/12/31/rails_glossary/">A Ruby on Rails glossary.</a> (technikhil.wordpress.com)</li>
+</ul>

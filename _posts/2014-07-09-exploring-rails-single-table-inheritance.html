@@ -1,0 +1,127 @@
+---
+layout: post
+title: 'Exploring Rails: Single Table Inheritance'
+date: 2014-07-09 23:48:36.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _publicize_pending: '1'
+  reblog_snapshot: "O:8:\"stdClass\":8:{s:5:\"title\";s:42:\"Exploring Rails: Single
+    Table Inheritance \";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2014-06-04
+    16:34:30\";s:9:\"permalink\";s:85:\"http://projectramon.wordpress.com/2014/06/04/exploring-rails-single-table-inheritance\";s:7:\"content\";s:8294:\"<div
+    class=\"reblogged-content\">\n\nHello and happy Wednesday!\r\n\r\nIn <a href=\"http://projectramon.wordpress.com/2014/06/02/exploring-rails-polymorphic-mayhem-accepts-nested-attribute-success/\"
+    target=\"_blank\">the last post</a>, we covered a solution towards using the Rails'
+    Form Helper <code>accepts_nested_attributes_for</code> to give us a convenient
+    ability to create data fields for multiple models to save and retrieve. This is
+    also known as creating a multi-part form.\r\n\r\nAt the time I hadn't figured
+    out how to implement Single Table Inheritance properly, and instead created 2
+    phone number classes to represent a primary and secondary number. After some quick
+    looking around, I found some pretty insightful tutorials that allowed me to use
+    STI in order to DRY out my two redundant classes from the last post.\r\n\r\n<h3>What
+    I did Wrong</h3>\r\n\r\nLets take a quick look at the code from my last post,
+    in order to demonstrate the problem and set the stage for implementing STI properly
+    in Rails. \r\n\r\nhttps://gist.github.com/sirramongabriel/96a7c6415a0311669cdc\r\n\r\nI
+    was having an issue with seeing the attribute fields commit or retrieve the data
+    stored in them, so when I created an object, the attributes were all evaluating
+    to <code>nil</code>. This issue went away completely when I realized that the
+    <code>has_many</code> associations for <code>primary_phones</code> and <code>secondary_phones</code>
+    were unnecessary. It's unnecessary because we're using inheritance. \r\n\r\nThis
+    has the benefit of allowing use one clear interface to make changes for all of
+    <code>PhoneNumber</code>'s sub-classes. I can also add specific methods and/or
+    attributes to the sub-classes if need be. \r\n\r\n<h3>When to use STI</h3>\r\n\r\nBefore
+    we cover the steps towards using STI, lets go over when STI can be considered
+    as an option.\r\n\r\n<a href=\"http://eewang.github.io/blog/2013/03/12/how-and-when-to-use-single-table-inheritance-in-rails/\"
+    target=\"_blank\">This blog post</a>, covers it nicely:\r\n\r\n\r\n\r\n<blockquote>STI
+    should be considered when dealing with model classes that share much of the same
+    functionality and data fields, but you as the developer may want more granular
+    control over extending or adding to each class individually. Rather than duplicate
+    the code over and over for multiple tables (and not being DRY) or forego the flexibility
+    of adding idiosyncratic functionality or methods, STI permits you to use keep
+    your data in a single table while writing specialized functionality.</blockquote>\r\n\r\nThis
+    is exactly what we need to DRY out my redundant <code>PrimaryPhoneNumber</code>
+    and <code>SecondaryPhoneNumber</code> classes in the example at the top of this
+    post.\r\n\r\nI also stumbled upon this post and wanted to include it as something
+    to personally keep in mind.\r\n\r\n<a href=\"http://rhnh.net/2010/07/02/3-reasons-why-you-should-not-use-single-table-inheritance\"
+    target=\"_blank\">3 Reasons Why You Shouldn't use STI</a>\r\n\r\nHere's is an
+    excerpt from that post:\r\n\r\n\r\n\r\n<blockquote>The only time STI is the right
+    answer is when you have models with exactly the same data, but different behavior.
+    You don’t compromise your data model, and everything stays neat and tidy. I have
+    yet to see a case in the wild where this rule holds, though.\r\n\r\nIf you are
+    using STI (or inheritance in general) to share code, you’re doing it wrong. Having
+    many tables does not conflict with the Don’t-Repeat-Yourself principle. Ruby has
+    modules, use them. (I once had a project where a 20 line hash drove the creation
+    of migrations, models, data loaders and test blueprints.)</blockquote>\r\n\r\n\r\n\r\n<h3>Implementing
+    STI in Rails</h3>\r\n\r\nSo here is an outline of how I was able to correctly
+    implement this pattern for my application.\r\n\r\n<ol>\n<li>Create the base class</li>\r\n<li>Along
+    with your needed attributes, add a <code>:type</code> attribute as a string to
+    the base class</li>\r\n<li>Create any necessary descendant classes</li>\r\n</ol>\n<strong>Step1:</strong>
+    This is where I've added the attributes that will be inherited by both of my child
+    classes. Note that this base class inherits from <code>ActiveRecord::Base</code>.
+    \r\n\r\nhttps://gist.github.com/sirramongabriel/b63bf4a837f16ac28d03\r\n\r\n<strong>Step2:</strong>
+    Here all we need to do is add the attribute <code>:type</code> to our <code>phone_numbers</code>
+    table in the database.\r\n\r\n<a href=\"http://bobspython.files.wordpress.com/2014/07/exploring_sti1_img1.jpg\"><img
+    src=\"http://bobspython.files.wordpress.com/2014/07/exploring_sti1_img1.jpg\"
+    alt=\"exploring_sti1_img1\" width=\"639\" height=\"35\" class=\"aligncenter size-full
+    wp-image-1949\" data-originalSrc=\"http://projectramon.files.wordpress.com/2014/06/exploring_sti1_img1.jpg\"
+    data-rehosted=\"1\"></a>\r\n\r\nNow to add the <code>:type</code> to Rails' whitelist
+    of attributes (note: I'm using Rails 3.2.x).\r\n\r\nhttps://gist.github.com/sirramongabriel/dbeb150109a1493d0495\r\n\r\nFor
+    Rails4.x we would create or add our <code>:type</code> attribute to the end of
+    our <code>permit</code> arguments <a href=\"http://edgeapi.rubyonrails.org/classes/ActionController/StrongParameters.html\"
+    target=\"_blank\">like it says here</a> in the RailsAPI:\r\n\r\n<a href=\"http://bobspython.files.wordpress.com/2014/07/exploring_sti1_img5.jpg\"><img
+    src=\"http://bobspython.files.wordpress.com/2014/07/exploring_sti1_img5.jpg\"
+    alt=\"exploring_sti1_img5\" width=\"567\" height=\"131\" class=\"aligncenter size-full
+    wp-image-1960\" data-originalSrc=\"http://projectramon.files.wordpress.com/2014/06/exploring_sti1_img5.jpg\"
+    data-rehosted=\"1\"></a>\r\n\r\nAnd since the migration has been ran, we can confirm
+    by taking a quick detour to look at our <code>schema.rb</code> file.\r\n\r\n<a
+    href=\"http://bobspython.files.wordpress.com/2014/07/exploring_sti1_img2.jpg\"><img
+    src=\"http://bobspython.files.wordpress.com/2014/07/exploring_sti1_img2.jpg\"
+    alt=\"exploring_sti1_img2\" width=\"676\" height=\"92\" class=\"aligncenter size-full
+    wp-image-1950\" data-originalSrc=\"http://projectramon.files.wordpress.com/2014/06/exploring_sti1_img2.jpg\"
+    data-rehosted=\"1\"></a>\r\n\r\n<strong>Step3:</strong> Time to create our descendant
+    class'. No need to add attributes, because they are going to be inherited from
+    the base class <code>PhoneNumber</code>. \r\n\r\nhttps://gist.github.com/sirramongabriel/3452795a3cf0fa1d725f\r\n\r\nNow
+    lets have a bit of fun and see how we can benefit from us implementing this pattern
+    in our Rails application.\r\n\r\n<h3>STI in Action!</h3>\r\n\r\n<a href=\"http://bobspython.files.wordpress.com/2014/07/exploring_sti1_img3.jpg\"><img
+    src=\"http://bobspython.files.wordpress.com/2014/07/exploring_sti1_img3.jpg\"
+    alt=\"exploring_sti1_img3\" width=\"676\" height=\"59\" class=\"aligncenter size-full
+    wp-image-1951\" data-originalSrc=\"http://projectramon.files.wordpress.com/2014/06/exploring_sti1_img3.jpg\"
+    data-rehosted=\"1\"></a>\r\n\r\nWe can already see from the example above, that
+    <code>PrimaryPhone</code> is properly inheriting the <code>:area_code</code> and
+    <code>:number</code> attributes from it's parent, <code>PhoneNumber</code>.\r\n\r\nHere's
+    something pretty neat, we can call all phone numbers through our base class and
+    then have our <code>:type</code> attribute tell us which type of number we have
+    stored.\r\n\r\n<a href=\"http://bobspython.files.wordpress.com/2014/07/exploring_sti1_img4.jpg\"><img
+    src=\"http://bobspython.files.wordpress.com/2014/07/exploring_sti1_img4.jpg\"
+    alt=\"exploring_sti1_img4\" width=\"676\" height=\"199\" class=\"aligncenter size-full
+    wp-image-1952\" data-originalSrc=\"http://projectramon.files.wordpress.com/2014/06/exploring_sti1_img4.jpg\"
+    data-rehosted=\"1\"></a>\r\n\r\nSo we can call <code>PhoneNumber.all</code> and
+    receive a list of all numbers (including any base class objects) and then allow
+    <code>:type</code> to 'categorize' which type of number object we're looking at.\r\n\r\n<h3>Learning
+    Resources</h3>\r\n\r\nI hope you've found this post on implementing STI in Rails
+    informative. Here are a few resources that I found both insightful and easy to
+    follow.\r\n\r\n<ol>\n<li>\n<strong><a href=\"http://vimeo.com/22143576\" target=\"_blank\">STI
+    Rails Tutorial</a></strong> by: <a href=\"https://twitter.com/cmaxw\" target=\"_blank\">Charles
+    Max Wood</a>\n</li>\r\n\r\n\r\n\t<li>\n<strong><a href=\"http://blog.eizesus.com/2009/10/sti-best-practices-in-rails/\"
+    target=\"_blank\">STI Best Practices in Rails</a></strong> by: Emphasized Insantiy</li>\r\n</ol>\r\n\r\nStay
+    tuned...\r\n\r\n</div>\";s:15:\"images_mirrored\";i:5;}"
+  is_reblog: '1'
+  post_id: '1948'
+  blog_id: '57073557'
+  publicize_twitter_user: bobr_az
+  publicize_twitter_url: http://t.co/GPu7ZUfnh2
+  _wpas_done_7641025: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:2516516912;b:1;}}
+  publicize_linkedin_url: http://www.linkedin.com/updates?discuss=&scope=336165323&stype=M&topic=5892891926251720704&type=U&a=ai2s
+  _wpas_done_7777887: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>As usual a great article by Ramon!!</p>

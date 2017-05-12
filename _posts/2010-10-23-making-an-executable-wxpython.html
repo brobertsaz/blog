@@ -1,0 +1,26 @@
+---
+layout: post
+title: Making an executable wxPython
+date: 2010-10-23 14:51:32.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _edit_last: '15714693'
+  _wp_old_slug: ''
+  _oembed_d8611aab898d2cff315702abc5d9bff6: "{{unknown}}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p style="text-align:justify;">I have been looking for quite some time now for a way to take my wxPython script and make it an executable file for windows.  I create interfaces for users and GIS and these can be cumbersome to copy over to the clients machine.  There are also extra modules that need to be downloaded after copying it over.  What I wanted was a way to make a .exe file from my script and an installer to use for installation.</p>
+<p style="text-align:justify;">I spent a considerable amount of time trying to use Py2exe as well as GUI2exe which is a GUI interface that can use several installers amongst which is Py2exe.  I continued to have a plethora of issues with these.  One of the first issues that I had was an issue with wxVersion.  I had always written my scripts to include the wxVersion to select the proper version of wx.  Not that I ever thought of it, but I only have one version installed and it is not necessary to use wxVersion.  I finally read on a forum that Py2exe does not like wxversion and that it should be excluded when using Py2exe.  I changed all of my modules and removed the wxVersion entirely.  I still continued to have issues with Py2exe not finding some of my modules which I then had to use "Includes" for and also many of the .dll's were not found.  I googled around and on another forum found a reference to <a href="http://pypi.python.org/pypi/bbfreeze/">bbfreeze</a>.</p>
+<p style="text-align:justify;">bbfreeze is for sure lacking in documentation on has not been updated since 2007 which made me a little nervous to try it.  I used Easy_Install from command line "$ easy_install bbfreeze" and in minutes had everything installed and ready to go.  From there a quick command line of "$ bb-freeze TOOLNAME.py" and away it went.  There are several better approches to using the bbfreeze such as a script with more options.  I will review these and update as needed.</p>
+<p style="text-align:justify;">bbfreeze created a dist folder that had everything I needed....almost.  I did not include the images folder (thus the need for the bbfreeze script instead of the command line) but after copying the image folder into the dist folder everything worked.  The last thing that I did was then use <a href="http://www.jrsoftware.org/isinfo.php">Inno Setup 5</a> to create an installer file for the executable.  I wish everything in life could be as easy to use as the Inno Setup 5 installer is.  I didn't even need to read any documentation and created an installer file in minutes.</p>
+<p style="text-align:justify;">I will post more information as I figure it out.</p>

@@ -1,0 +1,137 @@
+---
+layout: post
+title: From Capistrano 2.x to 3.x
+date: 2014-09-03 20:13:40.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _publicize_pending: '1'
+  publicize_twitter_user: bobr_az
+  is_reblog: '1'
+  post_id: '3'
+  blog_id: '73510460'
+  reblog_snapshot: |-
+    O:8:"stdClass":7:{s:5:"title";s:26:"From Capistrano 2.x to 3.x";s:4:"type";s:4:"post";s:9:"mime_type";s:0:"";s:6:"format";b:0;s:12:"modified_gmt";s:19:"2014-08-29 19:15:47";s:9:"permalink";s:71:"http://silicon9east.wordpress.com/2014/08/24/from-capistrano-2-x-to-3-x";s:7:"content";s:6890:"<div class="reblogged-content">
+
+    This guide describes upgrading from capistrano version 2.x to 3.x. In our company we use capistrano to deploy rails 3 &amp; 4 applications on test- and production-server. Our servers run with apache and passenger gems apache module.
+
+    <h1>Why Upgrading To Capistrano 3.x</h1>
+
+    Well it is some work and you need to change a lot, this is true. The following reasons nevertheless convinced me to dive into this adventure:
+
+    <ul>
+    <li>Cap 3 has out of the box multistage support</li>
+    <li>As far as I know cap 2 support has ended. Last cap 2 gem update was 4. July 2013. The documentation of cap 2 <a href="https://github.com/capistrano/capistrano/wiki">(see)</a> is referred to as "legacy" documentation.</li>
+    <li>Cap 3 has a cleaner, more intuitive config file content structure and uses a news simpler DSL.</li>
+    </ul>
+    <h1>Let's Upgrade!</h1>
+
+    Now that I have your attention and hopefully have convinced you that upgrading to cap 3 is totally worth your time and effort, let's begin.
+
+    <h2>Capfile, Deploy File and Stages</h2>
+
+    As mentioned above cap 3 has a more intuitive config file content structure. The files itself are the same but their content changed. The Capfile is the home of all requirement statements and the deploy tasks. In the deploy file are global server config, repo config, and third party plugin config (rollbar, whenever, etc.). The stage files accommodate server config specific to that stage (e.g. server address, username, password).
+
+    <h2>From Old To New Capistrano</h2>
+
+    I followed roughly this <a href="http://capistranorb.com/documentation/upgrading/">guide</a> on official capistrano website. Essentially I did this:
+
+    <ul>
+    <li>Remove all traces of old cap from your Gemfile and add the following:</li>
+    </ul>
+
+    [code lang=ruby]
+    gem 'capistrano', '~&gt; 3.2.1'
+    gem 'rvm1-capistrano3', '~&gt; 1.2.5', require: false
+    gem 'capistrano-rails', '~&gt; 1.1.1'
+    [/code]
+
+    This adds cap 3 itself and rvm- and rails- support for capistrano. <code>capistrano-rails</code> includes predefined tasks for rails database migration and assets precompilation. Note we use <code>rvm1-capistrano3</code> gem. This is the successor of <code>rvm-capistrano</code> gem which is only compatible with cap 2. <code>rvm1-capistrano3</code> requires as it's name says rvm 1. Be sure to update rvm. Also update SSHKit gem to newest version. I had locked SSHKit to an old version and got nasty errors. As it turns out <code>rvm1-capistrano3</code> and <code>capistrano-bundler</code> gems are not compatible. Therefore here I only use <code>rvm1-capistrano3</code> gem, which has built-in bundle support. For details about what those gems exactly do, go to their github repos.
+
+    <ul>
+    <li>Backup old <code>Capfile</code>, deploy file and stage files.</li>
+    <li>Install new gems with <code>bundle install</code>.</li>
+    <li>Setup new capistrano with <code>cap install</code> this will also create <code>production.rb</code> and <code>staging.rb</code>.</li>
+    <li>Move content of old stage files to new stage files.</li>
+    <li>Move all content of old <code>Capfile</code> and all requirement statements and tasks of old <code>deploy.rb</code> to new <code>Capfile</code>.</li>
+    <li>Move remaining content of old deploy file to new deploy file. In your new deploy file should be neither a requirement statement nor a deploy task.</li>
+    </ul>
+    <h2>Refactor New Config Files</h2>
+
+    <h3>Capfile</h3>
+
+    <ul>
+    <li>Update requirement statements. The requirements for capistrano 3 and it's various support gems look like this:</li>
+    </ul>
+
+    [code lang=ruby]
+    require 'capistrano/setup'
+    require 'capistrano/deploy'
+    require 'rvm1/capistrano3'
+    require 'capistrano/rails'
+    [/code]
+
+    Requirements of third party gems may also be added.
+
+    <ul>
+    <li>Refactor deploy tasks to new DSL. As earlier mentioned cap 3 uses a new DSL. You have to refactor all your deploy tasks to new DSL or cap 3 will not work. This is a lot of work. Be aware that tasks for file or folder symlink creation can be dropped. Cap 3 has built in functionality for this, more on this later.</li>
+    <li>Example tasks for assets precompilation, assets cleanup and passenger server are <a href="https://gist.github.com/jruef/4bf108712040e7f034ae#file-cap-3-tasks">here</a>.</li>
+    <li>In capistrano 3 deploy flow changed, your task from cap 2 may not be in right position! See <a href="http://capistranorb.com/documentation/getting-started/flow/9">cap 3 deploy flow overview</a>.</li>
+    </ul>
+    <h5>Further Reading</h5>
+
+    <ul>
+    <li>How to write your <a href="http://capistranorb.com/documentation/getting-started/cold-start/">first cap 3 task</a>.</li>
+    <li>More <a href="https://github.com/capistrano/sshkit/blob/master/EXAMPLES.md">example tasks</a>.</li>
+    </ul>
+    <h3>Deploy File</h3>
+
+    Most settings can be left as they are. Most important changes are:
+
+    <ul>
+    <li>
+    <code>repository</code> variable is now called <code>repo_url</code>.</li>
+    <li>
+    <code>deploy_via :remote_cache</code> is obsolete. Cap 3 creates a a local mirror of your repo on your server.</li>
+    <li>Use <code>linked_dirs</code> and <code>linked_files</code> to link files and folders into shared dir. For example if you put <code>set :linked_files, %w{config/database.yml}</code> into your deploy file capistrano will link <code>shared/config/database.yml</code> to <code>current/config/database.yml</code>. Same way for dirs.</li>
+    <li>Ssh settings have different syntax, see example deploy file below.</li>
+    <li>You can find my example deploy file <a href="https://gist.github.com/jruef/4197eb066b6cc1bdae49#file-cap-3-deploy-file">here</a>.</li>
+    <li>
+    <strong>Important</strong> In cap 2 you just could write <code>var_name</code> to get the value of a variable. In cap 3 this has changed to <code>fetch(:var_name)</code>.</li>
+    </ul>
+    <h3>Stage Files</h3>
+
+    <ul>
+    <li>Remember that settings shared by all stages should be in deploy file not in stage files.</li>
+    <li>The general syntax for server config is <code>server 'example.com', roles: %w{my_role my_other_role}, my_property: :my_value</code>
+    </li>
+    <li>An example stage file is <a href="https://gist.github.com/jruef/7885a853fc965044e0e2#file-example-server-config-cap-3">here</a>. Note that I fetch all values from deploy file.</li>
+    </ul>
+    <h1>Last Steps</h1>
+
+    Congratulation in theory you have upgraded to cap 3. In practice you should now try to deploy on a test server and verify that all linkings of files and dirs are present and point to the right. Furthermore you should verify that all your custom deploy tasks do what you intended them to do.
+
+    <h1>Helpful Readings</h1>
+
+    <ul>
+    <li>A good overview over what is new in cap 3, also with comparison to how it was done in cap 2, this <a href="http://blog.huangzhimin.com/2013/11/02/upgrade-to-capistrano3/">post</a> by Richard Huang.</li>
+    <li>Helpful was also this <a href="https://semaphoreapp.com/blog/2013/11/26/capistrano-3-upgrade-guide.html">how to</a>.</li>
+    </ul>
+    </div>";}
+  publicize_twitter_url: http://t.co/p0NOMzmgOz
+  _wpas_done_7641025: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:2516516912;b:1;}}
+  publicize_linkedin_url: ''
+  _wpas_done_7777887: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>I have been putting off on upgrading Capy.  There were a lot of changes between 2 and 3.  I will have to try this out (if I get brave enough!!)</p>

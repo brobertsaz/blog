@@ -1,0 +1,41 @@
+---
+layout: post
+title: Why is ruby on rails Ubuntu server setup so damned hard to do?
+date: 2013-10-16 21:10:14.000000000 -05:00
+type: post
+published: true
+status: publish
+categories: []
+tags:
+- MongoDB
+- Nginx
+- Rails
+- Ruby
+- Ruby on Rails
+meta:
+  _edit_last: '15714693'
+  _zemanta_has_recommendations: '1'
+  publicize_twitter_user: broberts_az
+  publicize_twitter_url: http://t.co/KUVenZ7eUu
+  _wpas_done_482036: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:199393780;b:1;}}
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>Well, I was messing with <a class="zem_slink" title="Server (computing)" href="http://en.wikipedia.org/wiki/Server_%28computing%29" target="_blank" rel="wikipedia">server</a> setup for <a class="zem_slink" title="Ruby on Rails" href="http://rubyonrails.org" target="_blank" rel="homepage">Ruby on Rails</a> again.  I had created a script to walk thru the steps but it still seems to be a combination of try this, get an error, google the error, apply the fix, and try it again.  If it works go to next step, and if not; repeat over and over.</p>
+<p>Now the best option for hosting Rails apps is <a class="zem_slink" title="Heroku" href="http://www.heroku.com/" target="_blank" rel="homepage">Heroku</a> but this is not always an option.  A lot of the other 'paid' Rails hosting options have 'one-click' server setup.  What I am talking about is setting up a brand new <a class="zem_slink" title="Ubuntu (operating system)" href="http://www.ubuntu.com" target="_blank" rel="homepage">Ubuntu</a> 12.* server for Ruby on Rails.</p>
+<p>I will be updating my step-by-step server setup and posting that soon...</p>
+<p>Today I want to talk about an awesome script that I found.  It is called <a href="https://github.com/joshfng/railsready">Railsready</a> by Josh Frye.  Out of the box it certainly kicks ass to use for setting up Rails ready server on 'Nix or <a class="zem_slink" title="OS X" href="http://www.apple.com/osx" target="_blank" rel="homepage">OSX</a>.</p>
+<p>Well, I wanted more, so I added more.  I have taken Josh's fine script and added some options that I wanted.</p>
+<p>I now have it setup to ask what version Ruby you want installed.  Right now that is a choice of 1.9.3 or 2.0.0.  I am planning on setting that up to prompt for which version but I worry that users will enter a non-existing patch.</p>
+<p>I have also added <a class="zem_slink" title="Nginx" href="http://nginx.org/" target="_blank" rel="homepage">Nginx</a> server install plus your choice of Unicorn, Thin or <a class="zem_slink" title="Phusion Passenger" href="http://modrails.com" target="_blank" rel="homepage">Passenger</a>.</p>
+<p>Next up is I am going to add option to choose from <a class="zem_slink" title="MongoDB" href="http://www.mongodb.org/" target="_blank" rel="homepage">Mongodb</a>, MySQL, and PostgreSQL.</p>
+<p>Take a look at it and see what you think... <a href="https://github.com/brobertsaz/railsready"> https://github.com/brobertsaz/railsready</a></p>
+<h6 class="zemanta-related-title" style="font-size:1em;">Related articles</h6>
+<ul class="zemanta-article-ul">
+<li class="zemanta-article-ul-li"><a href="http://www.prweb.com/releases/best-ruby-on-rails-hosts/2013/prweb11125505.htm" target="_blank">Best Web Hosts for Ruby on Rails in 2013 Introduced by...</a> (prweb.com)</li>
+</ul>

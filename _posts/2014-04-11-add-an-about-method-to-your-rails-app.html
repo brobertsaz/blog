@@ -1,0 +1,54 @@
+---
+layout: post
+title: Add an 'about' method to your Rails app
+date: 2014-04-11 17:22:55.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _publicize_pending: '1'
+  is_reblog: '1'
+  post_id: '11'
+  blog_id: '39895151'
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:39:\"Add an 'about' method
+    to your Rails app\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2014-04-04
+    17:17:04\";s:9:\"permalink\";s:70:\"http://livingjim.com/2014/04/04/add-an-about-method-to-your-rails-app/\";s:7:\"content\";s:2317:\"<div
+    class=\"reblogged-content\">I end up using Ruby on Rails apps as tools within
+    larger projects, not as an end to a web application need.  As such, my involvement
+    with my Rails app may go months between those intensive times where my head is
+    in the Rails app, and I forget many of the nuances and whys of the architecture.
+     So I recently built up a little extra goodness in my current project to help
+    me when I return to it next time.\r\n\r\nIn short, I have added to each model
+    a \"description\" method that just (now anyway) prints out my thinking about what
+    the model is there for and how it is to be used, what caveats exist in the model,
+    and so on.  So if my app has a Product model, I can work in the Rails console
+    with it and issue a Product.description call to print out all that stored human
+    knowledge.\r\n\r\nThat begs for an app-wide refresher, so I added a method via
+    an initializer file: about.\r\n\r\nLet's have a look!\r\n\r\n<em>app/models/product.rb</em>\r\n<pre>class
+    Product &lt; ActiveRecord::Base\r\n  def self.description\r\n    puts \"Instances
+    of the Product class......\"\r\n  end\r\nend</pre>\r\nconfig/initializers/my_stuff.rb\r\n<pre>def
+    about\r\n  Dir.glob(\"#{Rails::root}/app/models/*.rb\").each do |rb|\r\n    thisModelName
+    = rb.split(\"/\").last.split(\".\").first.camelcase\r\n    thisModel = thisModelName.constantize\r\n
+    \   puts \"\"\r\n    puts \"++++ #{thisModelName}\"\r\n    if thisModel.respond_to?(:description)
+    then\r\n      thisModel.description\r\n    end\r\n<b>    </b>puts thisModel.inspect\r\n<b>
+    \   </b>puts \"----\"\r\n<b>    </b>end\r\n<b>  </b>return true\r\nend</pre>\r\n\r\n<hr>\r\n\r\nProgramming
+    is a discipline, right? And so it takes discipline to always add a description
+    method to your models, but it's really beneficial either when you come back to
+    work on the Rails side of your project or you are bringing additional help in
+    to work on it with you.\r\n\r\nTo build this feature I had to learn how to take
+    a string and turn it into a class name.  This discussion deserves the credit for
+    showing me how to accomplish this: <a title=\"Getting a class object in Ruby from
+    a string containing that class’ name\" href=\"http://infovore.org/archives/2006/08/02/getting-a-class-object-in-ruby-from-a-string-containing-that-classes-name/\"
+    target=\"_blank\">Getting a class object in Ruby from a string containing that
+    class' name</a>\n</div>\";}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>Man, after dealing with legacy code so many times, this is a great idea.  Many times developers forget (or don't care?) about the next developer that will work on the code someday.  This would be good to throw into a rake task to create the full list of descriptions.  Thanks for this!!</p>

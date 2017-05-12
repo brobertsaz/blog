@@ -1,0 +1,37 @@
+---
+layout: post
+title: Dynamically change options for select based on first drop down
+date: 2012-09-15 15:27:05.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _edit_last: '15714693'
+  _wpas_done_twitter: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>I recently needed to change the options for select for a drop down based on the selection of another drop down.  At first this seemed like a pretty easy thing to do, right?  I thought that I could simply throw an if statement into the view and all would be well.  As I started to add the code to the view, I realized that this approach was not going to work at all.  That is when it hit me that I was going to need to use Javascript.</p>
+<p>There were a million examples and forum answers all over the web and I tried about half of them to no avail.  I called in the big gun himself, Michael (@m3talsmith) our in-house Javascript expert.</p>
+<p>Here is the entire code (minus the extra crap obviously) :</p>
+<p>https://gist.github.com/3710100</p>
+<p>Now, I will break it down into each part.  First lets start with the form part, and again this is not the entire form but rather just the 2 drop downs that we are working with.</p>
+<p>https://gist.github.com/3729943</p>
+<p>So we have the two drop downs in our form.  The first drop down has the values from the controller as @share_types.  So based on the selected value of the :share_type we will have different set of options for select for the second drop down.  For this we will need to check the selected value of the :share_type.  The first thing that we do is look for the change of that selection.</p>
+<p>https://gist.github.com/3729944</p>
+<p>First we call the initSubOptions() function on document ready.  This function watches the #selected_share_type drop down for it to change.  When it sees that drop down change it takes the value of it ($(this).val()) and passes that to the populateSubOptions function.</p>
+<p>https://gist.github.com/3730040</p>
+<p>The populateSubOptions() function looks at the selected value of the first drop down.  There are only 3 options that will ever be present in the first drop down and we have just two cases, if it is “share_across” or either of the other options.  Our if statement looks to see if the value is “share_across” and if it is it calls .empty() on the #share_exp_dates select and then appends to it the optionFromArray(share_across_options) otherwise it appends the optionFromArray(share_down_options).</p>
+<p>https://gist.github.com/3730070</p>
+<p>The optionsFromArray function creates the options for select based on which array it is passed.  The two array options are defined based on the values that are passed in from the controller; either @share_across_dates or @share_down_dates.</p>
+<p>It then runs thru the array and creates the option values.  The @options for @share_across_dates is an array of arrays:</p>
+<p>[['1 Week', 'one_week'], ['2 Weeks', 'two_weeks'], ['3 Weeks', 'three_weeks'], ['4 Weeks', 'four_weeks'], ['5 Weeks', 'five_weeks'], ['6 Weeks', 'six_weeks'] ]</p>
+<p>So, easy stuff here if you are good at javascript.  We watch for the value of the first drop down to be changed and then based on that we display the options for select accordingly.</p>
+<p>I am sure that there may be a better/easier way out there, but this worked for me.</p>

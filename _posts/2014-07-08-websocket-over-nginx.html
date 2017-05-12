@@ -1,0 +1,120 @@
+---
+layout: post
+title: WebSocket over Nginx
+date: 2014-07-08 18:05:18.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _publicize_pending: '1'
+  publicize_twitter_url: http://t.co/DOcyYDt66e
+  publicize_linkedin_url: http://www.linkedin.com/updates?discuss=&scope=336165323&stype=M&topic=5892443143508348928&type=U&a=Zw06
+  is_reblog: '1'
+  post_id: '2776'
+  blog_id: '9042983'
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:20:\"WebSocket over Nginx\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2013-05-28
+    15:59:42\";s:9:\"permalink\";s:60:\"http://blog.joshsoftware.com/2013/05/28/websocket-over-nginx\";s:7:\"content\";s:7484:\"<div
+    class=\"reblogged-content\">\n\nHow often do you find that the awesome movie seats
+    you have painstakingly chosen for yourself, is suddenly not available when you
+    proceed to pay for it. \"Damn it! Just missed!\" you say. Wouldn't it be  great
+    to be guaranteed the seat you selected everytime!\r\n\r\nThe problem with the
+    above scenario (as is  with most e-commerce portals) is that, if two users almost simultaneously 
+    select same seat and checkout to book, the seat will be booked with the user who
+    has clicked first. The other user will be redirected to same page with message
+    the S<em>eat has already been booked</em>. We all have used Indian Railway Website
+    and this problem really gets me frustrated.So I wanted to build system in which
+    the seat I select always gets booked.\r\n\r\nTo avoid this problem, I came up
+    with two solutions\r\n<h3>Auto Refresh every 2 seconds (like cricket scores on
+    cricinfo.com)</h3>\r\n<ul>\n<li>This would increase load on server as there will
+    be database query every 2 seconds and  again the load will increase with increase
+    in concurrent users using the page.</li>\r\n\t<li>This would not create a real-time
+    user experience.</li>\r\n</ul>\n<h3>Websockets</h3>\r\nWebSockets is a web technology
+    providing full-duplex communications channels over a single TCP connection. It
+    is similar to radio broadcasting. It consists of a broadcaster (radio transmitter)
+    and subscribers (radio receivers). A user connects to a particular channel (frequency)
+    and whatever is published over that channel is received by the user. Similarly,
+    in the Websocket space, the broadcaster is a server and the subscriber is the
+    browser.\r\n\r\nSo, in the earlier scenario, whenever a seats get booked, the
+    server will broadcast message to all subscribers instantaneously. With the help
+    of this message, wecan change the color of a booked seat immediately on all browsers
+    that have the page open. This ensures\r\n<ul>\n<li>Low load on server.</li>\r\n\t<li>A
+    Real Time user experience</li>\r\n</ul>\r\nI thought of using <span style=\"color:#000000;\"><a
+    title=\"websocket-rails\" href=\"https://github.com/DanKnox/websocket-rails\"
+    target=\"_blank\"><span style=\"color:#000000;\">websocket-rails</span></a></span>
+    gem as it makes it pretty easy to implement WebSocket in rails.  It is built over<span
+    style=\"color:#000000;\"><a title=\"faye\" href=\"http://faye.jcoglan.com/\" target=\"_blank\"><span
+    style=\"color:#000000;\"> faye</span></a></span> (a publish-subscribe messaging
+    system based on the Bayeux Protocol).\r\n<h2>Getting started with websocket-rails</h2>\r\n<h3>The
+    Configuration</h3>\r\n<ol>\n<li>Add the websocket-rails gem to your Gemfile and
+    run the bundle command</li>\r\n\t<li>Run the installation generator:   The generator
+    will require the WebSocket javascripts  in our <code>application.js          
+                                              </code>\r\n<pre>bundle exec rails g
+    websocket_rails:install</pre>\r\n</li>\r\n</ol>\r\nA lot more information related
+    to setup is <a href=\"https://github.com/DanKnox/websocket-rails/wiki/Installation-and-Setup\">here</a>\r\n<h3>Connecting
+    to the server</h3>\r\nYou connect to the server by creating a new WebSocketRails
+    object and passing it the server address.\r\n\r\n[code language=\"ruby\"]\r\n#
+    app/views/bookings/index.html.haml\r\njavascript:\r\n  var dispatcher = new WebSocketRails('localhost:3001/websocket')\r\n[/code]\r\n<h3>Event
+    Router and Trigger events on the server from the browser client</h3>\r\nThe installation
+    generator will create the events.rb file in your config/initializers directory.
+    All the routes related to websockets are to be added here. You can edit this file
+    to begin mapping client side events to controller actions.\r\n\r\n[code language=\"ruby\"]\r\n#
+    config/initializers/events.rb\r\nsubscribe :hold_seat, to: UserController, with_method:
+    :hold_seat\r\n[/code]\r\n\r\nThis events triggered from the JavaScript client
+    will invoke methods on the controller on the server. For example, from the browser
+    JavaScript console, we can trigger the UsersController#hold_seat method with the
+    following command\r\n\r\n[code language=\"javascript\"]\r\ndispatcher.trigger('hold_seat',
+    {seat_number: 12});\r\n[/code]\r\n\r\n<strong>Triggering Events on the Client
+    form server</strong>\r\n<ul>\n<li>Broadcasting to all connected clients</li>\r\n</ul>\r\nYou
+    can trigger an event on the client using the broadcast_message method. The broadcast_message
+    method takes two arguments, the event name to trigger(function to invoke on client
+    side), and an object to send along with the event.\r\n\r\n[code language=\"ruby\"]\r\n#
+    app/controller/users_controller.rb:\r\nbroadcast_message :update_seat_status,
+    {number: seat.number, state: 'hold'}\r\n[/code]\r\n<ul>\n<li> Broadcasting to
+    subscribed clients</li>\r\n</ul>\r\nThe channel will be automatically created
+    the first time a client subscribes to the channel or a message is broadcasted
+    to the channel on the server.\r\n\r\nTo listen to events on channel we can add
+    this JavaScript on our page\r\n\r\n[code language=\"javascript\"]\r\n# app/assets/javascripts/websocket.js\r\nchannel
+    = dispatcher.subscribe(channel_name);\r\n[/code]\r\n\r\nTo publish to a specific
+    channel, we can publish a message to that channel from anywhere in a Rails application
+    using the following code syntax:\r\n\r\n[code language=\"ruby\"]\r\nWebsocketRails[:channel_name].trigger(:event_name,
+    object_to_send)\r\n[/code]\r\n<ul>\n<li>Publishing events from the browser client</li>\r\n</ul>\r\n[code
+    language=\"javascript\"]\r\nchannel.trigger('event_name', object_to_send);\r\n[/code]\r\n\r\nA
+    full fledged working Rails application for booking seats using Websocket-rails
+    is available on my <span style=\"color:#000000;\"><a title=\"github account\"
+    href=\"https://github.com/pratik14/booking\" target=\"_blank\"><span style=\"color:#000000;\">github
+    account</span></a></span>\r\n<h2>Caveats</h2>\r\n<ul>\n<li>I used passenger as
+    application server and  as far passenger 3 is concerned it does not support  WebSockets.
+    Passenger 4 does support websockets but I have not tried it yet. Instead, I used
+    thin as a standalone server. In this situation only  the page which needs WebSocket
+    connection was rendered using the standalone server and rest of the application
+    works on passenger.  We also need to use Redis to enable publishing channel events
+    to the standalone server.</li>\r\n</ul>\n<p style=\"padding-left:30px;\">Configuration
+    to enable standalone server mode</p>\r\n\r\n[code language=\"ruby\"]\r\n# config/initializers/events.rb\r\nWebsocketRails.setup
+    do |config|\r\n  config.standalone = true\r\nend\r\n[/code]\r\n\r\nFor more configuration
+    click <a href=\"https://github.com/DanKnox/websocket-rails/wiki/Standalone-Server-Mode\">here</a>\r\n<ul>\n<li>Use
+    Thin server as primary app server.</li>\r\n</ul>\n<h3>Protocol Upgradation from
+    http to websocket protocol</h3>\r\nIt is required to change the protocol form
+    http to websockcet for creating websocket. Nginx did announce its support for
+    protocol upgradation for websocket in its 1.3.13 version (Feb 2103).  We just
+    to need configure nginx to change protocol  from http to websocket protocol for
+    a specific route.  In below configuration protocol upgradation is done using  proxy_set_header
+    option.\r\n\r\n[code language=\"bash\"]\r\nserver {\r\n  listen   80;\r\n  server_name
+     app.local;\r\n  root  /home/app/public;\r\n  passenger_enabled on;\r\n  rails_env
+    development;\r\n\r\n  location /any_location {\r\n     proxy_pass http://localhost:3001/realtime_page;\r\n
+    \    proxy_http_version 1.1;\r\n     proxy_set_header Upgrade $http_upgrade;\r\n
+    \    proxy_set_header Connection \"upgrade\";\r\n  }\r\n}[/code]</div>\";}"
+  publicize_twitter_user: bobr_az
+  _wpas_done_7641025: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:2516516912;b:1;}}
+  _wpas_done_7777887: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>Great write up for Websockets and Nginx (and you should be using Nginx!!)</p>

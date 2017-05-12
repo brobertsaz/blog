@@ -1,0 +1,32 @@
+---
+layout: post
+title: Cleanup files created with Rspec
+date: 2013-03-06 15:00:23.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _edit_last: '15714693'
+  publicize_reach: a:2:{s:7:"twitter";a:1:{i:482036;i:241;}s:2:"wp";a:1:{i:0;i:27;}}
+  publicize_twitter_user: broberts_az
+  _wpas_done_482036: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:199393780;b:1;}}
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>So I guess I just never took the time to look but our main Ruby on Rails web application creates a lot of files during testing.  Now I am not talking about database anything here.  We create icons, and pdf's and rtf files during our Rspec test suite.</p>
+<p>Just add this to you spec_helper.rb file:</p>
+<p>[sourcecode language="ruby"]</p>
+<p>config.after(:suite) do<br />
+  FileUtils.rm_rf(Dir[&quot;#{Rails.root}/public/system&quot;])<br />
+end<br />
+[/sourcecode]</p>
+<p>Obviously change the directory to the correct one.</p>
+<p>Hope that helps somebody :)</p>

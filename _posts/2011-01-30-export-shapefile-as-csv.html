@@ -1,0 +1,70 @@
+---
+layout: post
+title: Export Shapefile as .csv tutorial
+date: 2011-01-30 18:19:05.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Geoprocessing with Python
+tags:
+- Python
+meta:
+  _wpas_done_twitter: '1'
+  _edit_last: '15714693'
+  _wp_trash_meta_comments_status: a:1:{i:50;s:5:"trash";}
+  _wpas_skip_fb: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p><span style="color:#555555;font-size:12pt;">I recently had issues with a simple export to .csv.  What I wanted to do is pull in a shapefile and delete a bunch of fields and then export it out to a .csv (this works the same for saving to a text file).  It actually turned out easier than I thought as I did not need to delete all the fields but rather I just wrote out the fields that I wanted to keep:<br />
+</span></p>
+<p>[sourcecode language="Python"]</p>
+<p># Import system modules<br />
+import sys, string, os, glob, csv<br />
+import arcgisscripting<br />
+# Create the Geoprocessor object<br />
+gp = arcgisscripting.create()</p>
+<p># System arguments<br />
+input = sys.argv[1]<br />
+output = sys.argv[2]</p>
+<p># Set our new outputnew to be opened output with write privileges.<br />
+outputnew=open(output,'wb')</p>
+<p># Set linewriter as csv.writer written out to outputnew<br />
+# The delimiter can be set as comma, pipe etc.<br />
+linewriter=csv.writer(outputnew, delimiter=',')</p>
+<p># If you want to pass all fields thru then disregard this.  I use this as I only want to pass some of the fields out and these are listed in Python list<br />
+good_fields = ['field 1', 'field 2', 'field 3', 'field 4', 'field 5']</p>
+<p># Now we go thru all of the fields and keep just those that are in the list of good fields<br />
+flds=gp.ListFields(stops_in)<br />
+fld = flds.Next()<br />
+header=[]<br />
+while fld:<br />
+    if fld.Name in good_fields:<br />
+        value=fld.Name<br />
+        header.append(value)<br />
+    fld = flds.Next()<br />
+linewriter.writerow(header)</p>
+<p># And we run thru each row populating the kept fields<br />
+row=cursor.Next()<br />
+row_num = 1<br />
+while row:<br />
+    line=[]<br />
+    if row_is_valid(row_num, row):<br />
+        for fld in header:<br />
+            value=row.GetValue(fld)<br />
+            line.append(value)<br />
+        linewriter.writerow(line)<br />
+    row=cursor.Next()<br />
+    row_num += 1</p>
+<p>del cursor<br />
+gp.AddMessage(&quot;Finished&quot;)<br />
+output.close()</p>
+<p>[/sourcecode]</p>
+<p><span style="color:#555555;font-size:12pt;"><br />
+</span></p>
+<p><span style="color:#555555;font-size:12pt;">I originally attempted to make a copy of the original shapefile and then a table view from the shapefile. In the end all I needed to do was simply read the input shapefile and then write it out to the .csv file.</span></p>

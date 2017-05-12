@@ -1,0 +1,56 @@
+---
+layout: post
+title: Merging Pdf's in Rails application
+date: 2013-03-08 17:36:59.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _edit_last: '15714693'
+  _zemanta_has_recommendations: '1'
+  publicize_reach: a:2:{s:7:"twitter";a:1:{i:482036;i:240;}s:2:"wp";a:1:{i:0;i:27;}}
+  publicize_twitter_user: broberts_az
+  _wpas_done_482036: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:199393780;b:1;}}
+  _wp_format_url: ''
+  _wp_format_quote: ''
+  _wp_format_quote_source: ''
+  _wp_format_image: ''
+  _wp_format_gallery: ''
+  _wp_format_audio: ''
+  _wp_format_video: ''
+  _post_restored_from: a:3:{s:20:"restored_revision_id";i:972;s:16:"restored_by_user";i:15714693;s:13:"restored_time";i:1365981272;}
+  _wpas_skip_482036: '1'
+  _oembed_4617f0672779862685287a039b85c8aa: "{{unknown}}"
+  _oembed_72304bcf0048aab02550a026e6fff15b: "{{unknown}}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p style="text-align:justify;">Alright, I had a lot of fun today trying to figure out how to merge pdf's in our Rails application.</p>
+<p style="text-align:justify;">We are using pdfkit to create our pdf's.  What I needed to do was to take several pdf's and merge them into one large pdf.  Frankly I did not think it was even possible.  I found several <a class="zem_slink" title="RubyGems" href="http://rubygems.org" target="_blank" rel="homepage">Ruby gems</a> that were supposed to do the job but everyone I tried was just another PITA dead end.</p>
+<p style="text-align:justify;">After getting pointed in the right direction by @m3talsmith, I ended up solving my issue the old school way.  So, if you have done this before with Ruby gems stick with it.  If not, here we go...</p>
+<p>[sourcecode language="ruby"]<br />
+def merge_pdfs<br />
+   pdfs = []<br />
+   pdfs &amp;lt;&amp;lt; @bulletin.pdf.path<br />
+   @bulletin.bulletin_inserts.first.bulletin_insert_items.each do |bii|<br />
+     if bii.pdf.present?<br />
+      pdfs &amp;lt;&amp;lt; bii.pdf.path<br />
+     end<br />
+   end<br />
+   if pdfs.count &amp;gt; 1<br />
+     system &amp;quot;gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=temp.pdf #{pdfs.join(' ')}&amp;quot;<br />
+     system &amp;quot;cat '/Users/bob/Projects/bulletin-builder/temp.pdf' &amp;gt; #{@bulletin.pdf.path}&amp;quot;<br />
+   end<br />
+ end</p>
+<p>[/sourcecode]</p>
+<p style="text-align:justify;">I first started with an empty array for pdfs.  Then I went thru a couple of processes to add all the pdfs to the pdfs array.</p>
+<p style="text-align:justify;">After that, comes the old school.  Using <a class="zem_slink" title="Ghostscript" href="http://www.ghostscript.com" target="_blank" rel="homepage">Ghostscript</a> (gs) we joined all of the pdfs and outputted them to a temp.pdf.  I tried several times unsuccessfully to overwrite the original pdf but I never got it to work correctly.  After creating the temp.pdf we used good old cat command to copy the temp.pdf to the original pdf.</p>
+<p style="text-align:justify;">If you know or find a better way, please tell me!!</p>

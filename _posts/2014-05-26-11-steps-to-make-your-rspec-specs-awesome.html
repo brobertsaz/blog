@@ -1,0 +1,132 @@
+---
+layout: post
+title: 11 Steps To Make Your RSpec Specs Awesome
+date: 2014-05-26 18:03:53.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _publicize_pending: '1'
+  is_reblog: '1'
+  post_id: '381'
+  blog_id: '38570877'
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:41:\"11 Steps To Make Your
+    RSpec Specs Awesome\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2013-11-26
+    12:03:56\";s:9:\"permalink\";s:89:\"http://railsadventures.wordpress.com/2013/09/25/11-steps-to-make-your-rspec-specs-awesome\";s:7:\"content\";s:8632:\"<div
+    class=\"reblogged-content\">\n\n<h3>Preface</h3>\r\nEveryone agrees that writing
+    clean ruby code is essential. There are many blog posts about refactoring your
+    ruby code to make it more readable and maintainable. As tests become a major part
+    of our programming routine, I feel there is a large place for improvement in the
+    way we write and maintain our test-suites. Many ruby projects consist of more
+    rspec lines than actual ruby code, and that requires us to treat our test code
+    with as much care as we treat our actual ruby code, if not even more. Writing
+    specs may be considered by programmers as a burden or a chore if not done the
+    right way. That may cause some programmers to write less specs for their code
+    or to even totally give up on it. Luckily, RSpec provides us with all the tools
+    necessary to create efficient, great looking and fun-to-write specs for our code.
+    I'd like to go over a process of refactoring a test-suite written in RSpec for
+    a small library I've recently written in FTBpro.com.\r\n<h3>The Domain</h3>\r\nIn
+    <a href=\"http://www.ftbpro.com\">FTBPro</a> we have posts written by users, and
+    a dynamic set of reaction templates that allows the user to react to that post.
+    A post has a locale and a type, reaction templates has a locale and an array of
+    types which they fit to. When a new post is created, we want to attach the most
+    suitable reaction template to it:\r\n<ol>\n<li>It must have the same locale as
+    the post.</li>\r\n\t<li>Its types array must include the post's type.</li>\r\n\t<li>From
+    the set of matching reaction templates by rules 1 and 2, choose the one which
+    was created the latest.</li>\r\n</ol>\r\nI came out with the following interface
+    to do this job:\r\n<code>FindReaction.for(post).attach</code>\r\nWhile\r\n<code>FindReaction.for(post).reaction\r\n</code>holds
+    the reaction which was found - I mainly exposed this for tests purposes.\r\n\r\nNow
+    the funny part about this blog post is that I'm not going to post here the code
+    which implemented this logic, we shouldn't even care about it. What I'm going
+    to do is to present you with a messed up test suite for this logic, and lead you
+    through the process of making it a blast.\r\n\r\nThis test suit contains 4 simple
+    specs which describe the behavior we expect from FindReaction:\r\n\r\nhttps://gist.github.com/erez-rabih/6697511\r\n\r\nAlthough
+    these specs pass they're not optimal. Let's follow these rules of thumb to make
+    this spec a blast!\r\n<h4>Rule #1: Keep your specs DRY - use before blocks</h4>\r\nThe
+    first line of each spec is identical - we create a post. It should be extracted
+    to a before block so we don't have to mention it over and over again.\r\n<h4>Rule
+    #2: Use before :all instead of before :each when possible</h4>\r\nWhy should we
+    create the post before each spec runs? If you're not changing your model's attributes
+    between specs, you should definitely use before :all.\r\nA note on this: unlike
+    before :each blocks which are wrapped in a DB transaction and thus getting rollbacked
+    after the spec is executed, before :all blocks have to be cleaned explicitly so
+    that you don't fill your test DB with garbage.\r\n<h4>Rule #3: Use build instead
+    of create when possible</h4>\r\nWe're using FactoryGirl to create a post. Creating
+    is an expensive operation: The post has to go through validations, we save it
+    to the DB and in many cases it requires other models to be created as well. For
+    example, if part of a post validation says it has to have a user than we'll create
+    a user as well. By building a post instead of creating we save all this time and
+    get the same outcome.\r\n<h4>Rule #4: Use describe to create nested specs groups.
+    describe should relate to an operation or an object.</h4>\r\nWe're actually testing
+    here 2 different methods of FindReaction. Specs 1-3 describe the reaction method
+    while spec #4 describes the attach method. Each of these methods should have its
+    own describe block.\r\n<h4>Rule #5: Use variables instead of constants to keep
+    your specs from becoming too fragile.</h4>\r\nIn lines 19-21 we create reaction
+    templates and we want their locale to match the created post's locale. Instead
+    of using the string \"en\" again and again we should use post.locale\r\nThis makes
+    your spec less fragile so that if someday someone changes the post's locale, he
+    won't have to change the reaction templates creation as well.\r\n<h4>Rule #6:
+    Use RSpec's magnificent be_ syntactic sugar</h4>\r\nRSpec has many syntactic sugars
+    that makes your specs more readable. Let's look at line 6 for example:\r\n<code>reaction.blank?.should
+    == true</code>\r\nWhen an object reacts to some_method_name? RSpec allows you
+    to write the test in the following way:\r\n<code>object.should be_some_method_name</code>\r\nOr
+    in our case:\r\n<code>reaction.should be_blank</code>\r\n<div></div>\r\n<h4>Rule
+    #7: Use create! and save! instead of create and save</h4>\r\nWhen creating or
+    saving models to your DB, use create! and save! instead of create and save.\r\nThe
+    difference is that the bang version of the methods throws an exception if the
+    operation fails, while the non-banged versions just return false. I wasted a lot
+    of time debugging failed specs only to find out the model was not saved or created
+    due to validation or another problem. By using create! and save! you'll be sure
+    that the model was created successfully and it exists for you to test it, otherwise
+    an exception will be thrown and you'll know about it immediately.\r\n<h3>Midway</h3>\r\nAfter
+    applying these  7 simple rules our spec following already looks much better:\r\nhttps://gist.github.com/erez-rabih/6698414\r\nYou
+    might think to yourself \"OK, this looks great\", but I've got a surprise for
+    you: The interesting part is only ahead of us. Let's take the extra leap to improve
+    our specs even more.\r\n<h4>Rule #8: If/When rule of thumb</h4>\r\nWhen there
+    is a \"if\" or \"when\" in your it \"should ...\" clause, there's a hidden context
+    in it.\r\nLooking at spec #2 our it clause looks like this:\r\n<code>it \"should
+    return no reaction template if reaction templates exist, but non fitting\"</code>\r\nThere's
+    an <strong>if</strong> in it, and that's exactly what we're looking for. If or
+    when mean you're describing a state. These states should be extracted to a context
+    block with a before block describing the state. After applying this rule spec
+    #2 should look like this:\r\nhttps://gist.github.com/erez-rabih/6698523\r\n\r\nWe
+    should apply the same to specs 1,3 and 4\r\n<h4>Rule #9: Use subject/it clauses
+    to keep your specs DRY'er and cleaner</h4>\r\nWe can easily identify that specs
+    1,2 and 3 all test the same result: <code>FindReaction.for(@post).reaction</code>\r\nThis
+    can be easily extracted into <code>subject {FindReaction.for(@post).reaction}
+    </code>phrase which does miracles to our test code.\r\n<h4>Rule #10: One assertion
+    per test case</h4>\r\nI like to have only one assertion in each spec. This way
+    if the spec fails, you immediately know what went wrong and don't even have to
+    look at the detailed output of the failure. It also keeps your specs clean and
+    focused on what they're supposed to test. Spec #3 has two assertions in it, in
+    the first we check that a reaction is found and in the second we check what specific
+    reaction was found. These are two completely different assertions and deserve
+    different specs. The one assertion per spec rule is easily achieved with combination
+    of Rule #9, we'll see why right away.\r\n<h4>Rule #11: Use RSpec's expect {} block
+    to describe a change in the state of an object</h4>\r\nIn spec #4 we test that
+    the post's reaction_template has changed from nil to the attached reaction. RSpec
+    has a nice and clean way to describe these kind of state changes:\r\n<code>expect
+    { some_operation }.to change{something}.from(initial_value).to(final_value)</code>\r\nIt
+    is much cleaner and more readable this way.\r\n\r\nThis is the result after applying
+    rules #8-#11 to our spec:\r\nhttps://gist.github.com/erez-rabih/6698783\r\n<h3>Conclusion</h3>\r\nSo
+    what have we earned in this refactoring process? I'll point the main advantages
+    of the new code:\r\n<ol>\n<li>Our test-suite runs faster</li>\r\n\t<li>Our test
+    file is more readable</li>\r\n\t<li>The failure output provided by RSpec is better</li>\r\n\t<li>We're
+    not repeating ourselves between specs</li>\r\n\t<li>It is extremely easy to extend
+    the specs to describe new features</li>\r\n\t<li>I find it much more enjoyable
+    writing specs that looks cool (And you must admit, it does look cool).</li>\r\n</ol>\r\nI
+    know that even this code can be optimized and refactored, but I had to stop somewhere
+    :)\r\nI'll be glad to hear your insights and thoughts.\r\n\r\n* This post was
+    also featured on <a title=\"FTBpro's Tech Blog\" href=\"http://tech.ftbpro.com\"
+    target=\"_blank\">FTBpro's Tech Blog</a>\n</div>\";}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>Fantastic and very detailed post on writing and/or refactoring Rspec tests.  This is a must read!!</p>

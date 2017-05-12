@@ -1,0 +1,53 @@
+---
+layout: post
+title: Good Geoprocessing practices
+date: 2010-08-22 18:39:22.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Geoprocessing with Python
+tags:
+- GIS Geoprocessing in Python
+meta:
+  _edit_last: '15714693'
+  _wp_old_slug: ''
+  _wpas_skip_twitter: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>Something that I learned as good practice is working with copies of my shapefiles and not the originals.  When doing this you do create several temporary tables and/or shapefiles and these need to be cleaned up.</p>
+<p>[sourcecode language="Python"]</p>
+<p>## System arguments<br />
+ # Input Streets shapefile<br />
+ Streets = sys.argv[1]<br />
+ # Output Streets shapefile<br />
+ Streets_output = sys.argv[2]<br />
+ # Output Streets shapefile<br />
+ Streets_output2 = sys.argv[3]<br />
+ # facility streets layer<br />
+ facilstr = sys.argv[5]</p>
+<p># Set the workspace for the processing files<br />
+ gp.workspace = os.path.dirname(sys.argv[2])</p>
+<p># Make copies so that processing doesn't take place on the original.<br />
+ gp.AddMessage(&quot;\nCreating processing files...&quot;)<br />
+ gp.Copy_management(Streets, &quot;Streets_process.shp&quot;)<br />
+ gp.Copy_management(facilstr, &quot;facilstreets.shp&quot;)<br />
+ gp.AddMessage (&quot;Copies created&quot;)</p>
+<p>[/sourcecode]</p>
+<p>This creates copies of the input shapefiles which I then use for processing.  Because there are these temp files, in the end of the script I need to delete those temp files.  For this you need to import the "os" and "glob" functions such as import os, glob in the beginning of the script.  Then at the end of the script we use these functions to clean up the temp files.  I also cleanup the xml files that are created when working with temporary tables.</p>
+<p>[sourcecode language="Python"]</p>
+<p>gp.AddMessage(&quot;Cleanup...&quot;)<br />
+ # Delete &quot;process&quot; files</p>
+<p>for file in glob.glob(gp.workspace+&quot;/Streets_process*&quot;):<br />
+ os.remove(file)<br />
+ for file in glob.glob(gp.workspace+&quot;/facilstreets*&quot;):<br />
+ os.remove(file)<br />
+ for file in glob.glob(gp.workspace+&quot;/*.xml&quot;):<br />
+ os.remove(file)<br />
+ gp.AddMessage(&quot;\nDone.\n&quot;)</p>
+<p>[/sourcecode]</p>

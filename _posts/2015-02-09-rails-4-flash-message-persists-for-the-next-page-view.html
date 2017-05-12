@@ -1,0 +1,49 @@
+---
+layout: post
+title: 'Rails 4: Flash message persists for the next page view'
+date: 2015-02-09 18:43:58.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _publicize_pending: '1'
+  is_reblog: '1'
+  post_id: '403'
+  blog_id: '72115131'
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:54:\"Rails 4: Flash message
+    persists for the next page view\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2015-01-10
+    17:03:25\";s:9:\"permalink\";s:96:\"https://cbabhusal.wordpress.com/2015/01/10/rails-4-flash-message-persists-for-the-next-page-view\";s:7:\"content\";s:1460:\"<div
+    class=\"reblogged-content\">\n\nThe <span style=\"color:#0000ff;\"><code>flash</code></span>
+    variable is intended to be used before a <span style=\"color:#0000ff;\"><code>redirect</code></span>,
+    and it persists on the resulting page for one request. This means that if we do
+    not <span style=\"color:#0000ff;\"><code>redirect</code></span>, and instead simply
+    <span style=\"color:#0000ff;\"><code>render</code></span> a page, the <code><span
+    style=\"color:#0000ff;\">flash</span> </code>message will persist for two requests:
+    it appears on the rendered page but is still waiting for a redirect (i.e., a second
+    request), and thus the message will appear again if you click a link.\r\n\r\nTo
+    avoid this weird behavior, when rendering rather than redirecting we use <code><span
+    style=\"color:#0000ff;\">flash</span>.<span style=\"color:#0000ff;\">now</span></code>
+    instead of <span style=\"color:#0000ff;\"><code>flash</code></span>.\r\n\r\nThe
+    <code><span style=\"color:#0000ff;\">flash</span>.<span style=\"color:#0000ff;\">now</span></code>
+    object is used for displaying <span style=\"color:#0000ff;\"><code>flash</code></span>
+    messages on a rendered page. As per my assumption, if you ever find a random <span
+    style=\"color:#0000ff;\"><code>flash</code></span> message where you do not expect
+    it, you can resolve it by replacing <span style=\"color:#0000ff;\"><code>flash</code></span>
+    with <code><span style=\"color:#0000ff;\">flash</span>.<span style=\"color:#0000ff;\">now</span></code>.</div>\";}"
+  publicize_twitter_user: bobr_az
+  publicize_twitter_url: http://t.co/rOeRExq10G
+  _wpas_done_7641025: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:2516516912;b:1;}}
+  publicize_linkedin_url: ''
+  _wpas_done_7777887: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+

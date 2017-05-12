@@ -1,0 +1,34 @@
+---
+layout: post
+title: Merging shapefiles
+date: 2010-08-22 18:28:32.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Geoprocessing with Python
+tags:
+- GIS Geoprocessing in Python
+meta:
+  _edit_last: '15714693'
+  _wp_old_slug: ''
+  _wpas_skip_twitter: '1'
+  _wpas_skip_fb: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>Another process that I though would be quite simple was merging 2 shapefiles.  It seems there is an issue with the <a class="zem_slink" title="Shapefile" rel="wikipedia" href="http://en.wikipedia.org/wiki/Shapefile">shapefile</a> names not being recognized and I had to use "str" to identify the names as strings.</p>
+<p>[sourcecode language="Python"]</p>
+<p>temp1 = &quot;temp1.shp&quot;<br />
+ temp2 = &quot;temp2.shp&quot;</p>
+<p>strlist = str(temp1)+&quot;;&quot;+str(temp2)<br />
+ outshp = (gp.workspace+&quot;/final.shp&quot;)<br />
+ gp.Merge_management (str(strlist), outshp)<br />
+ gp.AddMessage (&quot;Merged Shapefiles&quot;)</p>
+<p>[/sourcecode]</p>
+<p>When I tried to just use the names of the shapefile copies I could not get this to work.  I then created a simple list and identified the shapefile names as strings as well as in the actual Merge_managment, I had to identify the strlist as string.</p>
+<p>BR</p>

@@ -1,0 +1,132 @@
+---
+layout: post
+title: Ubuntu 12.10 Server Setup for Ruby on Rails, Passenger, Nginx
+date: 2012-12-05 16:53:38.000000000 -06:00
+type: post
+published: true
+status: publish
+categories: []
+tags:
+- MySQL
+- Nginx
+- Programming
+- Rackspace
+- Ruby on Rails
+meta:
+  _edit_last: '15714693'
+  publicize_reach: a:2:{s:7:"twitter";a:1:{i:482036;i:223;}s:2:"wp";a:1:{i:0;i:22;}}
+  _wpas_done_482036: '1'
+  publicize_twitter_user: broberts_az
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:199393780;b:1;}}
+  _wpas_skip_482036: '1'
+  tagazine-media: a:7:{s:7:"primary";s:86:"http://bobspython.files.wordpress.com/2012/12/screen-shot-2012-11-22-at-5-42-34-pm.png";s:6:"images";a:2:{s:86:"http://bobspython.files.wordpress.com/2012/12/screen-shot-2012-11-22-at-5-42-34-pm.png";a:6:{s:8:"file_url";s:86:"http://bobspython.files.wordpress.com/2012/12/screen-shot-2012-11-22-at-5-42-34-pm.png";s:5:"width";i:650;s:6:"height";i:358;s:4:"type";s:5:"image";s:4:"area";i:232700;s:9:"file_path";b:0;}s:86:"http://bobspython.files.wordpress.com/2012/12/screen-shot-2012-11-23-at-1-16-58-pm.png";a:6:{s:8:"file_url";s:86:"http://bobspython.files.wordpress.com/2012/12/screen-shot-2012-11-23-at-1-16-58-pm.png";s:5:"width";i:525;s:6:"height";i:154;s:4:"type";s:5:"image";s:4:"area";i:80850;s:9:"file_path";b:0;}}s:6:"videos";a:0:{}s:11:"image_count";i:2;s:6:"author";s:8:"15714693";s:7:"blog_id";s:8:"15193052";s:9:"mod_stamp";s:19:"2012-12-06
+    00:14:41";}
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>So we all know what a pain in the ass it is to setup a new server for Ruby on Rails. This is why I love to use Heroku for hosting. There are times that this is not an option so we have to use a hosted linux server. For this walk thru I used Rackspace with <a class="zem_slink" title="List of Ubuntu releases" href="http://www.ubuntu.com/" target="_blank" rel="homepage">Ubuntu 12.04</a> for hosting. This is about as fully detailed as possible.</p>
+<h1>Server Setup</h1>
+<ul>
+<li>Create new server on Rackspace</li>
+<li>Login to new server
+<ul>
+<li>ssh root@IPaddress (you can also use the domain name if you have the DNS setup already)</li>
+<li>accept the RSA key</li>
+<li>use the password provided at server setup</li>
+<li>change the password that was provided at setup<span style="color:#000000;"><span style="font-family:ArialMT, sans-serif;"><span style="font-size:medium;">:</span></span></span>
+<ul>
+<li>$ passwd</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Create a new user for deployment
+<ul>
+<li>$ sudo adduser "username"
+<ul>
+<li>accept the defaults</li>
+</ul>
+</li>
+<li>add new user to staff and sudo groups:
+<ul>
+<li>$ usermod -a -G staff "username”</li>
+<li>$ usermod -a -G sudo "username”</li>
+</ul>
+</li>
+<li>switch user
+<ul>
+<li>$ su "username"</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>Update and Install dependencies:</li>
+</ul>
+<p>https://gist.github.com/4220718</p>
+<ul>
+<li>To make our live easier, lets go ahead and add our ssh keys to the new server so we do not have to sign in every time (this is done from your machine and not on the server):</li>
+</ul>
+<p style="padding-left:60px;">$ cat ~/.ssh/id_rsa.pub | ssh root@IPaddress "cat &gt;&gt; ~/.ssh/authorized_keys"</p>
+<h1>Install Ruby</h1>
+<p>Install your Ruby (obviously you use the version that you want. At this point many people use a Ruby version management like RVM or RBENV. As these servers are normally setup for just on application we will use the system version of Ruby):</p>
+<p>https://gist.github.com/4220698</p>
+<h1>Passenger and Nginx</h1>
+<p>First let's install Passenger and Nqinx:</p>
+<p>https://gist.github.com/4220722</p>
+<p>Setup script to control Nginx:</p>
+<p>https://gist.github.com/4220728</p>
+<p>You should be able to control Nginx. To start and stop server:</p>
+<p>https://gist.github.com/4220752</p>
+<ul>
+<li>Go to your IPaddress (or domain name) and you should see "Welcome to nginx"</li>
+<li>After installing nginx, you should see the following message in the terminal:</li>
+</ul>
+<p><a href="http://bob-roberts.net/2012/12/05/ubuntu-12-10-server-setup-for-ruby-on-rails/screen-shot-2012-11-22-at-5-42-34-pm-2/" rel="attachment wp-att-870"><img class="size-medium wp-image-870 aligncenter" alt="Screen Shot 2012-11-22 at 5.42.34 PM" src="{{ site.baseurl }}/assets/screen-shot-2012-11-22-at-5-42-34-pm.png?w=300" height="165" width="300" /></a></p>
+<ul>
+<li>Setup the nginx.conf for our server
+<ul>
+<li>edit the /opt/nginx/conf/nginx.conf</li>
+<li>add the IPaddress to the server name (You may use the domain name if you have one)</li>
+<li>add the path to your apps public directory to the root</li>
+<li>add the user to the nginx.conf
+<ul>
+<li>user “username” staff;</li>
+</ul>
+</li>
+<li>if necessary, set the rails environment using rails.env</li>
+</ul>
+</li>
+</ul>
+<p style="text-align:center;"> <a href="http://bob-roberts.net/2012/12/05/ubuntu-12-10-server-setup-for-ruby-on-rails/screen-shot-2012-11-23-at-1-16-58-pm-2/" rel="attachment wp-att-871"><img class="alignnone size-medium wp-image-871" alt="Screen Shot 2012-11-23 at 1.16.58 PM" src="{{ site.baseurl }}/assets/screen-shot-2012-11-23-at-1-16-58-pm.png?w=300" height="88" width="300" /></a></p>
+<h1>Database Setup</h1>
+<p>At this point there are a lot of different ways to go. The database needs to be setup. There are multiple options for databases such as MySQL, PostgreSQL, and Mongodb.</p>
+<h3>MySQL</h3>
+<p>https://gist.github.com/4220778</p>
+<h1>Deploying Rails</h1>
+<p>There are also several options for deploying your Rails application. The option that I am going to use is a nice little gem called <a href="https://github.com/mislav/git-deploy">git-deploy</a>.</p>
+<p>After following the directions for git-deploy:</p>
+<ul>
+<li>ssh into the server</li>
+<li>cd into you application</li>
+<li>check your Rails environment$ echo $RAILS_ENV
+<ul>
+<li>if it needs to be set:
+<ul>
+<li>add "export RAILS_ENV=staging" to the the ~/.bashrc</li>
+<li>$ source ~/.bashrc</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>run bundle</li>
+<li>rake db:create</li>
+<li>rake db:schema:load (if needed)</li>
+<li>rake db:migrate</li>
+<li>touch tmp/restart.txt</li>
+</ul>

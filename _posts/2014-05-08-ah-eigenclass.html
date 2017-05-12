@@ -1,0 +1,76 @@
+---
+layout: post
+title: Ah, Eigenclass
+date: 2014-05-08 11:13:23.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:14:\"Ah, Eigenclass\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2014-05-08
+    16:24:31\";s:9:\"permalink\";s:59:\"http://fifthsurprise.wordpress.com/2014/05/08/ah-eigenclass\";s:7:\"content\";s:4085:\"<div
+    class=\"reblogged-content\">There is a point in a Ruby-ist's life where you dig
+    a little too deep into the depths of metaprogramming.\r\n\r\nSometimes the result
+    is incredibly cool, like Rails. Rails uses a lot of metaprogramming in order to
+    save you a lot of effort.\r\n\r\nFor example, there's some nifty work being done
+    in order to create the find_by methods through combining method_missing and the
+    Eigenclass. This particular post is about the Eigenclass but you can find a pretty
+    good explanation of method_missing <a href=\"http://eugmill.com/blog/2014/05/05/ghost-methods-in-ruby-and-rails/\">here</a>.
+     But for more about Eigenclass, read on. <!--more-->\r\n\r\nActive Record will
+    provide dynamic finders for every known attribute on your table.\r\n\r\nSo if
+    your <em>Client </em>model has a filed <em>first_name</em>, you can have find_by_first_name
+    for free.\r\n\r\nCalling find_by_first_name works dynamically through the use
+    of method_missing in Object. Rails overrides method_missing for Active Record
+    so that the method can be dynamically defined.\r\n\r\nSpecifically:\r\n\r\n[code
+    language=\"ruby\"]\r\ndef method_missing(name, *arguments, &amp;amp;block)\r\n
+    \ match = Method.match(self, name)\r\n\r\n  if match &amp;amp;&amp;amp; match.valid?\r\n
+    \   match.define #define the method\r\n    send(name, *arguments, &amp;amp;block)\r\n
+    \ else\r\n    super\r\n  end\r\nend\r\n[/code]\r\n\r\nAnd this is where the method
+    actually gets defined:\r\n\r\n[code language=\"ruby\"]\r\ndef define\r\n  model.class_eval
+    &amp;lt;&amp;lt;-CODE, __FILE__, __LINE__ + 1\r\n  def self.#{name}(#{signature})\r\n
+    \   #{body}\r\n  end\r\n  CODE\r\nend\r\n[/code]\r\n\r\nSo we're defining a method
+    on to a class dynamically based on the attributes, which is pretty neat. But where
+    is this method? Is it somehow within the model's class?\r\n\r\nActually it's hiding
+    out in the Eigenclass (or the ghost class). What the heck is this?\r\n\r\nLet's
+    start with the name, which will help frame this post. Eigen means \"own\" in German/Dutch.
+    Class refers to the Ruby Class. So Eigenclass would be \"own class\". Hold on
+    to that, because we'll need to remember this down the line.\r\n\r\nSo first, some
+    ruby code:\r\n\r\n[code language=\"ruby\"]\r\nclass Animal\r\nend\r\n\r\nclass
+    Dog &amp;lt; Animal\r\nend\r\n\r\nhippo = Animal.new\r\n\r\npug = Dog.new\r\npoodle
+    = Dog.new\r\n\r\n#define an instance method/ singleton method\r\nclass &amp;lt;&amp;lt;
+    pug\r\n  def snore\r\n    \"ZzzzZZZzzz*snort*ZZZZzzz\"\r\n  end\r\nend\r\n\r\npug.snore
+    #=&amp;gt; \"ZzzzZZZzzz*snort*ZZZZzzz\"\r\npoodle.snore #=&amp;gt; NoMethodError\r\nhippo.snore
+    #=&amp;gt; NoMethodError\r\n\r\n#define a class's instance variable\r\nclass Dog\r\n
+    \ def bark\r\n    \"Woof woof\"\r\n  end\r\nend\r\n\r\npug.bark\r\npoodle.bark\r\nhippo.bark\r\n\r\n#define
+    a class variable\r\nclass Dog\r\n  class &amp;lt;&amp;lt; self\r\n    def types\r\n
+    \     \"Pug and Poodle\"\r\n    end\r\n  end\r\nend\r\n\r\nDog.singleton_methods
+    #=&amp;gt; [[0] types() Dog]]\r\npoodle.singleton_methods #=&amp;gt;\r\npug.singleton_methods
+    #=&amp;gt; [[0] types() Dog]]\r\n[/code]\r\n\r\nIn this example, I've defined
+    a class Animal and a subclass of Dog with various instances of each. As you can
+    see, you can define various methods and classes on the Class level or instance
+    level. These methods don't exist in the ether though. They're actually stored
+    in an anonymous class associated with either the instance or the class itself.
+    This anonymous class is the Eigenclass (the specific object's \"own\" class).\r\n\r\nThe
+    Eigenclass is anonymous but is inherited from a superclass's eigenclass. So every
+    class has its own hidden Eigenclass that the point to and ineherit from. The singleton
+    methods are actually instance methods of the associated Eigenclass.\r\n\r\nHow
+    is this getting used?\r\n\r\nWell let's say a Rails User model has an email attribute.
+    It would be useful to find a User based on the email (Ex. User.find_by_email(\"foo@foo.com\")).
+    Rails overrides method_missing so you can generate the right code to dynamically
+    find the object based on a given class attribute. But even more importantly, a
+    singleton method is defined on User's Eigenclass. This is applied on the class
+    level but could also be applied on the instance level.\r\n\r\nPowerful stuff!</div>\";}"
+  post_id: '118'
+  blog_id: '63964475'
+  is_reblog: '1'
+  _publicize_pending: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>I never knew how this worked nor heard of Eigenclass but have used find_by....  Nice clear explanation :)</p>

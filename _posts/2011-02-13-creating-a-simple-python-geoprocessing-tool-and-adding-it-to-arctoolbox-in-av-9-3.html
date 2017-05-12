@@ -1,0 +1,152 @@
+---
+layout: post
+title: Creating a simple Python Geoprocessing tool and adding it to ArcToolbox in
+  AV 9.3
+date: 2011-02-13 14:10:25.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Geoprocessing with Python
+tags: []
+meta:
+  _edit_last: '15714693'
+  _wpas_done_twitter: '1'
+  _wpas_done_fb: '1'
+  _oembed_c329d05700399ee9596da956cd0ce920: "{{unknown}}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p style="text-align:justify;background:white;"><span style="font-family:Georgia;font-size:10pt;color:#333333;">Ask and thou shalt receive… Well it seems as though there is a LOT of interest out there in Python Geoprocessing for <a class="zem_slink" title="ESRI" href="http://www.esri.com/" rel="homepage">ESRI</a> <a class="zem_slink" title="ArcView" href="http://www.esri.com/software/arcgis/arcview/index.html" rel="homepage">ArcView</a> 9.x.  This increased interest may be due to the release of ArcView 10 with ArcPy.  For those of you that do not know, Python has been shipped with ArcView for many years now.  The ArcToolbox tools are based on Python and when you create a model with the model builder you can export the <a class="zem_slink" title="Python (programming language)" href="http://www.python.org/" rel="homepage">Python code</a>.<br />
+</span></p>
+<p style="text-align:justify;background:white;"><span style="font-family:Georgia;font-size:10pt;color:#333333;">This week's tutorial will be creating a very simple Python geoprocessing script and then creating a new ArcToolbox tool and adding the Python script to the new toolbox.<br />
+</span></p>
+<p style="text-align:justify;background:white;"><span style="font-family:Georgia;font-size:10pt;color:#333333;">I once thought it would be nice to have a simple tool that told me all of the field names in a <a class="zem_slink" title="Shapefile" href="http://en.wikipedia.org/wiki/Shapefile" rel="wikipedia">shapefile</a>.  Sure I could open up the attribute table and see them but if I did that I wouldn't have written my simple tool.<br />
+</span></p>
+<p style="text-align:justify;background:white;"><span style="font-family:Georgia;font-size:11pt;color:#333333;"><strong>The Script<br />
+</strong></span></p>
+<p style="background:white;"><span style="font-family:Georgia;font-size:10pt;color:#808080;"><span style="color:#333333;">I think this script is simple enough to explain it with remark statements.</span><br />
+</span></p>
+<p style="background:white;">
+<p>[sourcecode language="Python"]</p>
+<p>#listfields.py<br />
+import sys, os, glob</p>
+<p># We need to create the geoprocessor object<br />
+import arcgisscripting<br />
+gp = arcgisscripting.create(9.3)</p>
+<p># We need to create an argument and assign it to the value of &quot;file&quot;<br />
+file = sys.argv[1]</p>
+<p># The workspace always needs to be identified and here we will use the location of &quot;file&quot;<br />
+gp.workspace = os.path.dirname(sys.argv[1])</p>
+<p># A good friend to use is the AddMessage.  This will print to the tool window.  Very useful with troubleshooting as well.<br />
+gp.AddMessage(&quot;Starting Process.....&quot;)</p>
+<p># Using ListFields, we get a list of the fields in the inputted &quot;file&quot;<br />
+fieldlist = gp.ListFields(&quot;&quot;+file+&quot;&quot;)<br />
+for field in fieldlist:<br />
+    FieldName = field.Name</p>
+<p>    # As we go thru the list, AddMessage will print each field name out to the tool window<br />
+    gp.AddMessage(FieldName)</p>
+<p># And we add one last message so that we know the entire process completed<br />
+gp.AddMessage(&quot;Process Complete&quot;)</p>
+<p>[/sourcecode]</p>
+<p style="background:white;">
+<p style="background:white;"><span style="font-family:Georgia;font-size:10pt;color:#333333;">Pretty simple stuff there, but I just wanted to use a simple script for this tutorial.<br />
+</span></p>
+<p style="background:white;">
+<p style="text-align:justify;background:white;"><span style="font-family:Georgia;font-size:11pt;color:#333333;"><strong>The Toolbox<br />
+</strong></span></p>
+<p style="text-align:justify;background:white;"><span style="font-family:Georgia;font-size:10pt;color:#333333;">Now we will create a new Toolbox where the list field's script will go.<br />
+</span></p>
+<ol>
+<li>
+<div style="text-align:justify;background:white;"><span style="font-family:Georgia;font-size:10pt;color:#333333;">In ArcToolbox, right click on the ArcToolbox folder at the top and select New Toolbox…<br />
+</span></div>
+<p style="text-align:justify;background:white;">
+<p style="text-align:justify;background:white;"><span style="color:#333333;"><img src="{{ site.baseurl }}/assets/021311_2110_creatingasi1.png" alt="" /><span style="font-family:Georgia;font-size:10pt;"><br />
+</span></span></p>
+<p style="text-align:justify;background:white;">
+</li>
+<li>
+<div style="text-align:justify;background:white;"><span style="font-family:Georgia;font-size:10pt;color:#333333;">Give your toolbox a name<br />
+</span></div>
+<p style="text-align:justify;background:white;">
+<p style="text-align:justify;background:white;"><span style="color:#333333;"><img src="{{ site.baseurl }}/assets/021311_2110_creatingasi2.png" alt="" /><span style="font-family:Georgia;font-size:10pt;"><br />
+</span></span></p>
+<p style="text-align:justify;background:white;">
+</li>
+<li>
+<div style="text-align:justify;background:white;"><span style="font-family:Georgia;font-size:10pt;color:#333333;">Right click on your new toolbox and select Add =&gt; Script<br />
+</span></div>
+<p style="text-align:justify;background:white;">
+<p style="text-align:justify;background:white;"><span style="color:#333333;"><img src="{{ site.baseurl }}/assets/021311_2110_creatingasi3.png" alt="" /><span style="font-family:Georgia;font-size:10pt;"><br />
+</span></span></p>
+<p style="text-align:justify;background:white;">
+</li>
+<li>
+<div style="text-align:justify;background:white;"><span style="font-family:Georgia;font-size:10pt;color:#333333;">Fill in the fields on the Add Script and click "Next". I always use the "Store <a class="zem_slink" title="Path (computing)" href="http://en.wikipedia.org/wiki/Path_%28computing%29" rel="wikipedia">relative path</a> names….." to make sharing the toolbox easier.<br />
+</span></div>
+<p style="text-align:justify;background:white;">
+<p style="text-align:justify;background:white;"><span style="color:#333333;"><img src="{{ site.baseurl }}/assets/021311_2110_creatingasi4.png" alt="" /><span style="font-family:Georgia;font-size:10pt;"><br />
+</span></span></p>
+<p style="text-align:justify;background:white;">
+</li>
+<li>
+<div style="text-align:justify;background:white;"><span style="font-family:Georgia;font-size:10pt;color:#333333;">Select the listfields.py file and check the "Run Python script in process" then click "Next"<br />
+</span></div>
+<p style="text-align:justify;background:white;">
+<p style="text-align:justify;background:white;"><span style="color:#333333;"><img src="{{ site.baseurl }}/assets/021311_2110_creatingasi5.png" alt="" /><span style="font-family:Georgia;font-size:10pt;"><br />
+</span></span></p>
+<p style="text-align:justify;background:white;">
+</li>
+<li>
+<div style="text-align:justify;background:white;"><span style="color:#333333;"><span style="font-family:Georgia;font-size:10pt;">Now the hard part. In the script that we created, there was one argument that we used "</span><span style="font-family:Consolas;font-size:9pt;">file = sys.argv[1]" </span><span style="font-family:Georgia;font-size:10pt;">The beauty of Python geoprocessing is that there is a user interface to work with and you do not have to write all of the requirements for your inputs or output.<br />
+</span></span></div>
+<ol>
+<li>
+<div style="text-align:justify;background:white;"><span style="font-family:Georgia;font-size:10pt;color:#333333;">The display name is what you will see in the tool. For this example we will use "Select your file:"<br />
+</span></div>
+</li>
+<li>
+<div style="text-align:justify;background:white;"><span style="font-family:Georgia;font-size:10pt;color:#333333;">The Data Type produces a drop down to choose what type of file is to be selected. For this example we will use "Shapefile"<br />
+</span></div>
+<p style="text-align:justify;background:white;">
+<p style="text-align:justify;background:white;"><span style="color:#333333;"><img src="{{ site.baseurl }}/assets/021311_2110_creatingasi6.png" alt="" /><span style="font-family:Georgia;font-size:10pt;"><br />
+</span></span></p>
+<p style="text-align:justify;background:white;">
+</li>
+<li>
+<div style="text-align:justify;background:white;"><span style="font-family:Georgia;font-size:10pt;color:#333333;">The default Parameter Properties will all be correct for this example. These properties are used to control each of the Parameters (in this example we only have the "Select your file:") Settings vary from Required or optional field, input or output direction etc.. Click "Finish"<br />
+</span></div>
+</li>
+</ol>
+<p style="text-align:justify;background:white;">
+<p style="text-align:justify;background:white;margin-left:36pt;"><span style="color:#333333;"><img src="{{ site.baseurl }}/assets/021311_2110_creatingasi7.png" alt="" /><span style="font-family:Georgia;font-size:10pt;"><br />
+</span></span></p>
+<p style="text-align:justify;background:white;margin-left:36pt;">
+</li>
+<li>
+<div style="text-align:justify;background:white;"><span style="font-family:Georgia;font-size:10pt;color:#333333;">That is all there is to it. You now have your new toolbox entitled "My tools" and within that toolbox a new tool entitled "ListFields"<br />
+</span></div>
+<p style="text-align:justify;background:white;">
+<p style="text-align:justify;background:white;"><span style="color:#333333;"><img src="{{ site.baseurl }}/assets/021311_2110_creatingasi8.png" alt="" /><span style="font-family:Georgia;font-size:10pt;"><br />
+</span></span></p>
+</li>
+<li>
+<div style="text-align:justify;background:white;"><span style="font-family:Georgia;font-size:10pt;color:#333333;">As with any Toolbox tool, click on the new tool to open it:<br />
+</span></div>
+<p style="text-align:justify;background:white;">
+<p style="text-align:justify;background:white;"><span style="color:#333333;"><img src="{{ site.baseurl }}/assets/021311_2110_creatingasi9.png" alt="" /><span style="font-family:Georgia;font-size:10pt;"><br />
+</span></span></p>
+<p style="text-align:justify;background:white;">
+<p style="text-align:justify;background:white;">
+</li>
+</ol>
+<p style="text-align:justify;background:white;"><span style="font-family:Georgia;font-size:10pt;color:#333333;">Go ahead and select a file and click "OK".<br />
+</span></p>
+<p style="text-align:justify;background:white;">
+<p style="text-align:justify;background:white;"><span style="color:black;font-family:Georgia;font-size:10pt;"><span style="color:#333333;">Obviously this is a basic example of what can be done but it is a start.</span><br />
+</span></p>

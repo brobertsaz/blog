@@ -1,0 +1,354 @@
+---
+layout: post
+title: Ruby on Rails for Beginners
+date: 2015-06-23 20:06:32.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  is_reblog: '1'
+  post_id: '123'
+  blog_id: '93770222'
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:27:\"Ruby on Rails for Beginners\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2015-06-18
+    08:29:56\";s:9:\"permalink\";s:81:\"https://ashishpatilwebtricks.wordpress.com/2015/06/18/ruby-on-rails-for-beginners\";s:7:\"content\";s:26455:\"<div
+    class=\"reblogged-content\">\n\nIf you’re like me, you’re reading this on your
+    bright-red custom-built laptop in a soothing rosemary-scented bubble bath, and
+    you’re wondering, “Why do I want another interpreted programming language? I can
+    find my way around Perl and PHP and maybe a little Python. <i>And</i> Unix shell
+    scripting. I feel fine. Why do people keep <a class=\"external text\" title=\"http://del.icio.us/tag/ruby/\"
+    href=\"http://del.icio.us/tag/ruby/\" target=\"_blank\" rel=\"nofollow\">talking
+    about Ruby</a>?”\r\n<table id=\"toc\" class=\"toc\" summary=\"Contents\"><tbody><tr>\n<td>\r\n<div
+    id=\"toctitle\">\r\n<h2>Contents</h2>\r\n</div>\r\n<ol>\n<li>Why Ruby is Cool</li>\r\n\t<li>Why
+    Rails Is Cool</li>\r\n\t<li>Installing Ruby and Rails</li>\r\n\t<li>Using It\r\n<ol>\n<li>Step
+    one:Set up the database</li>\r\n\t<li>Step two:Create the scaffolding</li>\r\n\t<li>Steps
+    three and beyond:Customize the application</li>\r\n</ol>\n</li>\r\n</ol>\n</td>\r\n</tr></tbody></table>\n<a
+    name=\"Why_Ruby_is_Cool\"></a>\r\n<h3><span class=\"mw-headline\">Why Ruby is
+    Cool</span></h3>\r\nLike so many of the very coolest things, Ruby was invented
+    in Japan in the ’90s. Ruby is purely object-oriented; even things like integers
+    and strings have intrinsic methods and properties. So, for example, <tt>print
+    \"Webmonkey\".reverse</tt> outputs “yeknombeW”. It’s a clean, pretty language,
+    with a flexible, predictable syntax that’s easy to read and write, and comfortable
+    for people coming from Perl or C.\r\n\r\nIt’s more than easy to learn and use
+    though — it’s fun, especially if you use <a class=\"external text\" title=\"http://poignantguide.net/ruby/\"
+    href=\"http://poignantguide.net/ruby/\" target=\"_blank\" rel=\"nofollow\">Why’s
+    (Poignant) Guide to Ruby</a>, an engrossing, whimsical adventure story that reads
+    like a collaboration between <a class=\"external text\" title=\"http://en.wikipedia.org/wiki/Stanislaw_Lem\"
+    href=\"http://en.wikipedia.org/wiki/Stanislaw_Lem\" target=\"_blank\" rel=\"nofollow\">Stanislaw
+    Lem</a> and <a class=\"external text\" title=\"http://en.wikipedia.org/wiki/Edward_Lear\"
+    href=\"http://en.wikipedia.org/wiki/Edward_Lear\" target=\"_blank\" rel=\"nofollow\">Ed
+    Lear</a> and just happens to teach the reader Ruby (and the love of Ruby). (Note
+    to editor:can you get this guy to write for Webmonkey?)\r\n\r\n<a name=\"Why_Rails_Is_Cool\"></a>\r\n<h3><span
+    class=\"mw-headline\">Why Rails Is Cool</span></h3>\r\nMuch of the attention being
+    heaped on Ruby these days is fueled by <a class=\"external text\" title=\"http://rubyonrails.com/\"
+    href=\"http://rubyonrails.com/\" target=\"_blank\" rel=\"nofollow\">Rails</a>,
+    a framework for using Ruby to make web applications. Ruby on Rails has been used
+    for a handful of high-profile sites, such as <a class=\"external text\" title=\"http://www.basecamphq.com/\"
+    href=\"http://www.basecamphq.com/\" target=\"_blank\" rel=\"nofollow\">Basecamp</a>
+    and <a class=\"external text\" title=\"http://www.backpackit.com/\" href=\"http://www.backpackit.com/\"
+    target=\"_blank\" rel=\"nofollow\">Backpack</a>.\r\n\r\nRails is much more than
+    just a tube of glue with which to stick Ruby on the web. And of course, it’s possible
+    to program web apps in Ruby without getting Rails involved — just tell Apache
+    to invoke your Ruby scripts via CGI. Rails is a programming toolbox, with a wealth
+    of pre-written code that implements the structure and many of the common functions
+    of a database-driven site. That eliminates much of the preliminary busywork necessary
+    to create such a site, but also enforces a tight, sane structure on the code,
+    which has the effect of making development very facile. It’s like working in a
+    well-organized company:it takes a little time to figure out who sits where and
+    what they do, but once you understand the structure, you can use it to your advantage
+    without having to make lots of micro-managerial decisions all the time.\r\n\r\nRails
+    uses a <a class=\"external text\" title=\"http://en.wikipedia.org/wiki/MVC\" href=\"http://en.wikipedia.org/wiki/MVC\"
+    target=\"_blank\" rel=\"nofollow\">model-view-controller</a> style of architecture,
+    in which the database and its representation (“model”), the user interface (“view”),
+    and the functional logic (“controller”) of the application are all kept neatly
+    separate. The advantages of this architecture can be debated, but at least it
+    means you have to try pretty hard if you want to make an application that’s not
+    clean, portable, and sharable.\r\n\r\nAnd easy. All over the web you’ll find testaments
+    to how “The first time I ever looked at Ruby on Rails, I built a mobile-platform,
+    social-networked auction site in six hours with one hand, while making this awesome
+    Ajax-enabled to-do-list manager with the other!”\r\n\r\nRegardless of Rails’s
+    actual merits, the enthusiasm — fueled by things like the Rails Day festival,
+    in which hundreds of competing developers had 24 hours to build a web app — is
+    contagious. Let’s join the party!\r\n\r\n<a name=\"Installing_Ruby_and_Rails\"></a>\r\n<h3><span
+    class=\"mw-headline\">Installing Ruby and Rails</span></h3>\r\nFor integration
+    into an existing web setup, Rails can run under Apache via CGI or <a class=\"external
+    text\" title=\"http://www.fastcgi.com/\" href=\"http://www.fastcgi.com/\" target=\"_blank\"
+    rel=\"nofollow\">FastCGI</a>. It also comes conveniently bundled with its own
+    web server software, WEBrick, which is written in Ruby and serves sites on port
+    3000 by default, making it easy to test RoR apps on a development machine.\r\n\r\nCool
+    people who manage their own web servers can install first Ruby and then Rails
+    (you’ll also need a database, like MySQL or PostgreSQL) and get started — the
+    <a class=\"external text\" title=\"http://wiki.rubyonrails.com/rails/show/GettingStartedWithRails\"
+    href=\"http://wiki.rubyonrails.com/rails/show/GettingStartedWithRails\" target=\"_blank\"
+    rel=\"nofollow\">official installation instructions</a> are more comprehensive,
+    platform by platform, than I could ever hope to be. Rails hasn’t become a popular
+    offering on hosting services the way Perl and PHP are. If you pay for hosting
+    on a shared server, your experience may vary. You can beg the host to install
+    it on the server, or install your own Rails and work around snags you encounter.
+    If you just want a version to play around with on your local Windows machine,
+    Curt Hibbs goes into painstaking detail <a class=\"external text\" title=\"http://www.onlamp.com/pub/a/onlamp/2005/01/20/rails.html\"
+    href=\"http://www.onlamp.com/pub/a/onlamp/2005/01/20/rails.html\" target=\"_blank\"
+    rel=\"nofollow\">here</a>. We can just use the built-in web server to start with,
+    and you can configure it to work with your Apache installation later.\r\n\r\n<a
+    name=\"Using_It\"></a>\r\n<h3><span class=\"mw-headline\">Using It</span></h3>\r\nHowever
+    you get your RoR on your system, the procedure is pretty simple once it’s installed.
+    Let’s take a stroll through building a basic application. How about a bookmark
+    manager? We’re only going to walk through the starter steps, so if you want an
+    actual full-featured bookmark manager at the end of the day, I am not your guy.
+    I can only teach you to fish; poaching the result in a nice court-bouillon is
+    up to you.\r\n\r\nGrab your stopwatches — let’s see how long it takes to get this
+    site off the ground.\r\n\r\n<a name=\"Step_one:Set_up_the_database\"></a>\r\n<h4><span
+    class=\"mw-headline\">Step one:Set up the database</span></h4>\r\nLet’s create
+    the MySQL database that Rails is going to use to store our bookmarks. Rails is
+    particular about certain things. Mainly, it likes the primary key in the database
+    table to be an auto-incremented integer called ‘id’, and the database table to
+    have a plural name (i.e., ending in ‘s’). Ours will be “bookmarks”; woe unto you
+    if you want Rails to organize your gooses. Me, I want the table to store a URL,
+    a name, and a description for each bookmark. So, using my command-line MySQL interface,
+    I create the database:\r\n<div id=\"highlighter_630022\" class=\"syntaxhighlighter
+    \ \">\r\n<div class=\"lines\">\r\n<div class=\"line alt1\">\r\n<table><tbody><tr>\n<td
+    class=\"number\"><code>1</code></td>\r\n<td class=\"content\"><code class=\"plain\">mysql&gt;
+    CREATE DATABASE bookmarker;</code></td>\r\n</tr></tbody></table>\n</div>\r\n</div>\r\n</div>\r\nand
+    then create and populate the table within it:\r\n<div id=\"highlighter_243624\"
+    class=\"syntaxhighlighter  \">\r\n<div class=\"lines\">\r\n<div class=\"line alt1\">\r\n<table><tbody><tr>\n<td
+    class=\"number\"><code>1</code></td>\r\n<td class=\"content\"><code class=\"plain\">mysql&gt;
+    USE DATABASE bookmarker;</code></td>\r\n</tr></tbody></table>\n</div>\r\n</div>\r\n</div>\r\n<i>note:</i>
+    some versions of MySQL don’t require the <b>DATABASE</b> keyword.\r\n<div id=\"highlighter_79642\"
+    class=\"syntaxhighlighter  \">\r\n<div class=\"lines\">\r\n<div class=\"line alt1\">\r\n<table><tbody><tr>\n<td
+    class=\"number\"><code>01</code></td>\r\n<td class=\"content\"><code class=\"plain\">mysql&gt;
+    CREATE TABLE bookmarks (</code></td>\r\n</tr></tbody></table>\n</div>\r\n<div
+    class=\"line alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>02</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>03</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>04</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>05</code></td>\r\n<td
+    class=\"content\">\n<code class=\"spaces\">  </code><code class=\"plain\">-&gt; 
+    id SMALLINT (5) NOT NULL auto_increment,</code>\n</td>\r\n</tr></tbody></table>\n</div>\r\n<div
+    class=\"line alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>06</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>07</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>08</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>09</code></td>\r\n<td
+    class=\"content\">\n<code class=\"spaces\">  </code><code class=\"plain\">-&gt; 
+    url VARCHAR (255),</code>\n</td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>10</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>11</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>12</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>13</code></td>\r\n<td
+    class=\"content\">\n<code class=\"spaces\">  </code><code class=\"plain\">-&gt; 
+    name VARCHAR (100),</code>\n</td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>14</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>15</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>16</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>17</code></td>\r\n<td
+    class=\"content\">\n<code class=\"spaces\">  </code><code class=\"plain\">-&gt; 
+    description VARCHAR (255),</code>\n</td>\r\n</tr></tbody></table>\n</div>\r\n<div
+    class=\"line alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>18</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>19</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>20</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>21</code></td>\r\n<td
+    class=\"content\">\n<code class=\"spaces\">  </code><code class=\"plain\">-&gt; 
+    PRIMARY KEY (id)</code>\n</td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>22</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>23</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>24</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>25</code></td>\r\n<td
+    class=\"content\">\n<code class=\"spaces\">  </code><code class=\"plain\">-&gt;
+    );</code>\n</td>\r\n</tr></tbody></table>\n</div>\r\n</div>\r\n</div>\r\nIf you
+    have a mouse and like to administer your MySQL in some snazzier way, feel free
+    to use that instead.\r\n\r\n<a name=\"Step_two:Create_the_scaffolding\"></a>\r\n<h4><span
+    class=\"mw-headline\">Step two:Create the scaffolding</span></h4>\r\nNow the magic
+    begins. Regardless of the nature of a Rails app, the first step, once the database
+    is in place, is to create a starter framework. In a nice fresh directory, we type
+    the magic words on the command line:\r\n<div id=\"highlighter_85920\" class=\"syntaxhighlighter
+    \ \">\r\n<div class=\"lines\">\r\n<div class=\"line alt1\">\r\n<table><tbody><tr>\n<td
+    class=\"number\"><code>1</code></td>\r\n<td class=\"content\"><code class=\"plain\">rails
+    Bookmarker</code></td>\r\n</tr></tbody></table>\n</div>\r\n</div>\r\n</div>\r\nAnd
+    Rails automatically creates a directory called Bookmarker containing eleven subdirectories
+    which constitute our budding application. Let’s pause here to take a brief look
+    at what goes into a Rails app.\r\n<div id=\"highlighter_220138\" class=\"syntaxhighlighter
+    \ \">\r\n<div class=\"lines\">\r\n<div class=\"line alt1\">\r\n<table><tbody><tr>\n<td
+    class=\"number\"><code>1</code></td>\r\n<td class=\"content\"><code class=\"plain\">$
+    ls Bookmarker</code></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>2</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>3</code></td>\r\n<td
+    class=\"content\"><code class=\"plain\">CHANGELOG README Rakefile app/ components/
+    config/ db/ doc/ lib/ log/ public/ script/ test/ vendor/</code></td>\r\n</tr></tbody></table>\n</div>\r\n</div>\r\n</div>\r\n<tt>public</tt>
+    is the public face of the application. It’s the only directory of the bunch that
+    the web server has access to. It contains the dispatch scripts, which are the
+    intermediaries between the browser and the application, and the directories where
+    we’ll put images, JavaScript and CSS.\r\n\r\nThe <tt>app</tt> directory contains
+    the meat of our application, including some elements you may remember from a few
+    sections ago:\r\n<div id=\"highlighter_749442\" class=\"syntaxhighlighter  \">\r\n<div
+    class=\"lines\">\r\n<div class=\"line alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>1</code></td>\r\n<td
+    class=\"content\"><code class=\"plain\">ls Bookmarker/app</code></td>\r\n</tr></tbody></table>\n</div>\r\n<div
+    class=\"line alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>2</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>3</code></td>\r\n<td
+    class=\"content\">\n<code class=\"spaces\"> </code><code class=\"plain\">apis/ 
+    controllers/  helpers/  models/  views/</code>\n</td>\r\n</tr></tbody></table>\n</div>\r\n</div>\r\n</div>\r\nWithin
+    this directory, <tt>controllers</tt> contains the functional Ruby code that drives
+    the application, <tt>models</tt> contains a description of the database, and <tt>views</tt>
+    contains <tt>.rhtml</tt> template files that control the visible HTML output of
+    the methods. There is one template for each method of our application.\r\n\r\nWhat
+    else? <tt>log</tt> contains logs, <tt>doc</tt> will contain documentation. <tt>script</tt>
+    contains some helpful executable scripts for working with Rails. <tt>config</tt>
+    contains configuration info, which we’ll set up right now.\r\n\r\n<tt>config/database.yml</tt>
+    is a <a class=\"external text\" title=\"http://www.yaml.org/\" href=\"http://www.yaml.org/\"
+    rel=\"nofollow\">YAML</a> file that tells Rails where the database is. We open
+    it in a text editor and modify the first stanza to reflect the database we created
+    above:\r\n<div id=\"highlighter_668162\" class=\"syntaxhighlighter  \">\r\n<div
+    class=\"lines\">\r\n<div class=\"line alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>01</code></td>\r\n<td
+    class=\"content\"><code class=\"plain\">development:</code></td>\r\n</tr></tbody></table>\n</div>\r\n<div
+    class=\"line alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>02</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>03</code></td>\r\n<td
+    class=\"content\">\n<code class=\"spaces\">   </code><code class=\"plain\">adapter:mysql</code>\n</td>\r\n</tr></tbody></table>\n</div>\r\n<div
+    class=\"line alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>04</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>05</code></td>\r\n<td
+    class=\"content\">\n<code class=\"spaces\">   </code><code class=\"plain\">database:bookmarker</code>\n</td>\r\n</tr></tbody></table>\n</div>\r\n<div
+    class=\"line alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>06</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>07</code></td>\r\n<td
+    class=\"content\">\n<code class=\"spaces\">   </code><code class=\"plain\">host:localhost</code>\n</td>\r\n</tr></tbody></table>\n</div>\r\n<div
+    class=\"line alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>08</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>09</code></td>\r\n<td
+    class=\"content\">\n<code class=\"spaces\">   </code><code class=\"plain\">username:root</code>\n</td>\r\n</tr></tbody></table>\n</div>\r\n<div
+    class=\"line alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>10</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>11</code></td>\r\n<td
+    class=\"content\">\n<code class=\"spaces\">   </code><code class=\"plain\">password:</code><code
+    class=\"string\">''</code><code class=\"plain\">s3cr3t</code><code class=\"string\">''</code>\n</td>\r\n</tr></tbody></table>\n</div>\r\n</div>\r\n</div>\r\nNext
+    we use one of the included tools to generate the components of our application:\r\n<div
+    id=\"highlighter_778918\" class=\"syntaxhighlighter  \">\r\n<div class=\"lines\">\r\n<div
+    class=\"line alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>1</code></td>\r\n<td
+    class=\"content\"><code class=\"plain\">$ ruby ./Bookmarker/script/generate scaffold
+    Bookmark</code></td>\r\n</tr></tbody></table>\n</div>\r\n</div>\r\n</div>\r\nModels
+    are capitalized, controllers are not. Don’t ask me why. Again, if your app delivers
+    synergetic enterprise solutions leveraging seminal proto-alternative band fIREHOSE,
+    you’re on your own.\r\n\r\nWe have just created a controller, a model and a handful
+    of views. Let’s fire up WEBrick, Rails’ built-in web server software, on port
+    3000, so we can check out the site we just MADE! For the record, make sure there’s
+    no firewall between you and WEBrick.\r\n<div id=\"highlighter_213266\" class=\"syntaxhighlighter
+    \ \">\r\n<div class=\"lines\">\r\n<div class=\"line alt1\">\r\n<table><tbody><tr>\n<td
+    class=\"number\"><code>1</code></td>\r\n<td class=\"content\"><code class=\"plain\">$
+    ruby ./Bookmarker/script/server</code></td>\r\n</tr></tbody></table>\n</div>\r\n</div>\r\n</div>\r\nNow
+    we point our browser to <a class=\"external free\" title=\"http://oursite.org:3000/bookmarks\"
+    href=\"http://oursite.org:3000/bookmarks\" rel=\"nofollow\">http://oursite.org:3000/bookmarks</a>
+    (because “bookmarks” is the name of the <i>controller</i>) and wow! We have a
+    working bookmark manager. The scaffolding we created with a single line of typing
+    already includes functions to create, delete and edit bookmarks. Stop the stopwatches!
+    Do you see yet why people say this is easy? All that remains is customization.\r\n\r\n<a
+    name=\"Steps_three_and_beyond:Customize_the_application\"></a>\r\n<h4><span class=\"mw-headline\">Steps
+    three and beyond:Customize the application</span></h4>\r\nAll the functions of
+    the application — create, edit, destroy — are Ruby methods, defined in <tt>app/controllers/bookmarks_controller.rb</tt>,
+    and each is displayed by an .rhtml template in the <tt>models</tt> directory.
+    The core of Rails development involves modifying these files with custom code,
+    to turn a basic Show-Edit-Destroy database front-end into a <a class=\"external
+    text\" title=\"http://tadalist.com\" href=\"http://tadalist.com\" rel=\"nofollow\">Ta-Da
+    List</a>. Let’s add a clickable link to each bookmark that points to the relevant
+    URL. Let us take a look at <tt>views/list.rhtml</tt>.\r\n\r\nRuby’s .rhtml templates
+    are <a class=\"external text\" title=\"http://api.rubyonrails.com/classes/ActionView/Base.html\"
+    href=\"http://api.rubyonrails.com/classes/ActionView/Base.html\" rel=\"nofollow\">Embedded
+    Ruby</a>, which uses <tt> %=</tt> and <tt> %</tt> tags to interpolate Ruby code
+    into HTML documents. The former is used when you want the Ruby’s output displayed
+    in the browser, the latter when you just want to run some method behind the scenes
+    and not output anything. So in <tt>views/bookmark.rb</tt>, we see:\r\n<div id=\"highlighter_493302\"
+    class=\"syntaxhighlighter  \">\r\n<div class=\"lines\">\r\n<div class=\"line alt1\">\r\n<table><tbody><tr>\n<td
+    class=\"number\"><code>1</code></td>\r\n<td class=\"content\">\n<code class=\"plain\">&lt;td&gt;&lt;%=
+    link_to </code><code class=\"string\">'Show'</code><code class=\"plain\">, :action
+    =&gt; </code><code class=\"string\">'show'</code><code class=\"plain\">, :id =&gt;
+    bookmark</code>\n</td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line alt2\">\r\n<table><tbody><tr>\n<td
+    class=\"number\"><code>2</code></td>\r\n<td class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div
+    class=\"line alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>3</code></td>\r\n<td
+    class=\"content\"><code class=\"plain\">%&gt;&lt;/td&gt;</code></td>\r\n</tr></tbody></table>\n</div>\r\n<div
+    class=\"line alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>4</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>5</code></td>\r\n<td
+    class=\"content\">\n<code class=\"plain\">&lt;td&gt;&lt;%= link_to </code><code
+    class=\"string\">'Edit'</code><code class=\"plain\">, :action =&gt; </code><code
+    class=\"string\">'edit'</code><code class=\"plain\">, :id =&gt; bookmark</code>\n</td>\r\n</tr></tbody></table>\n</div>\r\n<div
+    class=\"line alt2\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>6</code></td>\r\n<td
+    class=\"content\"></td>\r\n</tr></tbody></table>\n</div>\r\n<div class=\"line
+    alt1\">\r\n<table><tbody><tr>\n<td class=\"number\"><code>7</code></td>\r\n<td
+    class=\"content\"><code class=\"plain\">%&gt;&lt;/td&gt;</code></td>\r\n</tr></tbody></table>\n</div>\r\n</div>\r\n</div>\r\nThat
+    code, which runs once for each bookmark in the database table, uses Ruby’s <a
+    class=\"external text\" title=\"http://api.rubyonrails.com/classes/ActionView/Helpers/UrlHelper.html#M000304\"
+    href=\"http://api.rubyonrails.com/classes/ActionView/Helpers/UrlHelper.html#M000304\"
+    rel=\"nofollow\">link_to()</a> method to create <tt>a href</tt> link tags on the
+    page that invoke the show and edit methods. Let’s add another link, pointing to
+    the bookmarked page, for each bookmark:\r\n<div id=\"highlighter_623876\" class=\"syntaxhighlighter
+    \ \">\r\n<div class=\"lines\">\r\n<div class=\"line alt1\">\r\n<table><tbody><tr>\n<td
+    class=\"number\"><code>1</code></td>\r\n<td class=\"content\">\n<code class=\"plain\">&lt;td&gt;&lt;%=
+    link_to </code><code class=\"string\">'Open'</code><code class=\"plain\">, bookmark[</code><code
+    class=\"string\">\"url\"</code><code class=\"plain\">] %&gt;&lt;/td&gt;</code>\n</td>\r\n</tr></tbody></table>\n</div>\r\n</div>\r\n</div>\r\nSimply
+    enough, that creates a link whose text is “Open” and whose target is the URL value
+    for the current bookmark.\r\n\r\nLet’s look at one slightly more complicated example
+    before we go our separate ways today. Since the bookmark manager just has users
+    typing in URLs, we should check (at the very least) whether they have an “http://”
+    prefix already before throwing up a link to them. As with many commonly desirable
+    features, Rails has a pre-existing way to do that. In <tt>models/bookmark.rb</tt>,
+    we add a method call to the class definition:\r\n<div id=\"highlighter_948909\"
+    class=\"syntaxhighlighter  \">\r\n<div class=\"lines\">\r\n<div class=\"line alt1\">\r\n<table><tbody><tr>\n<td
+    class=\"number\"><code>1</code></td>\r\n<td class=\"content\">\n<code class=\"plain\">validates_format_of :url, :</code><code
+    class=\"keyword\">with</code> <code class=\"plain\">=&gt; /^http:</code><code
+    class=\"comments\">///, :message =&gt; \"needs to begin with 'http'.\"</code>\n</td>\r\n</tr></tbody></table>\n</div>\r\n</div>\r\n</div>\r\nNow,
+    when the user tries to create a new bookmark, that method will check the URL attribute
+    against the regular expression, and, if it doesn’t begin with “http://”, then
+    our little error message will be displayed. Documentation for the <tt>validates_format_of()</tt>
+    method is available <a class=\"external text\" title=\"http://api.rubyonrails.com/classes/ActiveRecord/Validations/ClassMethods.html#M000644\"
+    href=\"http://api.rubyonrails.com/classes/ActiveRecord/Validations/ClassMethods.html#M000644\"
+    rel=\"nofollow\">on the application site</a>.\r\n\r\nGo ahead and keep polishing
+    the bookmarker app. Learn some Ruby — it almost learns itself! Add CSS to <tt>public/stylesheets/scaffold.css</tt>,
+    add new functionality to the controller, modify the database model, hook in an
+    Ajax bookmarklet, whatever you’d like.\r\n\r\nRails’ cleverness — things like
+    auto-naming submit buttons after their actions — and Ruby’s flexibility — you
+    can rewrite any method you don’t quite like — form a powerful combo. Because of
+    Ruby’s reasonably intuitive way of doing things, getting from a starter scaffolding
+    to a finished application is a short and pleasurable journey. If Rails sometimes
+    seems like a domineering older sibling, insisting that you build your project
+    the way it wants you to, well then, both of you probably still have some growing
+    to do.</div>\";}"
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:7641025;s:53:"https://twitter.com/bobr_az/status/613543711146795008";}}
+  _publicize_done_7639684: '1'
+  _wpas_done_7641025: '1'
+  publicize_twitter_user: bobr_az
+  _publicize_failed_7776411: |-
+    O:13:"Keyring_Error":2:{s:6:"errors";a:1:{s:21:"keyring-request-error";a:1:{i:0;a:5:{s:7:"headers";a:11:{s:6:"server";s:17:"Apache-Coyote/1.1";s:15:"x-li-request-id";s:10:"ZYHX8QC11P";s:4:"date";s:29:"Wed, 24 Jun 2015 03:06:36 GMT";s:4:"vary";s:1:"*";s:11:"x-li-format";s:4:"json";s:12:"content-type";s:30:"application/json;charset=UTF-8";s:16:"content-encoding";s:4:"gzip";s:11:"x-li-fabric";s:9:"prod-ltx1";s:8:"x-li-pop";s:9:"prod-ltx1";s:9:"x-li-uuid";s:24:"7JFCGquN6hPQQHPA0ioAAA==";s:10:"set-cookie";s:154:"lidc="b=TB23:g=152:u=42:i=1435115197:t=1435189425:s=AQFWIMf5kHnqDQUS6V8jveSPV_W39LaC"; Expires=Wed, 24 Jun 2015 23:43:45 GMT; domain=.linkedin.com; Path=/";}s:4:"body";s:175:"{
+      "errorCode": 0,
+      "message": "[unauthorized]. Expired access token. Timestamp: 1408945124610",
+      "requestId": "ZYHX8QC11P",
+      "status": 401,
+      "timestamp": 1435115197351
+    }";s:8:"response";a:2:{s:4:"code";i:401;s:7:"message";s:12:"Unauthorized";}s:7:"cookies";a:1:{i:0;O:14:"WP_Http_Cookie":5:{s:4:"name";s:4:"lidc";s:5:"value";s:80:""b=TB23:g=152:u=42:i=1435115197:t=1435189425:s=AQFWIMf5kHnqDQUS6V8jveSPV_W39LaC"";s:7:"expires";i:1435189425;s:4:"path";s:1:"/";s:6:"domain";s:13:".linkedin.com";}}s:8:"filename";N;}}}s:10:"error_data";a:0:{}}
+  _oembed_d81ec26dd3d78e46f810e03f86c2aa37: "{{unknown}}"
+  _oembed_9f356ee57deafd14dbb68243e0e5e7e5: "{{unknown}}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>Super deep RoR for Beginners</p>

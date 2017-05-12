@@ -1,0 +1,47 @@
+---
+layout: post
+title: Joining a table to a feature class
+date: 2010-08-22 18:19:56.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Geoprocessing with Python
+tags:
+- GIS Geoprocessing in Python
+meta:
+  _edit_last: '15714693'
+  _wp_old_slug: ''
+  _wpas_skip_twitter: '1'
+  _wpas_skip_fb: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>I have had the need to join tables to a <a class="zem_slink" title="Shapefile" rel="wikipedia" href="http://en.wikipedia.org/wiki/Shapefile">shapefile</a> or feature class many times and after not finding anything on the web, I posted on the <a class="zem_slink" title="ESRI" rel="homepage" href="http://www.esri.com/">ESRI</a> forum and got my solution.</p>
+<p>The difference with joining a table is that it is a one way join.  That is, you can copy from the table to the feature but not the other way around.</p>
+<p>[sourcecode language="Python"]<br />
+gp.MakeFeatureLayer(&quot;temp.shp&quot;, &quot;temp&quot;)<br />
+ joinTable = &quot;temp2.dbf&quot;<br />
+ gp.AddJoin_management(&quot;temp&quot;, &quot;field 1&quot;, joinTable, &quot;field 1&quot;)<br />
+ gp.CalculateField_management(&quot;temp&quot;, &quot;Field_2&quot;, &quot;[temp2.Field_2]&quot;)<br />
+ gp.RemoveJoin_management(&quot;temp&quot;, &quot;temp2.dbf&quot;)</p>
+<p>[/sourcecode]</p>
+<p>I originally tried making a tableview of the table but found that it wasn't necessary to do so.  Notice that because it is a table, tou need the [] around the table that is being read from.</p>
+<p>I find this function very useful as I often have the need to read from a table and copy values over to a shapefile.</p>
+<p>In this instance I needed to join a table to a table.  The first table  (table 1) was an input table and the second table (table 2) was a copy of the .dbf from a shapefile.</p>
+<p>[sourcecode language="Python"]</p>
+<p>gp.AddMessage(&quot;Making Layer &amp; View...&quot;)<br />
+ # Make Feature Layer from Stops<br />
+ gp.Copy_management(sys.argv[3], &quot;temp.dbf&quot;)<br />
+ gp.MakeTableView_management(&quot;temp2.dbf&quot;, &quot;temp2&quot;)<br />
+ joinTable1 = &quot;temp.dbf&quot;<br />
+ joinTable2 = &quot;temp2&quot;<br />
+ gp.AddJoin_management(joinTable1, &quot;field_1&quot;, joinTable2, &quot;field_2&quot;)<br />
+ gp.AddMessage(&quot;Joined table views&quot;)<br />
+ gp.CalculateField_management(&quot;temp2&quot;, &quot;TIME&quot;, &quot;[temp.TIME]&quot;)<br />
+ gp.RemoveJoin_management(&quot;temp2&quot;, &quot;temp.dbf&quot;)</p>
+<p>[/sourcecode]</p>

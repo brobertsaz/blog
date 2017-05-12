@@ -1,0 +1,54 @@
+---
+layout: post
+title: acts_as_taggable_on + select2 = Super Easy Tags in Rails
+date: 2014-04-04 16:24:59.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  reblog_snapshot: "O:8:\"stdClass\":8:{s:5:\"title\";s:56:\"acts_as_taggable_on +
+    select2 = Super Easy Tags in Rails\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2013-07-09
+    21:08:25\";s:9:\"permalink\";s:92:\"http://rcode5.wordpress.com/2013/03/07/acts_as_taggable_on-select2-super-easy-tags-in-rails/\";s:7:\"content\";s:2465:\"<div
+    class=\"reblogged-content\">I've had two projects in the past little bit where
+    I wanted user input tags for objects.  I also wanted to have typed tags - tags
+    of different categories applied to the same object.  I found that <a href=\"https://github.com/mbleigh/acts-as-taggable-on/\"
+    target=\"_blank\">acts_as_taggable_on</a> (Rails gem) and <a href=\"http://ivaynberg.github.com/select2/\"
+    target=\"_blank\">select2</a> (jQuery plugin) work really nicely together and
+    make this an easy task.\r\n\r\nLet's assume that we have an ActiveRecord model
+    for a Post.  Follow <a href=\"https://github.com/mbleigh/acts-as-taggable-on/#readme\"
+    target=\"_blank\">directions to install acts_as_taggable_on</a> (add to Gemfile,
+    initialize and run migration).  Then add two different tag types to <code>Post</code>
+    like this:\r\n\r\n[sourcecode language=\"ruby\"]\r\nclass Post &lt; ActiveRecord::Base\r\n
+    \ acts_as_taggable # basic usage - gives us 'tags'\r\n  acts_as_taggable_on :topics\r\nend\r\n[/sourcecode]\r\n\r\nWith
+    this, the Post model is ready to store tags and topics.\r\n\r\n[sourcecode]\r\nirb&gt;
+    Post.first.tags &lt;&lt; 'super fun'\r\n[/sourcecode]\r\n\r\nTo push this to the
+    users, we want a nice UI for users to enter tags/topics.  This is where Select2
+    comes in.  In your form for adding/editing posts, add two input boxes, one for
+    topics and one for tags\r\n\r\n[sourcecode]\r\n# using haml templating\r\n.input-row\r\n
+    \ = f.label :tags\r\n  = f.text_field :tag_list\r\n.input-row\r\n  = f.label :topics\r\n
+    \ = f.text_field :topics_list\r\n[/sourcecode]\r\n\r\nThen attach the <code>select2</code>
+    plugin to the form elements.  Make sure you've got <code>jQuery</code> and <code>select.js</code>
+    included on the page.\r\n\r\n[sourcecode language=\"javascript\"]\r\n// in your
+    javascript\r\n$(function() {\r\n  $('.input-row #post_topics_list, .input-row
+    #post_tags_list').select2({tags:[]})\r\n});\r\n[/sourcecode]\r\n\r\nAnd you get
+    a beautiful input box with handy tag handling.\r\n<a href=\"http://bobspython.files.wordpress.com/2014/04/screen-shot-2013-03-06-at-6-59-51-pm.png\"><img
+    src=\"http://bobspython.files.wordpress.com/2014/04/screen-shot-2013-03-06-at-6-59-51-pm.png\"
+    alt=\"Tags and Topics form\" width=\"240\" height=\"160\" class=\"aligncenter
+    size-full wp-image-678\" data-originalSrc=\"http://rcode5.files.wordpress.com/2013/03/screen-shot-2013-03-06-at-6-59-51-pm.png\"
+    data-rehosted=\"1\"></a>\r\n\r\nUpdate:\r\nIf you haven't found it, there's a
+    nice package that puts select2 in the asset pipeline - https://github.com/argerim/select2-rails.</div>\";s:15:\"images_mirrored\";i:1;}"
+  _publicize_pending: '1'
+  is_reblog: '1'
+  post_id: '674'
+  blog_id: '35829712'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>Just what I wanted.  Big fan of Chosen/Select2.  Many thanks!</p>

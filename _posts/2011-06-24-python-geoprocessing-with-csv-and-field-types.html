@@ -1,0 +1,93 @@
+---
+layout: post
+title: Python geoprocessing with .csv and field types
+date: 2011-06-24 16:31:26.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Geoprocessing with Python
+tags: []
+meta:
+  _edit_last: '15714693'
+  _wpas_done_twitter: '1'
+  _wpas_skip_fb: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p style="text-align:justify;">A while back I showed how to import a <a class="zem_slink" title="Comma-separated values" href="http://en.wikipedia.org/wiki/Comma-separated_values" rel="wikipedia">.csv</a> to create a <a class="zem_slink" title="Shapefile" href="http://en.wikipedia.org/wiki/Shapefile" rel="wikipedia">shapefile</a>.  The script that I had written for a client went unused for quite sometime and after trying out the resulting shapefile it was determined that the fields from the .csv were being formatted incorrectly in the resulting shapefile.</p>
+<p style="text-align:justify;">Last night I set out to fix this.  The idea was to create a blank <a class="zem_slink" title="Table (database)" href="http://en.wikipedia.org/wiki/Table_%28database%29" rel="wikipedia">database table</a> with the proper field formats and then copy the values from the .csv to the database table.  What I thought was going to take 30 minutes to complete, turned into a long adventure.  About 6 hours later I finally figured it out.  Interestingly enough, I found almost NO info on what I was trying to do.  Finally I found a partial reference in a forum thread from 2006 and wasn't sure if it would even work.</p>
+<p>[sourcecode language="Python"]<br />
+# import required modules<br />
+import sys, os, glob<br />
+import arcgisscripting</p>
+<p># Create the geoprocessor object<br />
+gp = arcgisscripting.create()<br />
+# I was having issues with a table view not deleting so I added the overwrite<br />
+gp.overwriteoutput = 1</p>
+<p>## System arguments<br />
+# Input .csv<br />
+File_in = sys.argv[1]<br />
+# Output shapefile<br />
+File_out = sys.argv[2]<br />
+# Input table_template<br />
+tabletemp = sys.argv[3]</p>
+<p># Set the workspace for the processing files<br />
+gp.workspace = os.path.dirname(sys.argv[1])</p>
+<p># Convert the .csv to .dbf in the directory from sys.argv[3]<br />
+gp.AddMessage(&quot;\nCreating processing .dbf from .csv...&quot;)<br />
+gp.TableToDbase_conversion(File_in, os.path.dirname(sys.argv[3]))</p>
+<p>## Make copies so that processing doesn't take place on the originals.<br />
+gp.AddMessage(&quot;\nCreating processing file...&quot;)<br />
+gp.Copy_management(File_in[:-4]+&quot;.dbf&quot;, &quot;tempfile.dbf&quot;)<br />
+gp.Copy_management(tabletemp, &quot;temptable.dbf&quot;)</p>
+<p># Need to use a search cursor to read the values from the input file<br />
+# and then use a insert cursor to write to the new table.<br />
+# The part I could not figure out is the SetValue function.  By using a<br />
+# while statement we can read thru each of the records in the input .csv<br />
+# and then write them out using SetValue.<br />
+# The SetValue takes two parameters; the first is the field name in the new<br />
+# table and the second is the field name in the read file.  Quite similiar<br />
+# to Field Mapping actually.  The input field name must not match the output<br />
+# field name, however the formats do need to match.<br />
+gp.AddMessage(&quot;\nSearch cursor process...&quot;)<br />
+intable = &quot;tempfile.dbf&quot;<br />
+outtable = &quot;temptable.dbf&quot;<br />
+table = gp.SearchCursor(intable)<br />
+run = table.Next()<br />
+outRows = gp.InsertCursor(outtable)<br />
+while run:<br />
+	outRow = outRows.NewRow()<br />
+	outRow.SetValue(&quot;FieldName1&quot;, run.FieldName1)<br />
+	outRow.SetValue(&quot;FieldName2&quot;, run.FieldName2)<br />
+	outRow.SetValue(&quot;FieldName3&quot;, run.FieldName3)<br />
+	outRow.SetValue(&quot;FieldName4&quot;, run.FieldName4)<br />
+	run = table.Next()<br />
+del outRows</p>
+<p># From here you can do whatever you wish with the new table &quot;temptable.dbf&quot;<br />
+# If you want to make a points shapefile you will need to use the MakeEventLayer<br />
+# as shown below.</p>
+<p>gp.AddMessage(&quot;Creating the output points file...&quot;)<br />
+# Make a point shapefile based on the X,Y in the table<br />
+gp.MakeXYEventLayer_management(&quot;temptable.dbf&quot;, &quot;X&quot;, &quot;Y&quot;, &quot;Table_output&quot;)<br />
+gp.CopyFeatures_management(&quot;Table_output&quot;, &quot;temp.shp&quot;)<br />
+# Create a prj file for temp.shp<br />
+coordsys = &quot;Coordinate Systems/Geographic Coordinate Systems/World/WGS 1984.prj&quot;<br />
+gp.defineprojection(&quot;temp.shp&quot;, coordsys)</p>
+<p>gp.AddMessage(&quot;Creating final output file...&quot;)<br />
+# Create the output files based on the user's input<br />
+gp.Rename_management(&quot;temp.shp&quot;, File_out)</p>
+<p>gp.AddMessage(&quot;Cleanup...&quot;)<br />
+# Delete &quot;process&quot; files<br />
+for file in glob.glob(gp.workspace+&quot;/temp*&quot;):<br />
+    os.remove(file)<br />
+for file in glob.glob(gp.workspace+&quot;/*xml&quot;):<br />
+    os.remove(file)</p>
+<p>gp.AddMessage(&quot;\nImport Successful.\n&quot;)<br />
+[/sourcecode]</p>
+<p>Hope this helps!<br />
+BR</p>

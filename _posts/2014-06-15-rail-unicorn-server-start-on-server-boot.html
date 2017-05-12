@@ -1,0 +1,69 @@
+---
+layout: post
+title: Rail Unicorn server start on server boot
+date: 2014-06-15 15:46:40.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags:
+- Unicorn server
+meta:
+  _edit_last: '15714693'
+  geo_public: '0'
+  publicize_twitter_user: bobr_az
+  publicize_twitter_url: http://t.co/b4FrSY6nKw
+  _wpas_done_7641025: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:2516516912;b:1;}}
+  _wpas_skip_7641025: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>So this weekend we were having some power outages where our onsite servers are located.  When the servers booted back up, Unicorn server was not running.  This was quick and easy to fix using the <a href="https://github.com/sosedoff/capistrano-unicorn" target="_blank">capistrano-unicorn gem</a>:</p>
+<blockquote><p>If you get a generic looking 500 page then it may be the Unicorn server. You can check if Unicorn is running using ps aux as well. There should be one master and 5 workers running. If not you can use:</p>
+<p>cap unicorn:reload # Reload Unicorn<br />
+cap unicorn:restart # Restart Unicorn<br />
+cap unicorn:show_vars # Debug Unicorn variables<br />
+cap unicorn:shutdown # Immediately shutdown Unicorn<br />
+cap unicorn:start # Start Unicorn master process<br />
+cap unicorn:stop # Stop Unicorn</p>
+<p>Remember to use the development/staging/production in between the cap and unicorn (e.g. cap development unicorn:stop) In general, I would just use stop and start. It gives pretty good errors when you run it.</p></blockquote>
+<p>But that is a reactive fix and we want to be proactive and not think about these things on the weekend.  So, I tried a few other things like Monit but I could not get it to play nice with Unicorn and even then I realized that there was nothing setting Monit to start on server boot.  I read a couple of things about <a href="https://github.com/bluepill-rb/bluepill" target="_blank">Bluepill gem</a> and I decided to give it a try.</p>
+<p>First off I added the Bluepill gem to my Gemfile but that did not seem to work so I installed on the server:</p>
+<p style="padding-left:30px;">sudo gem install bluepill</p>
+<p>Following the Github README, I created <i>/var/run/bluepill</i> directory for bluepill to store its pid and sock files.</p>
+<p>Next I created a Bluepill configuration file in path/to/app/config and named it production.pill.  Bluepill can use different pill files based on the environment.</p>
+<p>[sourcecode language="ruby"]</p>
+<p>Bluepill.application(&quot;my_app&quot;, log_file: &quot;/var/www/my_app/shared/log/bluepill.log&quot;) do |app|<br />
+  app.process(&quot;unicorn&quot;) do |process|<br />
+    process.working_dir = &quot;/var/www/my_app/current&quot;</p>
+<p>    process.start_grace_time = 20.seconds<br />
+    process.stop_grace_time = 20.second<br />
+    process.restart_grace_time = 20.seconds</p>
+<p>    process.pid_file = &quot;/var/www/my_app/shared/pids/unicorn.pid&quot;</p>
+<p>    process.start_command = &quot;bundle exec unicorn -c /var/www/my_app/current/config/unicorn.rb -E production -D&quot;<br />
+    process.stop_command = &quot;kill -QUIT {{PID}}&quot;<br />
+    process.restart_command = &quot;kill -USR2 {{PID}}&quot;</p>
+<p>    process.uid = &quot;deploy&quot;<br />
+    process.gid = &quot;deploy&quot;<br />
+  end<br />
+end</p>
+<p>[/sourcecode]</p>
+<p>We will want to test to see if Bluepill is working.  First we need to load the Bluepill configuration file and start it:</p>
+<p style="padding-left:30px;">$  sudo bluepill load /var/www/my_app/current/config/production.pill</p>
+<p style="padding-left:30px;">$  sudo bluepill status</p>
+<p>Now we should have Bluepill monitoring our unicorn.  I tested this by stopping the unicorn server and checking the application and sure enough, the Unicorn master was restarted by Bluepill.  You can also watch the Bluepill logfile with sudo bluepill log unicorn.</p>
+<p>So now that is all up and running, we need to make sure that Bluepill is started when the server boots.  Create a bluepill.cong in the /var/init/ directory and add this:</p>
+<p>[sourcecode language="ruby"]</p>
+<p>description &quot;My App Bluepill&quot;</p>
+<p>start on runlevel [2]<br />
+stop on runlevel [016]</p>
+<p>expect daemon<br />
+exec bluepill load /var/www/my_app/current/config/production.pill</p>
+<p>respawn</p>
+<p>[/sourcecode]</p>

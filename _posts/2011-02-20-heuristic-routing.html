@@ -1,0 +1,60 @@
+---
+layout: post
+title: Solid Waste Routing - Improving Efficiency in Solid Waste Collection Part 3
+date: 2011-02-20 19:38:09.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Route Optimization
+tags: []
+meta:
+  _edit_last: '15714693'
+  _wpas_done_twitter: '1'
+  _wpas_done_fb: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<h2 style="text-align:justify;">Heuristic Routing</h2>
+<p style="text-align:justify;">The U.S. Environment Protection Agency in 1974 released a publication (SW-113) entitled Heuristic Routing for Solid Waste Collection Vehicles.  For many years, this was the definitive how-to manual for <a class="zem_slink" title="Municipal solid waste" rel="wikipedia" href="http://en.wikipedia.org/wiki/Municipal_solid_waste">solid waste</a> <a class="zem_slink" title="Routing" rel="wikipedia" href="http://en.wikipedia.org/wiki/Routing">routing</a>.  The majority of the rules still apply today.</p>
+<p style="text-align:justify;">Heuristic routing defined macro-routing and micro-routing.  Macro-routing "determines the assignment of daily collection routes to existing processing and disposal sites."</p>
+<p style="text-align:justify;">However, we are interested in micro-routing, which "looks in detail at each daily collection service area to determine the path that the collection vehicle should follow as it collects from each service on its route.  The objective is to minimize the driving time on the collection route through minimizing the dead (head) distance…"</p>
+<p style="text-align:justify;">Rules for Heuristic micro-routing:</p>
+<ol>
+<li>
+<div style="text-align:justify;">Routes should not be fragmented or overlapping. Each route should be compact, consisting of street segments clustered in the same geographical area.</div>
+<p>&nbsp;</li>
+<li>
+<div style="text-align:justify;">The collection route should start as close to the garage or motor pool as possible, taking into account heavily traveled and one-way streets (see rules 3 and 4).</div>
+<p>&nbsp;</li>
+<li>
+<div style="text-align:justify;">Collection from heavily traveled streets should not be carried out during rush hours.</div>
+<p>&nbsp;</li>
+<li>
+<div style="text-align:justify;">In the case of one-way streets, it is best to start the route near the upstream end of the street, working down it through the looping process.</div>
+<p>&nbsp;</li>
+<li>
+<div style="text-align:justify;">Services on dead-end streets can be considered as services on the street segment that they intersect, since they can only be collected by passing down that street segment. To keep left turns to a minimum, collect the dead-end streets when they are to the right of the truck.  Collections from dead-end streets must be made by walking down, backing down or making a U-turn at the dead-end.</div>
+<p>&nbsp;</li>
+<li>
+<div style="text-align:justify;">When practical, solid waste on a steep hill should be collected on both sides of the street while the vehicle is moving downhill. This facilitates safety, ease and speed of collection. It also lessens wear on the vehicle and conserves gas and oil.</div>
+<p>&nbsp;</li>
+<li>
+<div style="text-align:justify;">Higher elevations should be at the start of the route.</div>
+<p>&nbsp;</li>
+<li>
+<div style="text-align:justify;">For collection from one side of the street at a time, it is generally best to route with many clockwise turns around blocks. Note: Heuristic rules 8 and 9 emphasize the development of a series of clockwise loops in order to minimize right turns, which generally are more difficult and time-consuming than left turns. Particularly for right-hand-drive vehicles, right turns are safer.</div>
+<p>&nbsp;</li>
+<li>
+<div style="text-align:justify;">For collection from both sides of the street at the same time, it is generally best to route with long, straight paths across the street before looping clockwise.</div>
+<p>&nbsp;</li>
+<li>
+<div style="text-align:justify;">For certain block configurations within the route, specific routing patterns should be applied that best fit the layout.</div>
+</li>
+</ol>
+<p style="text-align:justify;">&nbsp;</p>
+<p style="text-align:justify;">As you can see, since the implementation of these changes in 1974, only a couple of the Heuristic rules have become outdated, but in general still today make up the rules of routing.</p>

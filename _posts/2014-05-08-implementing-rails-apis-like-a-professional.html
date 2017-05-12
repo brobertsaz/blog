@@ -1,0 +1,249 @@
+---
+layout: post
+title: Implementing Rails APIs like a professional
+date: 2014-05-08 11:26:24.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _publicize_pending: '1'
+  is_reblog: '1'
+  post_id: '3462'
+  blog_id: '9042983'
+  reblog_snapshot: |-
+    O:8:"stdClass":7:{s:5:"title";s:43:"Implementing Rails APIs like a professional";s:4:"type";s:4:"post";s:9:"mime_type";s:0:"";s:6:"format";b:0;s:12:"modified_gmt";s:19:"2014-05-08 09:45:47";s:9:"permalink";s:83:"http://blog.joshsoftware.com/2014/05/08/implementing-rails-apis-like-a-professional";s:7:"content";s:9536:"<div class="reblogged-content">Today, a web-portal that does not support APIs is not even considered a web portal! This post explains how we can implement Rails APIs in our application. Rails APIs require the following minimum implementation:
+
+    <ul>
+    <li>API keys.</li>
+    <li>API Versioning.</li>
+    <li>API Request Authentication.</li>
+    <li>Request throttling (optional).</li>
+    </ul>
+
+    Let's see how this can be done.
+
+    <h2>API key generation</h2>
+
+    Lets generate the model.
+
+    [code lang=bash]
+    $ rails g model User api_key:string
+    [/code]
+
+    or if the model already exists,
+
+    [code lang=bash]
+    $ rails g migration AddApiKeyToUsers api_key:string
+    [/code]
+
+    Now lets edit this model and add the logic to generate the API key when a record is created using the method <code>generate_api_key</code>.
+
+    [code lang=ruby]
+    def generate_api_key
+      loop do
+        token = SecureRandom.base64.tr('+/=', 'Qrt')
+        break token unless User.exists?(api_key: token).any?
+      end
+    end
+    [/code]
+
+    In this code we use <code>SecureRandom.base64.tr('+/=', 'Qat')</code> to generate a token. Since, it may contain the special characters like <code>+/=</code>, we shall replace them with some random alphabets using <code>tr</code>, so that the API key looks good. Now lets add the <code>before_create</code> callback.
+
+    [code lang=ruby]
+    before_create do |doc|
+      doc.api_key = doc.generate_api_key
+    end
+    [/code]
+
+    <h2>API controller and routes versioning</h2>
+
+    Now, lets generate the controller called <code>Api</code> in the <code>api</code> namespace. This helps us avoid the <code>ApplicationController</code> as APIs do not need the basic controller functionalities like protection from request forgery (the CSRF token), session authentication and the view helpers. Our <code>Api::ApiController</code> is in fact the <code>ApplicationController</code> for all our API controllers.
+
+    [code lang=bash]
+    $ rails g controller api/api
+    [/code]
+
+    To ensure we get basic controller functionality we need our <code>Api::ApiController</code> to inherit directly from <code>ActionController::Base</code>. So, be sure to replace the code as follows:
+
+    [code lang=ruby]
+    class Api::ApiController &lt; ActionController::Base
+    # Authentication and other filters implementation.
+    end
+    [/code]
+
+    Lets take an example to help understand all this better. Lets create an API for events that has two fields <code>name</code> and <code>occurred_at</code> that tell us which event occurred at which time. We shall write APIs to get events.
+
+    [code lang=text]
+    $ rails g model event name:string occurred_at:time
+    $ rails g controller api/v1/events
+    [/code]
+
+    APIs need to be versioned to ensure backward compatibility and future extensibility. The above approach provides us an easy way to do this and keep our code maintainable. Remember to version only when required - v2 would be added when either there is entirely new functionality that would not work with v1 clients, i.e. potentially broken compatibility. (This may be a good time to mention <a href="http://jsonapi.org">jsonapi.org</a>. This is what the next generation of Web APIs will do, so it's definitely worth a read).
+
+    [code lang=ruby]
+    # app/controllers/api/v1/events_controller.rb
+    class Api::V1::EventsController &lt; Api::ApiController
+    end
+    [/code]
+
+    <h3>Routes versioning</h3>
+
+    This is an art and you should ensure that your routes are well designed. Here is an example.
+
+    [code lang=ruby]
+    namespace :api do
+      namespace :v1 do
+        resources :events
+      end
+    end
+    [/code]
+
+    This will generate the routes with 'api/v1' namespace prefix.
+
+    [code lang=ruby]
+    Prefix            Verb   URI Pattern                       Controller#Action
+    api_v1_events     GET    /api/v1/events(.:format)          api/v1/events#index {:format=&gt; :json}
+                      POST   /api/v1/events(.:format)          api/v1/events#create {:format=&gt; :json}
+    new_api_v1_event  GET    /api/v1/events/new(.:format)      api/v1/events#new {:format=&gt; :json}
+    edit_api_v1_event GET    /api/v1/events/:id/edit(.:format) api/v1/events#edit {:format=&gt; :json}
+    api_v1_event      GET    /api/v1/events/:id(.:format)      api/v1/events#show {:format=&gt; :json}
+                      PATCH  /api/v1/events/:id(.:format)      api/v1/events#update {:format=&gt; :json}
+                      PUT    /api/v1/events/:id(.:format)      api/v1/events#update {:format=&gt; :json}
+                      DELETE /api/v1/events/:id(.:format)      api/v1/events#destroy {:format=&gt; :json}
+    [/code]
+
+    If want to remove the API prefix (/api) and use a subdomain like <code>api.example.com</code>, then we can use options like <code>path</code> and <code>constraints</code>
+
+    [code lang=ruby]
+    namespace :api, path: '', constraints: {subdomain: 'api'} do
+      namespace :v1 do
+        resources :events
+      end
+    end
+
+    [/code]
+
+    Using <code>path</code> option we can change the namespace name. Now routes look like this
+
+    [code lang=ruby]
+    Prefix            Verb   URI Pattern                   Controller#Action
+    api_v1_events     GET    /v1/events(.:format)          api/v1/events#index {:format=&gt; :json, :subdomain=&gt; "api"}
+                      POST   /v1/events(.:format)          api/v1/events#create {:format=&gt; :json, :subdomain=&gt; "api"}
+    new_api_v1_event  GET    /v1/events/new(.:format)      api/v1/events#new {:format=&gt; :json, :subdomain=&gt; "api"}
+    edit_api_v1_event GET    /v1/events/:id/edit(.:format) api/v1/events#edit {:format=&gt; :json, :subdomain=&gt; "api"}
+    api_v1_event      GET    /v1/events/:id(.:format)      api/v1/events#show {:format=&gt; :json, :subdomain=&gt;"api"}
+                      PATCH  /v1/events/:id(.:format)      api/v1/events#update {:format=&gt;:json, :subdomain=&gt;"api"}
+                      PUT    /v1/events/:id(.:format)      api/v1/events#update {:format=&gt; :json, :subdomain=&gt; "api"}
+                      DELETE /v1/events/:id(.:format)     api/v1/events#destroy {:format=&gt;:json, :subdomain=&gt; "api"}
+    [/code]
+
+    If we want to process every request as a JSON request by default, then add <code>format: :json</code> to the <code>defaults</code> in the namespace options. So any request will now be considered as a JSON request and will give JSON response.
+
+    [code lang=ruby]
+    namespace :api, path: '', constraints: {subdomain: 'api'}, defaults: {format: 'json'}
+    [/code]
+
+    Here is an example of our API controller action.
+
+    [code lang=ruby]
+    class Api::V1::EventsController &lt; Api::ApiController
+      respond_to :json
+
+      def index
+        @events = Event.all
+        respond_with @events
+      end
+    end
+    [/code]
+
+    <h2>API Authentication</h2>
+
+    This is important and we can implement the authentication in the <code>Api::ApiController</code> itself so that it is applicable for all the API controllers. There are different ways to authenticate:
+
+    <ul>
+    <li>Use the inbuilt rails method <code>authenticate_or_request_with_http_token</code>
+    </li>
+    <li>Do it manually.</li>
+    </ul>
+
+    If we use <code>authenticate_or_request_with_http_token</code>(ref: <a href="http://api.rubyonrails.org/classes/ActionController/HttpAuthentication/Token.html">token auth api</a>), our code looks like this.
+
+    [code lang=ruby]
+    class Api::ApiController &lt; ActionController::Base
+      private
+
+      def authenticate
+        authenticate_or_request_with_http_token do |token, options|
+          @user = User.where(api_key: token).first
+        end
+      end
+    end
+
+    [/code]
+
+    Now, in our <code>EventsController</code> we need to ensure we add the filter. (Note: Rails3 would require this to be <code>before_filter</code>).
+
+    [code lang=ruby]
+    class Api::V1::EventsController &lt; Api::ApiController
+      respond_to :json
+
+      before_action :authenticate
+
+      def index
+        @events = Event.all
+        respond_with @events
+      end
+    end
+    [/code]
+
+    Now, to test this API out we can use curl.
+
+    [code lang=text]
+    $ curl -H "Authorization: Token token=WwEsPpOCYMsyPsmmvKBqQDOaEJ4t" http://localhost:3000/events
+    [/code]
+
+    If we pass the <code>api_key</code> in the request header (i.e the <code>X-API-KEY</code> header field), then we need to do the authentication manually.
+
+    [code lang=ruby]
+    def authenticate
+      api_key = request.headers['X-Api-Key']
+      @user = User.where(api_key: api_key).first if api_key
+
+      unless @user
+        head status: :unauthorized
+        return false
+      end
+    end
+    [/code]
+
+    Again, we can test this with curl.
+
+    [code lang=text]
+    $ curl -H "X-Api-Key: WwEsPpOCYMsyPsmmvKBqQDOaEJ4t" http://localhost:3000/v1/events.json
+    [/code]
+
+    <strong>NOTE 1</strong> Never pass the API key in the params(for example: <code>http://test.com?api_key= WwEsPpOCYMsyPsmmvKBqQDOaEJ4t</code> or in the POST or PUT parameters). The params will get logged and the API keys would be seen in the logs. If someone has access to your logs or purges the logs or even by mistake pastes a log snippet on stackoverflow, then God help you! We can of course use filtering configuration in our application but the best way is to avoid this situation and pass the API key in the request header <strong>always</strong>.
+
+    <strong>NOTE 2</strong> Always use the <a href="http://guides.rubyonrails.org/layouts_and_rendering.html#the-status-option">HTTP status codes</a> for different response status to make the HTTP status code more readable.
+
+    [code lang=ruby]
+    render status: :unauthorized # 401
+    render status: :too_many_requests # 424
+    render status: :unprocessable_entity # 422
+    # and many more!
+    [/code]
+
+    In my next post, I shall talk about Request throttling. The information here is enough for you to get started on writing good Rails APIs that are versioned, clean and authenticated. If you want to see a sample working code, see <a href="https://github.com/jiren/api_template">Github</a>.
+
+    Feedback is welcome.</div>";}
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+

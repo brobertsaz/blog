@@ -1,0 +1,130 @@
+---
+layout: post
+title: Avoid Common mistakes in Ruby on Rails Development
+date: 2014-04-01 22:08:42.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _publicize_pending: '1'
+  is_reblog: '1'
+  post_id: '3'
+  blog_id: '66319701'
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:50:\"Avoid Common mistakes
+    in Ruby on Rails Development\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2014-03-29
+    10:32:46\";s:9:\"permalink\";s:109:\"http://rubyonrailswebdevelopment.wordpress.com/2014/03/29/avoid-common-mistakes-in-ruby-on-rails-development/\";s:7:\"content\";s:8664:\"<div
+    class=\"reblogged-content\">Many programmers face similar problems over and over.
+    So, here I am going to list out the common mistakes that can be avoided in <a
+    title=\"Ruby on Rails Development\" href=\"http://www.allerin.com\" target=\"_blank\">Ruby
+    on Rails Development</a>.\r\n\r\n<strong>1. Database column Indexing</strong>\r\nAt
+    the beginning of programming , mostly during writing migrations, we forget to
+    add indexes , which may or may not have any effect in initial stages of application,
+    but will have drastic delay in fetching records from the database as the table
+    size increases.\r\n\r\n<strong>2. ActiveRecord transaction for saving multiple
+    object</strong>\r\nWhenever saving multiple objects in a single request, always
+    use ActiveRecord::Base::transaction method to support atomicity. So, if any record
+    has not saved the entire transaction, will get rolled back and nothing will be
+    saved into the database.\r\nAlways add indexes to the column being used for searching
+    records.\r\n<span style=\"text-decoration:underline;\">Example:</span>\r\n<pre>ActiveRecord::Base.transaction
+    do\r\n  @tasks.each do |task|\r\n    task.save!\r\n  end\r\nend</pre>\r\n<strong>3.
+    Using delete_all instead of destroy_all</strong>\r\nActiveRecord::Base::delete_all
+    or ActiveRecord::Base#delete method deletes the record(s) from the database without
+    firing any callback. So, This method must be used sensibly.\r\nWhere as ActiveRecord::Base::destroy_all
+    or ActiveRecord::Base#destroy executes before_destroy and after_destroy callbacks.\r\n\r\n<strong>4.
+    Using IN sub-queries</strong>\r\nRelational Database supports different types
+    of sub-queries. Unfortunately, one of them is a performance disaster.\r\n\r\nIN
+    and NOT IN sub-queries.\r\nStatic array in these queries are fine, but when used
+    sub-query inside, it reduces the performance and also there are limitation on
+    the number of elements in these queries depending on different databases.\r\n\r\nDo
+    Not use queries like IN or NOT IN\r\n\r\nThese queries must be written using EXISTS
+    or NOT EXISTS predicates to avoid serious performance issues.\r\n\r\n<span style=\"text-decoration:underline;\">Note:</span>
+    Oracle optimizes IN fairly well same as EXITS, So both can be used. But not the
+    same case with NOT IN vs NOT EXISTS. Better to use NOT EXISTS even on Oracle instead
+    of NOT IN predicate.\r\n\r\n<strong>5. Storing Session in database</strong>\r\nIt
+    is very easy to store session data in relational databases, but it is the most
+    expensive thing.\r\nSession data are stored and retrieved more frequently and
+    can create scenario when the database can go unresponsive for the more important
+    work to be done.\r\nIf there is a need of database for string session data, then
+    use 'Memcache' or 'Redis'.\r\n\r\n<strong>6. Set the primary key explicitly for
+    database views</strong>\r\nSometimes we need to make use of database views for
+    complex data joined from different tables, to reduce the overheads of fetching
+    data in a single query and also to support the searching and sorting based on
+    the columns of joined tables.\r\n\r\nAlways set the primary key explicitly in
+    the respective model, this will provide the flexibility to define association
+    with other models.\r\n\r\n<span style=\"text-decoration:underline;\">Example:</span>\r\n<pre>Class
+    UserDetailsView &lt; ActiveRecord::Base\r\n  self.table_name = :user_details #
+    user_details is a view in database\r\n  self.primary_key = :id # view_contains
+    id from the joind user table and can be used as primary key for this model\r\nend</pre>\r\n<strong>7.
+    Use find_each</strong>\r\nDo not use each method for iterating large set of records(ActiveRecord::Relation).
+    It will fetch all the record in a single query from the database and will dump
+    into the memory, causing\r\nperformance degradation if the there is not enough
+    memory. So, better make use of find_each method, this method not only etches record
+    in batches from the database but yields those once at a time too. Once the current
+    batch is processed another batch will be fetched from the database. So no need
+    to have all the records at once in the memory.\r\n<span style=\"text-decoration:underline;\">Example:</span>\r\n<pre>Book.where(:published
+    =&gt; true).find_each do |book|\r\n  puts \"Do something here!\"\r\nend</pre>\r\n<strong>8.
+    Make use of Ranges instead of comparisons for numbers</strong>\r\nNo more if x
+    &gt; 1000 &amp;&amp; x &lt; 2000 nonsense. Instead:\r\n<pre> year = 1972\r\n case
+    year\r\n   when 1970..1979: \"Seventies\"\r\n   when 1980..1989: \"Eighties\"\r\n
+    \  when 1990..1999: \"Nineties\"\r\n end</pre>\r\n<strong>9. Use pluck instead
+    of map&lt;/strong&gt;</strong>\r\nWe often need to find a single column from the
+    database, So many of us make use of map method on ActiveRecord::Relation.\r\nLike:\r\n<pre>User.active.select(:name).map(&amp;amp;:name)</pre>\r\nOr,
+    even worse:\r\n<pre>User.active.map(&amp;amp;:name)</pre>\r\nInstead use pluck
+    method:\r\n<span style=\"text-decoration:underline;\">Example:</span>\r\n<pre>User.active.pluck(:name)</pre>\r\n<strong>10.
+    Allow both single item and and array to make use of the same loop without condition</strong>\r\nI
+    have observed that few folks write something like this\r\n<pre>(items.is_a?(Array)
+    ? Items : [items]).each do |item|\r\n  #------------------\r\nend</pre>\r\nInstead
+    use following:\r\n<pre>*items].each do |item|\r\n  #------------------\r\nend</pre>\r\nAbove
+    code will take care of items containing either a single object or array.\r\n\r\n<strong>11.
+    Rescue to the rescue</strong>\r\nUse rescue for one liner statements which may
+    throw error instead of condition:\r\n<pre>hsh = {:age =&gt; 50}\r\nhsh[:name].downcase
+    #=&gt; Error\r\nhsh[:name].try(:downcase) #=&gt; nil</pre>\r\nOr, even worse:\r\n<pre>hsh[:name]
+    ? hsh[:name].downcase : nil #=&gt; nil</pre>\r\nInstead use as below:\r\n<pre>hsh[:name].downcase
+    rescue nil #=&gt; nil</pre>\r\nOR\r\n<pre>hsh[:name].to_s.downcase #=&gt; ''</pre>\r\n<strong>12.
+    Try to reduce redundancy using Ruby's logic</strong>\r\nmethod for checking odd
+    number:\r\n<pre>def odd?(x)\r\n  x % 2 == 0 ? false : true\r\nend</pre>\r\nInstead
+    make use of Ruby logics and simply it somewhat more.\r\n<pre>def odd?(x)\r\n  x
+    % 2 != 0\r\nend</pre>\r\n<strong>13. ActiveRecord::Base::exists</strong>\r\nSometime
+    we just need to check for existence of any record in the database. And I have
+    seen coders are writing something like:\r\nTo check whether published books are
+    present in the database or not:\r\n<pre>books = Book.where(:published =&gt; true)\r\nbooks.count
+    &gt; 0 # will return true if published books exists in database.</pre>\r\nInstead
+    use ActiveRecord::Base::exists method as:\r\n<pre>Book.exists?(:published =&gt;
+    true)</pre>\r\n<strong>14. SQL Injection</strong>\r\n\r\nNever interpolate the
+    input from the outside world into ActiveRecord query directly.\r\n<pre>query =
+    \"SELECT * FROM users WHERE name = '#{name}' AND password = '#{password'} LIMIT
+    1\"\r\nresults = User.connection.execute(query)</pre>\r\nAbove query will behave
+    unexpected whenever a sql injection string is passed and name nad password:\r\n<span
+    style=\"text-decoration:underline;\">Example:</span>\r\n<pre>name: ' OR 'a' =
+    'a\r\npassword: ' OR 'a' = 'a</pre>\r\nabove input will generate query something
+    like\r\n<pre>SELECT * FROM users WHERE name = '' OR 'a' = 'a' AND password = ''
+    OR 'a' = 'a' LIMIT 1</pre>\r\nAnd above query will always return a user. Instead
+    make use of 'where' or 'find_by' methods these will automatically escape the commas('/”)
+    in the input value and will not allow query to return true and will check the
+    record in database exactly what it had been passed as name and password.\r\n\r\n<strong>15.
+    N+1 queries</strong>\r\nSo, Basically it happens when we load a bunch of objects
+    from the database, and then for each one of those objects we make 1 or more database
+    query.\r\n<span style=\"text-decoration:underline;\">Example:</span>\r\n<pre>class
+    Customer { where(active: true) }\r\nend</pre>\r\n<pre>class Address &lt; ActiveRecor...\r\nbelongs_to
+    :customer\r\nend</pre>\r\n<pre>@customers = Customer.active</pre>\r\n<pre># this
+    is fine the customer object is already in memory\r\n# this one fires one query
+    to the database for finding Address record for each custome</pre>\r\nSuppose we
+    have 100 active customers then total database queries will be 101.\r\n1 query
+    for finding all the active customers and other 100 queries for finding an address
+    for each.\r\nInstead try eager_loading and just fire 2 queries for all.\r\n<pre>@customers
+    = Customer.active.includes(:address)</pre>\r\nThe above query will fire 1 query
+    for finding all the customers and other query for finding all the address associated
+    to the clients fetched in the first query.\r\n\r\nReference Post : http://www.allerin.com/blog/common-mistakes-in-ror\r\nFor
+    more similar blog posts, visit <a href=\"http://www.allerin.com/blog\" title=\"Ruby
+    on Rails Blog\" target=\"_blank\">Ruby on Rails Blog</a>\n</div>\";}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>Pretty nice write up.  I never saw the find_each before.  Will have to try that out :)</p>

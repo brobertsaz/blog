@@ -1,0 +1,39 @@
+---
+layout: post
+title: Writing stories for Pivotal Tracker
+date: 2012-08-13 16:06:41.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _edit_last: '15714693'
+  _wpas_done_twitter: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p style="text-align:justify;">I have had a lot of hits from people searching for how to write <a class="zem_slink" title="User story" href="http://en.wikipedia.org/wiki/User_story" rel="wikipedia" target="_blank">user stories</a> for <a class="zem_slink" title="Project Management" href="http://www.business.com/business-planning/project-management/" rel="businesscom" target="_blank">project management</a> solutions like <a class="zem_slink" title="Pivotal Tracker" href="http://www.pivotaltracker.com/" rel="homepage" target="_blank">Pivotal Tracker</a>.  User stories are used in the <a class="zem_slink" title="Agile Software Development" href="http://www.techopedia.com/definition/13564/agile-software-development" rel="techopedia" target="_blank">Agile development</a> process so that the <a class="zem_slink" title="Client (computing)" href="http://en.wikipedia.org/wiki/Client_%28computing%29" rel="wikipedia" target="_blank">client</a> can define the way that they want their application to perform.  They are written in a way that a non computer savvy client can describe what they want to the developer.</p>
+<p style="text-align:justify;">User stories can be as simple as a one line sentence describing a function.  This is normally to answer the "who", "what", and "where" but not necessarily always.  A user story can also, and generally should, include a list of tasks that need to be accomplished to result in the desired behavior.  User stories are a big portion of the <a class="zem_slink" title="Behavior Driven Development" href="http://en.wikipedia.org/wiki/Behavior_Driven_Development" rel="wikipedia" target="_blank">Behavior Driven Development</a> (BDD) as they describe a desired behavior.</p>
+<h3 style="text-align:justify;">ISBAT</h3>
+<p style="text-align:justify;">A common term in writing user stories is ISBAT, short for "I should be able to" and is a great why for the client to think thru the functionality that they wish to achieve.</p>
+<h3 style="text-align:justify;">A simple user story example</h3>
+<p style="text-align:justify;">The client wants a site that a customer can go to, create and account and purchase something.  So the first thing we need to do is create an account.  Our story could start as "As a user ISBAT create an account."  This reads and is clear to what the desired behavior is.  So now how will we do that.  We can create tasks working together with the client.</p>
+<ol style="text-align:justify;">
+<li>Task 1 - visit the home page</li>
+<li>Task 2 - click on create an account</li>
+<li>Task 3 - fill in a form and submit it</li>
+<li>Task 4 - click on  confirm my account in email</li>
+</ol>
+<p style="text-align:justify;">Now we have a pretty good understanding of exactly what the client wants and expects.  The more explicit that the user stories are the easier it is to write your tests.  You can use "create an account" in your describe and your first test should be it "creates new user account." Following this story, you can easily write the rest of the test such as visit root_path, click_link "Create Account", etc.</p>
+<h6 class="zemanta-related-title" style="font-size:1em;">Related articles</h6>
+<ul class="zemanta-article-ul">
+<li class="zemanta-article-ul-li"><a href="http://thecriticalpath.info/2012/07/27/defining-the-qualified-user-story/" target="_blank">Defining The Qualified User Story</a> (thecriticalpath.info)</li>
+<li class="zemanta-article-ul-li"><a href="http://www.allaboutagile.com/how-detailed-should-tasks-be-in-a-user-story/" target="_blank">How Detailed Should Tasks Be in a User Story?</a> (allaboutagile.com)</li>
+<li class="zemanta-article-ul-li"><a href="http://www.usabilitycounts.com/2012/06/08/product-talk-user-stories-are-better-than-prds/" target="_blank">Product Talk: User Stories Are Better Than PRDs</a> (usabilitycounts.com)</li>
+</ul>

@@ -1,0 +1,194 @@
+---
+layout: post
+title: Rails Best Practices
+date: 2014-09-11 20:45:05.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _publicize_pending: '1'
+  publicize_twitter_url: http://t.co/B25TqOjBeP
+  publicize_linkedin_url: ''
+  is_reblog: '1'
+  post_id: '5'
+  blog_id: '74514439'
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:20:\"Rails Best Practices\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2014-09-10
+    18:52:59\";s:9:\"permalink\";s:68:\"http://niteshvarmablog.wordpress.com/2014/09/10/rails-best-practices\";s:7:\"content\";s:13767:\"<div
+    class=\"reblogged-content\">\n\n<div dir=\"ltr\" style=\"text-align:left;\">\r\n<div
+    class=\"normal\" style=\"text-align:center;\" align=\"center\">\r\n<p style=\"text-align:left;\">With
+    the fast pace of today’s agile development industries, we know how important it
+    is to complete a project on time. We also recognize the importance of other factors
+    such as flexibility and readability &amp; most important performance of the application.</p>\r\n<p
+    style=\"text-align:left;\"> Many times even experienced developers do not consider
+    above points, which wont impact during initial stages of application, but will
+    raise problems when the data in application grows exponentially and enhancement
+    is to be done for existing application.</p>\r\n<p style=\"text-align:left;\"> Below
+    are some best practices in Ruby on Rails, which should be considered at time of
+    development in Rails framework.</p>\r\n<p style=\"text-align:left;\"> <strong>*
+    </strong><strong>Use Eager Loading (Prevent N + 1 queries)</strong></p>\r\n<p
+    style=\"text-align:left;\"> Most of the time new Rails developer not use eager
+    loading of object in Rails.</p>\r\n<p style=\"text-align:left;\"> Eager Loading
+    is highly recommended at the time of development in Rails.</p>\r\n<p style=\"text-align:left;\">It
+    mainly resolved the common issues like N + 1 queries.</p>\r\n<p style=\"text-align:left;\">We
+    can detect the N + 1 queries issues by using gem ‘Bullet’ in development environment.</p>\r\n<p
+    style=\"text-align:left;\"> Poor:</p>\r\n\r\n<pre style=\"text-align:left;\"> \r\n
+    \ user has_one address\r\n  users_controller\r\n  def index\r\n    @users = User.all\r\n 
+    end\r\n</pre>\r\n<p style=\"text-align:left;\">  index.html.haml</p>\r\n\r\n<pre
+    style=\"text-align:left;\">  \r\n - @users.each do |u|\r\n   %p= u.address.phone_number\r\n</pre>\r\n<p
+    style=\"text-align:left;\">Above will first fire 1 query to find all the users
+    and then for each user in each block will fire 1 query each (N queries where N
+    is count of users record) to find phone_number from associated addresses table.</p>\r\n<p
+    style=\"text-align:left;\">This will leads to increase load on the server &amp;
+    DB when dealing with large scale application.</p>\r\n<p style=\"text-align:left;\">Solution:</p>\r\n\r\n<pre
+    style=\"text-align:left;\">  @user = User.include(:address)</pre>\r\n<p style=\"text-align:left;\">Above
+    will fire 1 query to  load all users object &amp; then 1 query to find associated
+    addresses of all the users record, which will now reduce N + 1 queries to 2 queries.</p>\r\n<p
+    style=\"text-align:left;\"><strong>* Don’t Rescue Exception, Rescue Standard Error</strong></p>\r\n<p
+    style=\"text-align:left;\">Consider below  begin-rescue syntax</p>\r\n\r\n<pre
+    style=\"text-align:left;\"> \r\n begin\r\n   method_call\r\n rescue Exception
+    =&gt; e\r\n  logger.info(“Error:- #{e}”)\r\n end\r\n</pre>\r\n<p style=\"text-align:left;\">Explicitly
+    rescuing Exception will also rescue code errors such as SyntaxError, LoadError
+    etc.</p>\r\n<p style=\"text-align:left;\">If we do not use Exception type qualifier,
+    then Ruby will catch only StandardError, which is probably what we want from begin-rescue:</p>\r\n\r\n<pre
+    style=\"text-align:left;\"> \r\n begin\r\n   method_call\r\n rescue =&gt; e\r\n
+    \  logger.info(\"Error: #{e}\")\r\n end\r\n</pre>\r\n<p style=\"text-align:left;\"><strong>*
+    Use query attribute</strong></p>\r\n<p style=\"text-align:left;\">We always check
+    if ActiveRecord's attributes exist or not by nil?, blank? or present? ? Rails
+    provides a cleaner way for this by query attribute.</p>\r\n<p style=\"text-align:left;\">Suppose
+    locked is boolean value of  users table.</p>\r\n<p style=\"text-align:left;\">General:</p>\r\n\r\n<pre
+    style=\"text-align:left;\">  \r\n  if @user.locked.present?\r\n     ….\r\n  end
+    \r\n  if @user.locked.blank?\r\n   …. \r\n  end\r\n\r\n</pre>\r\n<p style=\"text-align:left;\">Re-factored:</p>\r\n<pre
+    style=\"text-align:left;\">  \r\n if @user.locked?\r\n   ….\r\n end\r\n unless
+    @user.locked?\r\n   ….\r\n end\r\n</pre>\r\n<p style=\"text-align:left;\">The
+    query attribute is almost the same as the present? method call on attribute, or
+    the opposite of blank? method call. Each attribute of ActiveRecord's model has
+    a query method, so we don't need to use the present? or blank? for ActiveRecord's
+    attributes.</p>\r\n<p style=\"text-align:left;\"><strong>* Caching with instance
+    variable or Use memoization</strong></p>\r\n<p style=\"text-align:left;\"></p>\r\n<pre
+    style=\"text-align:left;\">\r\n  class Customer &lt; ActiveRecord::Base\r\n    has_many
+    :accounts, conditions =&gt; {:active =&gt; true}\r\n    \r\n    def total_balance\r\n
+    \     #calculation over accounts to calculate total_balance\r\n    end\r\n  end\r\n</pre>\r\n<p
+    style=\"text-align:left;\">total_balance will be used multiple times in models,
+    views and controllers, such as</p>\r\n<p style=\"text-align:left;\"></p>\r\n<pre
+    style=\"text-align:left;\">\r\n  - if @customer.total_balance &gt; 0\r\n    %div.balance=
+    @customer.total_balance\r\n</pre>\r\n<p style=\"text-align:left;\">every time
+    we use the total_balance, there should be a db query sent to retrieve all available
+    accounts for the user, and then calculate amount as per accounts balance available.</p>\r\n<p
+    style=\"text-align:left;\">How can we avoid the duplicated db query and duplicated
+    calculation?</p>\r\n<p style=\"text-align:left;\">We can use following methods.</p>\r\n<p
+    style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\"></p>\r\n<pre
+    style=\"text-align:left;\">\r\n  class Customer &lt; ActiveRecord::Base\r\n    has_many
+    :accounts, conditions =&gt; {:active =&gt; true}\r\n    \r\n    def total_balance\r\n
+    \     @total_balance ||= #calculation over accounts to calculate total_balance\r\n
+    \   end\r\n  end\r\n</pre>\r\n<p style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\">That
+    means when first time we call total_balance, one db query will be sent, calculate
+    the total balance then assign the result to the instance variable @total_balance.
+    The second time when we call total_balance, no db query be sent and no calculation
+    will be done, just return the @total_balance directly.</p>\r\n<p style=\"text-align:left;\">We
+    can also do this with memoize</p>\r\n<p style=\"text-align:left;\"></p>\r\n<pre
+    style=\"text-align:left;\">\r\n class Customer &lt; ActiveRecord::Base\r\n   extend
+    ActiveSupport::Memoizable\r\n   has_many :accounts, conditions =&gt; {:active
+    =&gt; true}\r\n   def total_balance\r\n     #calculation over accounts to calculate
+    total_balance\r\n   end\r\n   memoize :total_balance\r\n end\r\n</pre>\r\n<p style=\"text-align:left;\">memoize
+    method will help to cache the method result automatically, we don't need to change
+    the method implementations anymore, here we just declare what methods should be
+    memoization.</p>\r\n<p style=\"text-align:left;\">Note:- memoize  is deprecated
+    from Rails 3.2 and removed in next measure version and added in gem <a href=\"https://github.com/matthewrudy/memoist\">memoist</a>
+    .</p>\r\n<p style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\">*
+    Use batched finder for large data query</p>\r\n<p style=\"text-align:left;\"></p>\r\n<p
+    style=\"text-align:left;\">Suppose you have social network website containing
+    millions of  user and you needs to send daily notification to them morning.</p>\r\n<p
+    style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\">General method:</p>\r\n<p
+    style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\">You may find
+    all the users, then send notifications to them one by one.</p>\r\n<p style=\"text-align:left;\"></p>\r\n<pre
+    style=\"text-align:left;\">\r\n  User.all.each do |user|\r\n    user.send_notification\r\n
+    \ end\r\n</pre>\r\n<p style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\">This
+    code snippet will find all of the users and create a ruby object for each user
+    row in table. But this will create huge load (memory consumption) on the application
+    and server.</p>\r\n<p style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\">Improved
+    method:</p>\r\n<p style=\"text-align:left;\">find_each and find_in_batches are
+    available for batched finder. We can use them to improve the performance when
+    we needs to perform certain action on huge collection of records.</p>\r\n<p style=\"text-align:left;\"></p>\r\n<pre
+    style=\"text-align:left;\">\r\n  User.find_each do |user|\r\n    user.send_notification!
+    \r\n  end\r\n</pre>\r\n<p style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\">Using
+    find_each, the application only finds 1000 users once, yield them, then handle
+    the next 1000 users, until the last 1000 users. That means the application will
+    only load 1000 user objects into memory each time.</p>\r\n<p style=\"text-align:left;\">1000
+    is the default batch size, if we want to change batch_size we can use :batch_size
+    option to change it.</p>\r\n<p style=\"text-align:left;\">find_in_batches is similar
+    to find_each except that it yields the array of objects</p>\r\n<p style=\"text-align:left;\"></p>\r\n<pre
+    style=\"text-align:left;\">\r\n  User.find_in_batches(:batch_size =&gt; 50) do
+    |users|\r\n    users.each {  |user|   user.send_notification! }\r\n  end\r\n</pre>\r\n<p
+    style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\">This method is
+    very useful for large data query, saving the memory and time.</p>\r\n<p style=\"text-align:left;\"></p>\r\n<p
+    style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\"><strong>* Prevent
+    SQL Injections by using the ? in queries</strong></p>\r\n<p style=\"text-align:left;\"></p>\r\n<p
+    style=\"text-align:left;\">User.where(“name != #{params[:name]}” )</p>\r\n<p style=\"text-align:left;\">User.where(‘name
+    != ?’, params[:name] )</p>\r\n<p style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\">ActiveRecord
+    will sanitize the given params, and prevent the sql injection.</p>\r\n<p style=\"text-align:left;\"></p>\r\n<p
+    style=\"text-align:left;\"><strong>* Use caching</strong></p>\r\n<p style=\"text-align:left;\"></p>\r\n<p
+    style=\"text-align:left;\">Using the cache will speed up the application response
+    time a lot. When user will request the application pages, rails won't be requested,
+    apache (server) will serve the cached pages, which decreases page response time
+    and server load..</p>\r\n<p style=\"text-align:left;\">In your environment file
+    (production.rb) file add :</p>\r\n<p style=\"text-align:left;\"></p>\r\n<pre style=\"text-align:left;\">\r\nconfig.action_controller.perform_caching
+    = true\r\nconfig.action_controller.cache_store = :file_store, Rails.root + ’/tmp/cache/’
+    \r\nconfig.action_controller.page_cache_directory = Rails.root + ‘/public/cache/’\r\n</pre>\r\n<p
+    style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\">And
+    in the controllers where you want to activate page caching just add action names.</p>\r\n<p
+    style=\"text-align:left;\">caches_page :index</p>\r\n<p style=\"text-align:left;\"></p>\r\n<p
+    style=\"text-align:left;\">So, next time when you will access the cached pages
+    request will not go to the server.</p>\r\n<p style=\"text-align:left;\">Above
+    will be good for full static pages, we can also use fragment caching to cache
+    particular sections of pages.</p>\r\n<p style=\"text-align:left;\">For more details
+    on Rails caching refer:</p>\r\n<p style=\"text-align:left;\">http://guides.rubyonrails.org/caching_with_rails.html</p>\r\n<p
+    style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\"><strong>* Replace
+    instance variable with local variable</strong></p>\r\n<p style=\"text-align:left;\"></p>\r\n<p
+    style=\"text-align:left;\">Partial is a reusable view template, In partial view,
+    we can use the instance variable directly, but it may be confused and make it
+    hard to reuse anywhere, because we don't know exactly which instance variable
+    can be used, so we can use the local variable in partial which will be explicitly
+    assignment at the time of render.</p>\r\n<p style=\"text-align:left;\"></p>\r\n<pre
+    style=\"text-align:left;\">\r\n  class UsersController &lt; ApplicationController\r\n
+       def show \r\n      @user = User.find(params[:id])\r\n    end\r\n  end\r\n</pre>\r\n<p
+    style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\">In show.html.haml</p>\r\n<p
+    style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\">When using instance
+    variable on partial</p>\r\n<p style=\"text-align:left;\">  = render :partial =&gt;
+    ‘deatils’</p>\r\n<p style=\"text-align:left;\">Refactor  by using local variables.</p>\r\n<p
+    style=\"text-align:left;\">  = render :partial =&gt; ‘details’, :locals =&gt;
+    { :user =&gt; @user }</p>\r\n<p style=\"text-align:left;\">  or</p>\r\n<p style=\"text-align:left;\"> 
+    = render ‘details’, { :user =&gt; @user }</p>\r\n<p style=\"text-align:left;\"></p>\r\n<p
+    style=\"text-align:left;\">Now we can use the local variable user in partial details.</p>\r\n<p
+    style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\"><strong>* Use
+    DB index on tables</strong></p>\r\n<p style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\">Always
+    add index for foreign key, columns that are used in  lookup fields and columns
+    that are used in a GROUP BY. This can improve the performance for sql query. If
+    you're not sure which column need to index , use https://github.com/plentz/lol_dba,
+    which provide rake tasks to find missing indexes.</p>\r\n<p style=\"text-align:left;\"></p>\r\n<p
+    style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\"></p>\r\n<pre
+    style=\"text-align:left;\">\r\n  class CreatePosts &lt; ActiveRecord::Migration\r\n
+    \   def change\r\n      create_table ‘posts’ do |t|\r\n        t.string :content\r\n    
+    \   t.references :comment, :index =&gt; true\r\n        t.references :user, :index
+    =&gt; true\r\n        t.boolean :active,  :index =&gt; true\r\n      end\r\n 
+    \  end\r\n  end\r\n</pre>\r\n<p style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\">We
+    can add index explicitly as</p>\r\n<p style=\"text-align:left;\">  add_index :comments,
+    :active</p>\r\n<p style=\"text-align:left;\"></p>\r\n<p style=\"text-align:left;\">We
+    can also combine index like below</p>\r\n<p style=\"text-align:left;\">  add_index
+    :comments, [:resource_id, :resource_type]</p>\r\n<p style=\"text-align:left;\"></p>\r\n<p
+    style=\"text-align:left;\"></p>\r\n\r\n</div>\r\n</div>\n</div>\";}"
+  publicize_twitter_user: bobr_az
+  _wpas_done_7641025: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:2516516912;b:1;}}
+  _wpas_done_7777887: '1'
+  _oembed_f33d5e8d83f332f698e37c406831f79b: "{{unknown}}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>A couple of these tricks I wasnt aware of like the find_each.  Thanks for the write up ;)</p>

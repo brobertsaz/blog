@@ -1,0 +1,51 @@
+---
+layout: post
+title: How to Set Up Flash Hashes and Error Messages in Rails
+date: 2015-05-20 23:06:17.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  is_reblog: '1'
+  post_id: '26'
+  blog_id: '91461367'
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:54:\"How to Set Up Flash Hashes
+    and Error Messages in Rails\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2015-05-15
+    04:15:23\";s:9:\"permalink\";s:108:\"https://christopherrdoddcode.wordpress.com/2015/05/15/how-to-set-up-flash-hashes-and-error-messages-in-rails\";s:7:\"content\";s:2170:\"<div
+    class=\"reblogged-content\">\n\n<strong>Notices</strong>\r\n\r\n<strong>1. Setting
+    a notice</strong>\r\n\r\nSetting a flash notice is as easy as assigning it to
+    the <strong><em>flash </em></strong>object\r\n<pre>flash[:notice] = \"The subject
+    was created successfully\"</pre>\r\n<em>Where should you put it?</em>\r\n\r\nA
+    good place to put it is in the controller after the object successfully saves
+    or is destroyed. For example:\r\n<pre>def create\r\n  @subject = Subject.new(subject_params)\r\n\r\n
+    \ if @subject.save\r\n    flash[:notice] = \"Subject '#{@subject.name}' created
+    Successfully\"\r\n    redirect_to root_path\r\n\r\n  else\r\n    render('new')\r\n
+    \ end\r\nend</pre>\r\n<strong>2. Displaying the notice</strong>\r\n\r\nIf using
+    <a href=\"http://getbootstrap.com/\">Bootstrap</a> and <a href=\"http://haml.info/\">HAML</a>,
+    you can put this in the view where the user gets redirected to\r\n<pre>-if !flash[:notice].blank?\r\n
+    \ .row\r\n    .notice.alert.alert-success\r\n      =flash[:notice]</pre>\r\nIf
+    you're not using <a href=\"http://getbootstrap.com/\">Bootstrap</a> or <a href=\"http://haml.info/\">HAML</a>,
+    try this:\r\n<pre>&lt;% if !flash[:notice].blank? %&gt;\r\n   &lt;div class=\"notice\"&gt;&lt;%=
+    flash[:notice] %&gt;&lt;/div&gt;\r\n&lt;% end %&gt;</pre>\r\n<strong>Errors</strong>\r\n\r\n<strong>1.
+    Write your validations</strong>\r\n\r\nFor there to be errors, you need validations.
+    If you haven't built validations, I suggest you do this now.\r\n\r\n<strong>2.
+    Generate a partial for displaying your errors</strong>\r\n<pre><em>#app/views/application/_error_messages.html.haml</em>\r\n-if
+    object &amp;&amp; object.errors.size &gt; 0\r\n  #error-explanation\r\n    %h3\r\n
+    \     = pluralize(object.errors.size, 'error')\r\n      prohibited this record
+    from being saved\r\n    %p problems with the following fields:\r\n    %ul\r\n
+    \     - object.errors.full_messages.each do |msg|\r\n        %li= msg</pre>\r\n<b>3.
+    Create a custom helper method</b>\r\n<pre><em>#app/helpers/application_helper.rb</em>\r\ndef
+    error_messages_for(object)\r\n  render(:partial =&gt; 'application/error_messages',
+    :locals =&gt; {:object =&gt; object})\r\nend</pre>\r\n<strong>3. Call the helper
+    on the view with the form</strong>\r\n<pre>= error_messages_for(@subject)</pre>\n</div>\";}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>So simple but so many do not use this.  We have a legacy app that has NO error messages.  Try to login with wrong email, it just does not work but no message to tell you why.  Seems like this should be a standard thing.</p>

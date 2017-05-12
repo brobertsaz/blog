@@ -1,0 +1,276 @@
+---
+layout: feedback
+title: manli - 2012-04-11 04:52:25
+date: 2012-04-11 04:52:25.000000000 -05:00
+type: feedback
+published: true
+status: publish
+categories: []
+tags: []
+meta:
+  _feedback_author: manli
+  _feedback_author_email: cmanli24@gmail.com
+  _feedback_author_url: ''
+  _feedback_subject: Email from Blog
+  _feedback_ip: 203.199.47.172
+  _feedback_contact_form_url: http://bob-roberts.net/contact/
+  _feedback_all_fields: "a:4:{s:4:\"Name\";s:5:\"manli\";s:5:\"Email\";s:18:\"cmanli24@gmail.com\";s:7:\"Website\";s:0:\"\";s:7:\"Comment\";s:2499:\"I
+    need to read the x and y values into an array and create a polygon using them
+    in python script. but i am facing an issue with reading the y coordinates.the
+    text that i used in the script is in the fol. format:-\r\n\r\nx,y\r\n0.0,722.9\r\n-70.5,718.6\r\n-141.0,708.5\r\n-209.8,691.5\r\n-276.9,667.7\r\n-340.6,637.1\r\n-401.8,600.6\r\n-458.7,558.9\r\n-510.5,510.5\r\n-558.9,458.7\r\n-600.6,401.8\r\n-637.1,340.6\r\n-667.7,276.9\r\n-691.5,209.8\r\n-708.5,141.0\r\n-718.6,70.5\r\n-722.9,0.0\r\n-718.6,-70.5\r\n-708.5,-141.0\r\n-691.5,-209.8\r\n-667.7,-276.9\r\n-637.1,-340.6\r\n-600.6,-401.8\r\n-558.9,-458.7\r\n-510.5,-510.5\r\n-458.7,-558.9\r\n-401.8,-600.6\r\n-340.6,-637.1\r\n-276.9,-667.7\r\n-209.8,-691.5\r\n-141.0,-708.5\r\n-70.5,-718.6\r\n0.0,-722.9\r\n70.5,-718.6\r\n141.0,-708.5\r\n209.8,-691.5\r\n276.9,-667.7\r\n340.6,-637.1\r\n401.8,-600.6\r\n458.7,-558.9\r\n510.5,-510.5\r\n558.9,-458.7\r\n600.6,-401.8\r\n637.1,-340.6\r\n667.7,-276.9\r\n691.5,-209.8\r\n708.5,-141.0\r\n718.6,-70.5\r\n722.9,0.0\r\n718.6,70.5\r\n708.5,141.0\r\n691.5,209.8\r\n667.7,276.9\r\n637.1,340.6\r\n600.6,401.8\r\n558.9,458.7\r\n510.5,510.5\r\n458.7,558.9\r\n401.8,600.6\r\n340.6,637.1\r\n276.9,667.7\r\n209.8,691.5\r\n141.0,708.5\r\n70.5,718.6\r\n0.0,722.9\r\n\r\nand
+    my python code is:-\r\ncan you help me with the issue??\r\n\r\nimport arcpy, sys,os\r\n\r\npointFilePath
+    = \"D:\\manli\\python trials\\test3.txt\"\r\n\r\n# Open the file and read the
+    first (and only) line\r\npointFile = open(pointFilePath, \"r\")\r\nheaderLine
+    = pointFile.readline()\r\n\r\n# Make a Python list out of the coordinates. , is
+    the delimiter\r\nvalueList = headerLine.split(\",\")\r\n\r\nlatValueIndex = valueList.index(\"lat\")\r\nlonValueIndex
+    = valueList.index(\"lon\")\r\n##print latValueIndex\r\ncoordList = []\r\nfor line
+    in pointFile.readlines():\r\n    segmentedLine = line.split(\",\")\r\n    coordList.append([segmentedLine[lonValueIndex],
+    segmentedLine[latValueIndex]])\r\n   \r\nprint coordList\r\n\r\n\r\n# This Array
+    object will hold a clockwise \"ring\" of Point\r\n#  objects, thereby making a
+    polygon.\r\npolygonArray = arcpy.CreateObject(\"Array\")\r\n\r\n\r\nfor line in
+    pointFile.readlines():\r\n    segmentedLine = line.split(\",\")\r\n    latValue
+    = segmentedLine[latValueIndex]\r\n    #lonValue = segmentedLine[lonValueIndex]\r\n\r\n\r\n#
+    Loop through each coordinate pair and make a Point object\r\n\r\n    currentPoint
+    = arcpy.CreateObject(\"Point\")\r\n    currentPoint.X = lonValue # X coordinate\r\n
+    \   currentPoint.Y = latValue # Y coordinate\r\n\r\n    # Add the newly-created
+    Point to your Array    \r\n    polygonArray.add(currentPoint)\r\n    polygonArray.append([segmentedLine[latValueIndex]])\r\n\r\nprint
+    polygonArray\r\narcpy.AddMessage(polygonArray)\";}"
+  _feedback_extra_fields: a:0:{}
+  _feedback_email: "a:4:{s:2:\"to\";a:1:{i:0;s:21:\"broberts_az@yahoo.com\";}s:7:\"subject\";s:15:\"Email
+    from Blog\";s:7:\"message\";s:2707:\"Name: manli\nEmail: cmanli24@gmail.com\nComment:
+    I need to read the x and y values into an array and create a polygon using them
+    in python script. but i am facing an issue with reading the y coordinates.the
+    text that i used in the script is in the fol. format:-\r\n\r\nx,y\r\n0.0,722.9\r\n-70.5,718.6\r\n-141.0,708.5\r\n-209.8,691.5\r\n-276.9,667.7\r\n-340.6,637.1\r\n-401.8,600.6\r\n-458.7,558.9\r\n-510.5,510.5\r\n-558.9,458.7\r\n-600.6,401.8\r\n-637.1,340.6\r\n-667.7,276.9\r\n-691.5,209.8\r\n-708.5,141.0\r\n-718.6,70.5\r\n-722.9,0.0\r\n-718.6,-70.5\r\n-708.5,-141.0\r\n-691.5,-209.8\r\n-667.7,-276.9\r\n-637.1,-340.6\r\n-600.6,-401.8\r\n-558.9,-458.7\r\n-510.5,-510.5\r\n-458.7,-558.9\r\n-401.8,-600.6\r\n-340.6,-637.1\r\n-276.9,-667.7\r\n-209.8,-691.5\r\n-141.0,-708.5\r\n-70.5,-718.6\r\n0.0,-722.9\r\n70.5,-718.6\r\n141.0,-708.5\r\n209.8,-691.5\r\n276.9,-667.7\r\n340.6,-637.1\r\n401.8,-600.6\r\n458.7,-558.9\r\n510.5,-510.5\r\n558.9,-458.7\r\n600.6,-401.8\r\n637.1,-340.6\r\n667.7,-276.9\r\n691.5,-209.8\r\n708.5,-141.0\r\n718.6,-70.5\r\n722.9,0.0\r\n718.6,70.5\r\n708.5,141.0\r\n691.5,209.8\r\n667.7,276.9\r\n637.1,340.6\r\n600.6,401.8\r\n558.9,458.7\r\n510.5,510.5\r\n458.7,558.9\r\n401.8,600.6\r\n340.6,637.1\r\n276.9,667.7\r\n209.8,691.5\r\n141.0,708.5\r\n70.5,718.6\r\n0.0,722.9\r\n\r\nand
+    my python code is:-\r\ncan you help me with the issue??\r\n\r\nimport arcpy, sys,os\r\n\r\npointFilePath
+    = \"D:manlipython trialstest3.txt\"\r\n\r\n# Open the file and read the first
+    (and only) line\r\npointFile = open(pointFilePath, \"r\")\r\nheaderLine = pointFile.readline()\r\n\r\n#
+    Make a Python list out of the coordinates. , is the delimiter\r\nvalueList = headerLine.split(\",\")\r\n\r\nlatValueIndex
+    = valueList.index(\"lat\")\r\nlonValueIndex = valueList.index(\"lon\")\r\n##print
+    latValueIndex\r\ncoordList = []\r\nfor line in pointFile.readlines():\r\n    segmentedLine
+    = line.split(\",\")\r\n    coordList.append([segmentedLine[lonValueIndex], segmentedLine[latValueIndex]])\r\n
+    \  \r\nprint coordList\r\n\r\n\r\n# This Array object will hold a clockwise \"ring\"
+    of Point\r\n#  objects, thereby making a polygon.\r\npolygonArray = arcpy.CreateObject(\"Array\")\r\n\r\n\r\nfor
+    line in pointFile.readlines():\r\n    segmentedLine = line.split(\",\")\r\n    latValue
+    = segmentedLine[latValueIndex]\r\n    #lonValue = segmentedLine[lonValueIndex]\r\n\r\n\r\n#
+    Loop through each coordinate pair and make a Point object\r\n\r\n    currentPoint
+    = arcpy.CreateObject(\"Point\")\r\n    currentPoint.X = lonValue # X coordinate\r\n
+    \   currentPoint.Y = latValue # Y coordinate\r\n\r\n    # Add the newly-created
+    Point to your Array    \r\n    polygonArray.add(currentPoint)\r\n    polygonArray.append([segmentedLine[latValueIndex]])\r\n\r\nprint
+    polygonArray\r\narcpy.AddMessage(polygonArray)\n\nTime: Wednesday April 11, 2012
+    at 4:52 am\nIP Address: 203.199.47.172\nContact Form URL: http://bob-roberts.net/contact/\nSent
+    by an unverified visitor to your site.\";s:7:\"headers\";s:105:\"From: manli <cmanli24@gmail.com>\r\nReply-To:
+    cmanli24@gmail.com\r\nContent-Type: text/plain; charset=\"UTF-8\"\";}"
+author: 
+---
+<p>I need to read the x and y values into an array and create a polygon using them in python script. but i am facing an issue with reading the y coordinates.the text that i used in the script is in the fol. format:-</p>
+<p>x,y<br />
+0.0,722.9<br />
+-70.5,718.6<br />
+-141.0,708.5<br />
+-209.8,691.5<br />
+-276.9,667.7<br />
+-340.6,637.1<br />
+-401.8,600.6<br />
+-458.7,558.9<br />
+-510.5,510.5<br />
+-558.9,458.7<br />
+-600.6,401.8<br />
+-637.1,340.6<br />
+-667.7,276.9<br />
+-691.5,209.8<br />
+-708.5,141.0<br />
+-718.6,70.5<br />
+-722.9,0.0<br />
+-718.6,-70.5<br />
+-708.5,-141.0<br />
+-691.5,-209.8<br />
+-667.7,-276.9<br />
+-637.1,-340.6<br />
+-600.6,-401.8<br />
+-558.9,-458.7<br />
+-510.5,-510.5<br />
+-458.7,-558.9<br />
+-401.8,-600.6<br />
+-340.6,-637.1<br />
+-276.9,-667.7<br />
+-209.8,-691.5<br />
+-141.0,-708.5<br />
+-70.5,-718.6<br />
+0.0,-722.9<br />
+70.5,-718.6<br />
+141.0,-708.5<br />
+209.8,-691.5<br />
+276.9,-667.7<br />
+340.6,-637.1<br />
+401.8,-600.6<br />
+458.7,-558.9<br />
+510.5,-510.5<br />
+558.9,-458.7<br />
+600.6,-401.8<br />
+637.1,-340.6<br />
+667.7,-276.9<br />
+691.5,-209.8<br />
+708.5,-141.0<br />
+718.6,-70.5<br />
+722.9,0.0<br />
+718.6,70.5<br />
+708.5,141.0<br />
+691.5,209.8<br />
+667.7,276.9<br />
+637.1,340.6<br />
+600.6,401.8<br />
+558.9,458.7<br />
+510.5,510.5<br />
+458.7,558.9<br />
+401.8,600.6<br />
+340.6,637.1<br />
+276.9,667.7<br />
+209.8,691.5<br />
+141.0,708.5<br />
+70.5,718.6<br />
+0.0,722.9</p>
+<p>and my python code is:-<br />
+can you help me with the issue??</p>
+<p>import arcpy, sys,os</p>
+<p>pointFilePath = "D:manlipython trialstest3.txt"</p>
+<p># Open the file and read the first (and only) line<br />
+pointFile = open(pointFilePath, "r")<br />
+headerLine = pointFile.readline()</p>
+<p># Make a Python list out of the coordinates. , is the delimiter<br />
+valueList = headerLine.split(",")</p>
+<p>latValueIndex = valueList.index("lat")<br />
+lonValueIndex = valueList.index("lon")<br />
+##print latValueIndex<br />
+coordList = []<br />
+for line in pointFile.readlines():<br />
+    segmentedLine = line.split(",")<br />
+    coordList.append([segmentedLine[lonValueIndex], segmentedLine[latValueIndex]])</p>
+<p>print coordList</p>
+<p># This Array object will hold a clockwise "ring" of Point<br />
+#  objects, thereby making a polygon.<br />
+polygonArray = arcpy.CreateObject("Array")</p>
+<p>for line in pointFile.readlines():<br />
+    segmentedLine = line.split(",")<br />
+    latValue = segmentedLine[latValueIndex]<br />
+    #lonValue = segmentedLine[lonValueIndex]</p>
+<p># Loop through each coordinate pair and make a Point object</p>
+<p>    currentPoint = arcpy.CreateObject("Point")<br />
+    currentPoint.X = lonValue # X coordinate<br />
+    currentPoint.Y = latValue # Y coordinate</p>
+<p>    # Add the newly-created Point to your Array<br />
+    polygonArray.add(currentPoint)<br />
+    polygonArray.append([segmentedLine[latValueIndex]])</p>
+<p>print polygonArray<br />
+arcpy.AddMessage(polygonArray)<br />
+<!--more--><br />
+AUTHOR: manli<br />
+AUTHOR EMAIL: cmanli24@gmail.com<br />
+AUTHOR URL:<br />
+SUBJECT: Email from Blog<br />
+IP: 203.199.47.172<br />
+Array<br />
+(<br />
+    [Name] =&gt; manli<br />
+    [Email] =&gt; cmanli24@gmail.com<br />
+    [Website] =&gt;<br />
+    [Comment] =&gt; I need to read the x and y values into an array and create a polygon using them in python script. but i am facing an issue with reading the y coordinates.the text that i used in the script is in the fol. format:-</p>
+<p>x,y<br />
+0.0,722.9<br />
+-70.5,718.6<br />
+-141.0,708.5<br />
+-209.8,691.5<br />
+-276.9,667.7<br />
+-340.6,637.1<br />
+-401.8,600.6<br />
+-458.7,558.9<br />
+-510.5,510.5<br />
+-558.9,458.7<br />
+-600.6,401.8<br />
+-637.1,340.6<br />
+-667.7,276.9<br />
+-691.5,209.8<br />
+-708.5,141.0<br />
+-718.6,70.5<br />
+-722.9,0.0<br />
+-718.6,-70.5<br />
+-708.5,-141.0<br />
+-691.5,-209.8<br />
+-667.7,-276.9<br />
+-637.1,-340.6<br />
+-600.6,-401.8<br />
+-558.9,-458.7<br />
+-510.5,-510.5<br />
+-458.7,-558.9<br />
+-401.8,-600.6<br />
+-340.6,-637.1<br />
+-276.9,-667.7<br />
+-209.8,-691.5<br />
+-141.0,-708.5<br />
+-70.5,-718.6<br />
+0.0,-722.9<br />
+70.5,-718.6<br />
+141.0,-708.5<br />
+209.8,-691.5<br />
+276.9,-667.7<br />
+340.6,-637.1<br />
+401.8,-600.6<br />
+458.7,-558.9<br />
+510.5,-510.5<br />
+558.9,-458.7<br />
+600.6,-401.8<br />
+637.1,-340.6<br />
+667.7,-276.9<br />
+691.5,-209.8<br />
+708.5,-141.0<br />
+718.6,-70.5<br />
+722.9,0.0<br />
+718.6,70.5<br />
+708.5,141.0<br />
+691.5,209.8<br />
+667.7,276.9<br />
+637.1,340.6<br />
+600.6,401.8<br />
+558.9,458.7<br />
+510.5,510.5<br />
+458.7,558.9<br />
+401.8,600.6<br />
+340.6,637.1<br />
+276.9,667.7<br />
+209.8,691.5<br />
+141.0,708.5<br />
+70.5,718.6<br />
+0.0,722.9</p>
+<p>and my python code is:-<br />
+can you help me with the issue??</p>
+<p>import arcpy, sys,os</p>
+<p>pointFilePath = "D:\manli\python trials\test3.txt"</p>
+<p># Open the file and read the first (and only) line<br />
+pointFile = open(pointFilePath, "r")<br />
+headerLine = pointFile.readline()</p>
+<p># Make a Python list out of the coordinates. , is the delimiter<br />
+valueList = headerLine.split(",")</p>
+<p>latValueIndex = valueList.index("lat")<br />
+lonValueIndex = valueList.index("lon")<br />
+##print latValueIndex<br />
+coordList = []<br />
+for line in pointFile.readlines():<br />
+    segmentedLine = line.split(",")<br />
+    coordList.append([segmentedLine[lonValueIndex], segmentedLine[latValueIndex]])</p>
+<p>print coordList</p>
+<p># This Array object will hold a clockwise "ring" of Point<br />
+#  objects, thereby making a polygon.<br />
+polygonArray = arcpy.CreateObject("Array")</p>
+<p>for line in pointFile.readlines():<br />
+    segmentedLine = line.split(",")<br />
+    latValue = segmentedLine[latValueIndex]<br />
+    #lonValue = segmentedLine[lonValueIndex]</p>
+<p># Loop through each coordinate pair and make a Point object</p>
+<p>    currentPoint = arcpy.CreateObject("Point")<br />
+    currentPoint.X = lonValue # X coordinate<br />
+    currentPoint.Y = latValue # Y coordinate</p>
+<p>    # Add the newly-created Point to your Array<br />
+    polygonArray.add(currentPoint)<br />
+    polygonArray.append([segmentedLine[latValueIndex]])</p>
+<p>print polygonArray<br />
+arcpy.AddMessage(polygonArray)<br />
+)</p>

@@ -1,0 +1,60 @@
+---
+layout: post
+title: Upgrading your Vagrant box to Ruby 2.0
+date: 2014-04-18 17:38:49.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _publicize_pending: '1'
+  is_reblog: '1'
+  post_id: '58'
+  blog_id: '55784886'
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:38:\"Upgrading your Vagrant
+    box to Ruby 2.0\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2013-10-10
+    14:43:06\";s:9:\"permalink\";s:78:\"http://jibai31.wordpress.com/2013/09/01/upgrading-your-vagrant-box-to-ruby-20/\";s:7:\"content\";s:2897:\"<div
+    class=\"reblogged-content\">If you followed the post on setting up <a href=\"http://jibai31.wordpress.com/2013/08/07/test-your-production-environment-with-vagrant/\"
+    target=\"_blank\">Vagrant</a>, you've got a nice working environment, hopefully
+    quite close to the environment where your app is running live.\r\n\r\nAnd now
+    you need to upgrade that environment, so you'd like to upgrade your box alongside.
+    In my case, I'm upgrading my app from Ruby 1.9.2 to Ruby 2.0 on <a href=\"http://www.heroku.com\"
+    target=\"_blank\">Heroku</a>, so I'd like to upgrade my Ubuntu VM too. This post
+    will cover first the upgrade to Ruby 2.0, and then saving the upgraded box.\r\n\r\nFirst
+    we use apt-get to ensure that all of our installed software is up to date.\r\n<pre><code>$
+    sudo apt-get update</code></pre>\r\n\r\nThen we install some prerequisites: the
+    build essentials, ZLib, Git.\r\n<pre><code>$ sudo apt-get install build-essential
+    zlib1g-dev git-core</code></pre>\r\n\r\nI don't want to simply upgrade Ruby, I'd
+    like to go back and forth between the 2 versions while testing the upgrade. There
+    are 2 recommended tools for managing several Ruby versions: <a href=\"https://rvm.io/\"
+    target=\"_blank\">RVM </a>and <a href=\"https://github.com/sstephenson/rbenv\"
+    target=\"_blank\">rbenv</a>. Being more familiar with RVM, that's the way I'm
+    going. But do check the two options if you're interested.\r\n\r\nThis will actually
+    install RVM and the latest stable Ruby version as well:\r\n<pre><code>$ curl -L
+    https://get.rvm.io | bash -s stable --ruby\r\n$ source /home/vagrant/.rvm/scripts/rvm</code></pre>\r\n\r\nAnd
+    reload your profile:\r\n<pre><code>$ source ~/.profile</code></pre>\r\n\r\nAnd
+    that's it! At the time of this writing, this installed ruby-2.0.0-p247. If you
+    want to switch between versions, simply run:\r\n<pre><code>$ rvm use 2.0.0</code></pre>\r\n\r\nNow
+    the upgrade is done, you want to test your app. Nothing simpler. Upgrade your
+    Ruby version in your Gemfile:\r\n[code language=\"ruby\"]ruby '2.0.0'[/code]\r\n\r\nAnd
+    reinstall all the gems for Ruby 2.0.0:\r\n<pre><code>$ bundle</code></pre>\r\n\r\nFinally,
+    run the tests:\r\n<pre><code>$ bundle exec rspec spec</code></pre>\r\n\r\nAs far
+    as I'm concerned, nothing breaks! I'm done with the upgrade!\r\n\r\nBut now I
+    did this work to upgrade my Ubuntu VM, I'd like to back it up. So that if I happen
+    to run a vagrant destroy, I can simply restore it. It turns out it's quite easy
+    to do. While your VM is running, simply execute a Vagrant <a href=\"http://docs.vagrantup.com/v2/cli/package.html\"
+    target=\"_blank\">package</a> command:\r\n<pre><code>$ vagrant package\r\n[default]
+    Attempting graceful shutdown of VM...\r\n[default] Clearing any previously set
+    forwarded ports...\r\n[default] Creating temporary directory for export...\r\n[default]
+    Exporting VM...\r\n[default] Compressing package to: C:/Users/JB/myapp/package.box</code></pre>\r\n\r\nYou
+    can now share this box with coworkers, or back it up for future restore.</div>\";}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>Sweet, I did not know about the option to package a Vagrant box.  Thanks for this.</p>

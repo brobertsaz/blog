@@ -1,0 +1,87 @@
+---
+layout: post
+title: Behavior Driven Development - Using RSpec and Capybara
+date: 2012-02-17 15:01:20.000000000 -06:00
+type: post
+published: true
+status: publish
+categories: []
+tags:
+- bdd
+- Behavior Driven Development
+- Capybara
+- RSpec
+- Ruby
+- Ruby on Rails
+- test driven development
+meta:
+  _edit_last: '15714693'
+  publicize_results: a:1:{s:7:"twitter";a:1:{i:199393780;a:2:{s:7:"user_id";s:11:"broberts_az";s:7:"post_id";s:18:"170628938865967104";}}}
+  _wpas_done_twitter: '1'
+  _wpas_skip_fb: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p style="text-align:justify;">In writing my recent posts about creating a <a class="zem_slink" title="Ruby on Rails" href="http://rubyonrails.org" rel="homepage">Ruby on Rails</a> TODO application from the ground up, I felt that I should have been more descriptive in explaining BDD - <a class="zem_slink" title="Behavior Driven Development" href="http://en.wikipedia.org/wiki/Behavior_Driven_Development" rel="wikipedia">Behavior Driven Development</a> in how it differs from TDD - <a class="zem_slink" title="Test-driven development" href="http://en.wikipedia.org/wiki/Test-driven_development" rel="wikipedia">Test Driven Development</a>.</p>
+<p style="text-align:justify;">Additionally, I think that there is a lot more that can be explained about the entire BDD process and the tools that I use including <a class="zem_slink" title="RSpec" href="http://rspec.info/" rel="homepage">RSpec</a>, Capaybara and others.</p>
+<p style="text-align:justify;"><strong>BDD vs. TDD</strong></p>
+<p style="text-align:justify;">BDD is a concept or technique for testing that Dan North introduced to the programming community.  Some would argue that BDD is a programming philosophy.  What BDD did was change the perception of TDD.  Focus is placed on the overall behavior of the program from the user point of view.</p>
+<p style="text-align:justify;">To fully understand BDD, we must first look at the meaning of TDD.  Credit is given to Kent Black for developing TDD.  Wikipedia defines <a href="http://en.wikipedia.org/wiki/Test-Driven_Development">TDD</a> “as a <a href="http://en.wikipedia.org/wiki/Software_development_process">software development process</a> that relies on the repetition of a very short development cycle: first the developer writes a failing automated <a href="http://en.wikipedia.org/wiki/Test_case">test case</a> that defines a desired improvement or new function, then produces code to pass that test and finally <a href="http://en.wikipedia.org/wiki/Code_refactoring">refactors</a> the new code to acceptable standards.”  Simply put, TDD means writing a test BEFORE writing the code and you know that the test will fail.  Then you write just enough code to pass the test.</p>
+<p style="text-align:justify;"><a href="http://butunclebob.com/ArticleS.UncleBob.TheThreeRulesOfTdd">The Three Laws of TDD</a> according to UncleBob:</p>
+<ol style="text-align:justify;">
+<li>You are not allowed to write any production code unless it is to make a failing unit test pass.</li>
+<li>You are not allowed to write any more of a unit test than is sufficient to fail; and compilation failures are failures.</li>
+<li>You are not allowed to write any more production code than is sufficient to pass the one failing unit test.</li>
+</ol>
+<p style="text-align:justify;">Benefits to TDD include:</p>
+<ul style="text-align:justify;">
+<li>Less code when writing only the code needed to pass the test</li>
+<li>Writing tests first cause you to focus on what you want the code to do</li>
+<li>Assists when refactoring by telling you if changes have broken any tests</li>
+</ul>
+<p style="text-align:justify;">Ok, so what is the downside?  I will say this if you are not doing BDD then you MUST at least use TDD.  I do not think that there is a downside to TDD per se, but I feel that with TDD, you will write a lot more tests.  If you are properly testing, then you will have tests for all of your methods.  Is this a bad thing?  Absolutely not.  In the end, as long you have tested first, you will benefit.  So what is the difference?</p>
+<p style="text-align:justify;">BDD is a development process that was created by Dan North to address issues that he had with the TDD process.  The testing process changed to thinking about the behavior that was expected or desired and not just writing tests on everything.</p>
+<p style="text-align:justify;">With BDD, acceptance tests are written using “User Stories” which can be maintained using sites such as Pivotal Tracker.  A user story is written in a couple of ways.  I use ISBAT for “I should be able to” when writing my stories.  An example would be; “As a User ISBAT create a new task”.  Another format or way to think of writing stories is to use “As a [role] I want [feature] so that [benefit]".  Thinking this way and writing stories in this manner is that you think like the end user.  This is key for your client.  A good user experience will help them to achieve what they want.  Think of it in the clients perspective:</p>
+<p style="text-align:justify;">As a (company owner) I want (a working e-commerce store) so that (I can make money)</p>
+<p style="text-align:justify;">So what is the difference between TDD and BDD?  It is how you view setting up your tests.  The best definition or description of the difference that I have see comes from a <a href="http://www.killswitchcollective.com/articles/30_tdd_bdd_and_using_rspec">blog article on Killswitch Collective’s</a> site:</p>
+<p style="text-align:justify;">“Test::Unit supports a Test Driven Development (TDD) approach, while RSpec implies a Behavior Driven Development (BDD) approach. In TDD, we are usually writing one test per function, leading to many small tests. In TDD, since there is one test per function, we end up writing tests at a core level that end up following the same structure as our code. With a BDD approach, we are using specs as a guide for testing. We are telling a story by describing how a set of functionality should behave, and focus less on the return value of a single method. Think of BDD as a humanized TDD; it is TDD written to use a more English like vocabulary for expressing functionality. BDD makes it easier for other developers to read and understand the code, becoming an additional form of documentation. BDD changes the way we think about testing, since it is more focused on implementing high level specs.”</p>
+<p style="text-align:justify;">For BDD, I use RSpec and Capybara which is pretty much the standard for Ruby on Rails BDD testing.  RSpec was created by Steven Baker in 2005 to be a BDD testing tool.  Rspec is used for testing models and is usually in the following format:</p>
+<pre>describe ‘Creating Blog Entry’ do
+  context ‘after it is created’ do
+    it ‘has required fields’ do
+      blog.title.present?
+      blog.body.present?
+    end
+  end
+end</pre>
+<p style="text-align:justify;">The test reads ‘Creating Blog Entry after it is created it has required fields’ and makes sense what we are doing.</p>
+<p style="text-align:justify;">For the actual user interface we use what is called a request spec.  For emulating the user experience, we use Capybara written by Jonas Nicklas for testing.  From the <a href="http://jnicklas.github.com/capybara/">Capybara website</a> :</p>
+<p style="text-align:justify;">“Capybara is a library written in the <a href="http://www.ruby-lang.org/">Ruby</a> programming language which makes it easy to simulate how a user interacts with your application.</p>
+<p style="text-align:justify;">Capybara can talk with many different drivers which execute your tests through the same clean and simple interface. You can seamlessly choose between Selenium, Webkit or pure Ruby drivers.”</p>
+<p style="text-align:justify;">Here is an example of how we would look at the same scenario but from the user point of view:</p>
+<pre>As a user ISBAT create a blog entry:
+ISBAT give it a title
+ISBAT give it a body</pre>
+<p style="text-align:justify;">These are behaviors we expect.  Underlying these ‘tasks’ in our story is the functionality that we will create, but based on the expected behavior.  Lets look at the request spec:</p>
+<pre>describe ‘Creating Blog Entry’ do
+    it ‘has required fields to fill out’ do
+      visit new_blog_entry_path
+      fill_in ‘Title’, with: ‘My New Post’
+      fill_in ‘Body’, with: ‘Here is my post content’
+      click_button ‘Save’
+      page.should have_content ‘New Blog Entry created’
+      page.should have_content ‘My New Post’
+      page.should have_content ‘Here is my post content’
+      page.should_not have_content ‘Error’
+    end
+end</pre>
+<p style="text-align:justify;">Now you can see the test is written for the expectations a user will have to create a new blog entry.  This is same as how the user will create a blog entry.  Visit the new blog entry path is where you create a new blog entry.  You then fill out the form and click the ’Save’ button.  As this is Behavior Driven Development we also express what the expected or desired behavior is.  We should see a message that the blog entry was created.  We also expect that the entry will be visible after creating it so we expect to see the title and the body content.  We also do not want to see an error message.  Now we write the code to pass the test.  We are not so concerned with all the details that we are going to code to get this resulting behavior but rather we just want to make sure that the experience and the behavior happens.  And we only write enough code to pass our test.</p>
+<p style="text-align:justify;">Hope this helps clarify BDD a bit.</p>
+<h6 class="zemanta-related-title" style="font-size:1em;">Related articles</h6>
+<ul class="zemanta-article-ul">
+<li class="zemanta-article-ul-li"><a href="http://codebetter.com/jameskovacs/2012/01/19/tddbdd-as-architectural-tools/">TDD/BDD as Architectural Tools</a> (codebetter.com)</li>
+</ul>

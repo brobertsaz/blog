@@ -1,0 +1,65 @@
+---
+layout: post
+title: Create a Ruby on Rails TODO application
+date: 2011-12-26 19:03:12.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags:
+- factorygirl
+- request specs
+meta:
+  publicize_results: a:1:{s:7:"twitter";a:1:{i:199393780;a:2:{s:7:"user_id";s:11:"broberts_az";s:7:"post_id";s:18:"151483243634503680";}}}
+  _wpas_done_twitter: '1'
+  _edit_last: '15714693'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p style="text-align:justify;">In an attempt to improve my <a class="zem_slink" title="Ruby on Rails" href="http://rubyonrails.org/" rel="homepage">RoR</a> skills and based on the suggestion of @m3talsmith, I am going to be creating a TODO application from almost scratch.  I will be blogging each step as I create the TODO both for my personal learning experience in addition to helping others to learn.</p>
+<p style="text-align:justify;">The TODO application will initially involve the following functions:</p>
+<ul style="text-align:justify;">
+<li>Add a note</li>
+<li>Edit a note</li>
+<li>Delete a note</li>
+<li>View all notes</li>
+</ul>
+<p style="text-align:justify;">These functions will initially be for html, then xml and then json.</p>
+<p style="text-align:justify;"><span style="text-decoration:underline;"><strong>Creating Stories</strong></span></p>
+<p style="text-align:justify;">I have found that creating stories for each function is a great way to think thru the workflow.  I personally use Pivotal Tracker but there are other applications out there that you can use.</p>
+<p style="text-align:justify;">ISBAT - I should be able to</p>
+<p style="text-align:justify;">Generally, the stories are created using ISBAT.  For this TODO application, I will start with four stories:</p>
+<ul style="text-align:justify;">
+<li>As a visitor ISBAT create a note</li>
+<li>As a visitor ISBAT edit a note</li>
+<li>As a visitor ISBAT delete a note</li>
+<li>As a visitor ISBAT view all notes</li>
+</ul>
+<p style="text-align:justify;">For testing I will be using <a class="zem_slink" title="RSpec" href="http://rspec.info/" rel="homepage">Rspec</a> and Capybara.  There are a lot of things that can be tested in an application, but I am going to be using just request specs.  These are tests to emulate the actual user experience to include filling in fields and clicking on buttons and links.  The theory behind this is that if you test all of the possible actions a user can perform, then the functionality behind the actions should work correctly.  I will be creating a blog entry for each of the above listed stories.</p>
+<p style="text-align:justify;"><span style="text-decoration:underline;"><strong>Project Setup</strong></span></p>
+<p style="text-align:justify;">The guys at RebelHold have created a great open source starter application to build an application upon which uses <a class="zem_slink" title="MongoDB" href="http://www.mongodb.org/" rel="homepage">MongoDB</a> and Mongoid, <a class="zem_slink" title="Haml" href="http://haml-lang.com/" rel="homepage">Haml</a>, Rspec, FactoryGirl, and <a class="zem_slink" title="Heroku" href="http://www.heroku.com/" rel="homepage">Heroku</a>.  As a today, <a href="https://github.com/rebelhold/Rebel-Foundation" target="_blank">Rebel-Foundation</a> uses Rails 3.1.3 and <a class="zem_slink" title="Ruby (programming language)" href="http://www.ruby-lang.org/" rel="homepage">Ruby</a> 1.9.2.</p>
+<p>To create my project I will clone Rebel-Foundation from github:</p>
+<p>[sourcecode language="bash"]<br />
+git clone git@github.com:rebelhold/Rebel-Foundation.git todo_app<br />
+[/sourcecode]</p>
+<p>This creates a new Rails application named "todo_app". Following the instructions on github:</p>
+<blockquote>
+<pre>== Instructions
+
+For those rvm users we've included a rvmrc. Just:
+
+cp rvmrc .rvmrc
+cd ..
+
+And cd back in to your project.
+
+Accept the rvmrcgem install bundler
+bundle</pre>
+</blockquote>
+<p>If you are NOT using rvm, then you need to!!</p>
+<p>This will setup the basic project.  My next blog entry will be writing the first story, the tests for that story and the code to pass the tests.</p>

@@ -1,0 +1,58 @@
+---
+layout: post
+title: Feature specs - RSpec
+date: 2014-02-24 17:06:42.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  blog_id: '64067922'
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:21:\"Feature specs - RSpec\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2014-02-12
+    12:34:41\";s:9:\"permalink\";s:56:\"http://rohitbhore.wordpress.com/2014/02/10/feature-spec/\";s:7:\"content\";s:2883:\"<div
+    class=\"reblogged-content\">\n<h1 id=\"toc_0\">Integration test with RSpec and
+    Capybara</h1>\r\n<h2 id=\"toc_1\">Feature spec</h2>\r\nGenerally we use controller
+    spec, model spec to test our application. What if when you will needs to put everything
+    together? Feature spec is nothing but integration testing.\r\n\r\nFeature spec
+    makes sure that models and controllers all workes nicely with other models and
+    controllers in the application.\r\n<h2 id=\"toc_2\">Capybara</h2>\r\n<h4 id=\"toc_3\"><strong>Problem</strong></h4>\r\nThe
+    old RSpec <a title=\"request-spec\" href=\"https://www.relishapp.com/rspec/rspec-rails/docs/request-specs/request-spec\">requests
+    spec</a> used Capybara 1.x as framework for both <em>Integration Test</em> and
+    in <a title=\"capybara\" href=\"https://github.com/jnicklas/capybara\">capybara</a>.\r\n<h4
+    id=\"toc_4\"><strong>Solution</strong></h4>\r\nCapybara 2.x introduced a few changes
+    with some advanced use. So it's becomes the term feature instead of request.\r\n\r\nIf
+    you are <a title=\"upgrading to Capybara 2.0\" href=\"https://github.com/rspec/rspec-rails/blob/master/Capybara.md\">upgrading
+    to Capybara 2.0</a>, you'll need to do a few things:\r\n<ul>\n<li>Upgrade rspec-rails
+    to 2.12.0 or greater</li>\r\n\t<li>Move all the tests from spec/request to spec/features</li>\r\n</ul>\n<em>Gemfile</em>\r\n<div>\r\n<div>\r\n<pre>group
+    :test do\r\n  gem \"rspec-rails\", \"~&gt; 2.12.2\"\r\n  gem \"capybara\", \"~&gt;
+    2.0\"\r\nend</pre>\r\n</div>\r\n</div>\r\nCapybara lets you know about how a user
+    would interact with your application through a web browser, by using simple methods
+    like click_button, click_link, fill_in, and visit.\r\n<h4 id=\"toc_5\">Example</h4>\r\nAlso
+    you will need to use <strong>feature</strong> instead of <strong>describe</strong>, <strong>scenario</strong> instead
+    of <strong>it</strong> and <strong>background</strong> instead of <strong>before</strong> this
+    to make it more readable.\r\n\r\nHere is one self explanatory example.\r\n\r\n<em>spec/features/signup_spec.rb</em>\r\n<div>\r\n<div>\r\n<pre>require
+    'spec_helper'\r\n\r\nfeature 'Visitor signs up' do\r\n  scenario 'with valid email
+    and password' do\r\n    sign_up_with 'email@example.com', 'password    \r\n    expect(page).to
+    have_content('Welcome! You have signed up successfully.')\r\n  end\r\n\r\n  scenario
+    'with invalid email' do\r\n    sign_up_with 'invalid_email', 'password'    \r\n
+    \   expect(page).to have_content('Sign in')\r\n  end\r\n\r\n  scenario 'with blank
+    password' do\r\n    sign_up_with 'email@example.com', ''\r\n    expect(page).to
+    have_content('Sign in')\r\n  end\r\n\r\n  def sign_up_with(email, password)\r\n
+    \   visit sign_up_path\r\n    fill_in 'Email', with: email\r\n    fill_in 'Password',
+    with: password\r\n    click_button 'Sign up'\r\n  end\r\nend</pre>\r\n</div>\r\n</div>\r\nIn
+    the <a href=\"https://github.com/jnicklas/capybara\">official documentation</a> you
+    will find more interesting information about the new features/changes made for
+    Capybara 2.</div>\";}"
+  _publicize_pending: '1'
+  is_reblog: '1'
+  post_id: '13'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+

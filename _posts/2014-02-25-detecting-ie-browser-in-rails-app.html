@@ -1,0 +1,29 @@
+---
+layout: post
+title: Detecting IE browser in Rails app
+date: 2014-02-25 19:32:51.000000000 -06:00
+type: post
+published: true
+status: publish
+categories: []
+tags:
+- IE 8
+- Ruby on Rails
+meta:
+  _publicize_pending: '1'
+  _rest_api_published: '1'
+  _rest_api_client_id: "-1"
+  _oembed_d68912cbc87a957a40ddeeaf870950fd: "{{unknown}}"
+  _oembed_38cb566520d63582b285e19835d0897c: "{{unknown}}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>I have been working an app that is used by many users that are still on MS XP and using IE8.  It is a javascript heavy app and I have many issues in dealing with the cross-browser compatibility (IE) but today I found a great gem.</p>
+<p>I was trying everything using CSS to hide a div in IE 8 to no avail.  And then <a href="https://github.com/fnando/browser">Browser Gem</a> to the rescue.</p>
+<p>I added a simple check for IE 8 in my view:</p>
+<p>    = if browser.ie8?</p>
+<p>Thank you browser gem!!!</p>

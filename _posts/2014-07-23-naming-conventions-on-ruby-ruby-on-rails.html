@@ -1,0 +1,60 @@
+---
+layout: post
+title: Naming conventions on Ruby & Ruby on Rails
+date: 2014-07-23 17:50:21.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  is_reblog: '1'
+  post_id: '563'
+  blog_id: '14963381'
+  reblog_snapshot: |-
+    O:8:"stdClass":7:{s:5:"title";s:46:"Naming conventions on Ruby &amp; Ruby on Rails";s:4:"type";s:4:"post";s:9:"mime_type";s:0:"";s:6:"format";b:0;s:12:"modified_gmt";s:19:"2014-07-18 06:59:21";s:9:"permalink";s:85:"http://selvaonrails.wordpress.com/2014/07/18/naming-conventions-on-ruby-ruby-on-rails";s:7:"content";s:7466:"<div class="reblogged-content">
+
+    <p style="text-align:center;"><span style="text-decoration:underline;"><strong>Ruby Naming Conventions</strong></span></p>
+    <p><span style="font-family:Verdana;font-size:small;"><strong><em>Local Variables</em></strong><br>Lowercase letter followed by other characters, naming convention states that it is better to use underscores rather than camelBack for multiple word names, e.g. mileage, variable_xyz</span></p>
+    <p><span style="font-family:Verdana;font-size:small;"><em><strong>Instance Variables</strong><br></em>Instance variables are defined using the single "at" sign (@) followed by a name. It is suggested that a lowercase letter should be used after the @, e.g. @colour </span></p>
+    <p><span style="font-family:Verdana;font-size:small;"><em><strong>Instance Methods</strong><br></em>Method names should start with a lowercase letter, and may be followed by digits, underscores, and letters, e.g. paint, close_the_door</span></p>
+    <p><span style="font-family:Verdana;font-size:small;"><em><strong>Class Variables</strong><br></em>Class variable names start with a double "at" sign (@@) and may be followed by digits, underscores, and letters, e.g. @@colour</span></p>
+    <p><span style="font-family:Verdana;font-size:small;"><em><strong>Constant </strong><br></em>Constant names start with an uppercase letter followed by other characters. Constant objects are by convention named using all uppercase letters and underscores between words, e.g. THIS_IS_A_CONSTANT</span></p>
+    <p><span style="font-family:Verdana;font-size:small;"><em><strong>Class and Module </strong><br></em>Class and module names starts with an uppercase letter, by convention they are named using MixedCase, e.g. module Encryption, class MixedCase</span></p>
+    <p><span style="font-family:Verdana;font-size:small;"><em><strong>Global Variables</strong><br></em>Starts with a dollar ($) sign followed by other characters, e.g. $global</span></p>
+    <p style="text-align:center;"><span style="text-decoration:underline;"><strong>Rails Naming Conventions</strong></span></p>
+    <p><span style="font-size:small;"><span style="font-family:Verdana;"><em><strong>Variable </strong><br></em>Variables are named where all letters are lowercase and words are separated by underscores, e.g. order_amount, total</span></span></p>
+    <p><span style="font-family:Verdana;font-size:small;"><em><strong>Class and Module</strong> <br></em>Classes and modules use MixedCase and have no underscores, each word starts with a uppercase letter, e.g. InvoiceItem</span></p>
+    <p><span style="font-family:Verdana;font-size:small;"><strong><em>Database Table</em></strong><br>Table names have all lowercase letters and underscores between words, also all table names need to be plural, e.g. invoice_items, orders</span></p>
+    <p><span style="font-family:Verdana;font-size:small;"><strong><em>Model</em> </strong><br>The model is named using the class naming convention of unbroken MixedCase and is always the singular of the table name, e.g. table name might be orders, the model name would be Order. Rails will then look for the class definition in a file called order.rb in the /app/models directory. If the model class name has multiple capitalised words, the table name is assumed to have underscores between these words.</span></p>
+    <p><span style="font-family:Verdana;font-size:small;"><strong><em>Controller</em></strong><br>Controller class names are pluralized, such that OrdersController would be the controller class for the orders table.  Rails will then look for the class definition in a file called orders_controller.rb in the /app/controllers directory.</span></p>
+    <p><span style="font-family:Verdana;font-size:small;"><strong><em>Files, Directories and other pluralization</em></strong><br></span><span style="font-family:Verdana;font-size:small;">Files are named using lowercase and underscores. Assuming we have an Orders controller then the following other conventions will apply:</span></p>
+    <ul>
+    <li><span style="font-family:Verdana;font-size:small;">That there is a helper module named OrdersHelper in the orders_helper.rb found in the app/helpers directory</span></li>
+    <li><span style="font-family:Verdana;font-size:small;">Rails will look for view template files for the controller in the app/views/orders directory</span></li>
+    <li><span style="font-family:Verdana;font-size:small;">Output from this view will then be used in the layout defined in the orders.html.erb in the app/views/layouts directory</span></li>
+    <li><span style="font-family:Verdana;font-size:small;">Test files including <span style="font-family:Verdana;font-size:small;">order_test.rb</span> will be created in the /test/unit directory, a file will be created in the /test/fixtures directory called orders.yml and finally a file called orders_controller_test.rb will be created in the /test/functional directory</span></li>
+    </ul>
+    <p><span style="font-family:Verdana;font-size:small;"><em><strong>Primary Key</strong><br></em>The primary key of a table is assumed to be named id.</span></p>
+    <p><span style="font-family:Verdana;font-size:small;"><strong><em>Foreign Key</em></strong><br>The foreign key is named with the singular version of the target table name with _id appended to it, e.g. order_id in the items table where we have items linked to the orders table.</span></p>
+    <p><span style="font-family:Verdana;font-size:small;"><em><strong>Many to Many Link Tables</strong><br></em>Tables used to join two tables in a many to many relationship is named using the table names they link, with the table names in alphabetical order, for example items_orders.</span></p>
+    <p><span style="font-family:Verdana;font-size:small;"><em><strong>Automated Record Timestamps</strong><br></em>You can get ActiveRecord to automatically update the create and update times of records in a database table. To do this create two specially named columns created_at and updated_at to your table, i.e. t.datetime :created_at and t.datetime :updated_at. If you only want to store the date rather than a date and time, use :created_on and :updated_on.</span></p>
+    <p style="text-align:center;"><span style="text-decoration:underline;"><b>Naming Convention Summary</b></span></p>
+    <p><strong><span style="font-family:Verdana;font-size:small;"><em>Model Naming Convention</em></span></strong></p>
+    <p><span style="font-family:Verdana;font-size:small;">Table: orders<br>Class: Order<br>File: /app/models/order.rb<br>Primary Key: id<br>Foreign Key: customer_id<br>Link Tables: items_orders</span></p>
+    <p><strong><span style="font-family:Verdana;font-size:small;"><em>Controller Naming Convention</em></span></strong></p>
+    <p><span style="font-family:Verdana;font-size:small;">Class: OrdersController<br>File: /app/controllers/orders_controller.rb<br>Layout: /app/layouts/orders.html.erb</span></p>
+    <p><strong><span style="font-family:Verdana;font-size:small;"><em>View Naming Convention</em></span></strong></p>
+    <p><span style="font-family:Verdana;font-size:small;">Helper: /app/helpers/orders_helper.rb<br>Helper Module: OrdersHelper<br>Views: /app/views/orders/… (list.html.erb for example)</span></p>
+    <p><strong><span style="font-family:Verdana;font-size:small;"><em>Tests Naming Convention</em></span></strong></p>
+    <p><span style="font-family:Verdana;font-size:small;">Unit: /test/unit/order_test.rb<br>Functional: /test/functional/orders_controller_test.rb<br>Fixtures: /test/fixtures/orders.yml</span></p>
+    </div>";}
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+

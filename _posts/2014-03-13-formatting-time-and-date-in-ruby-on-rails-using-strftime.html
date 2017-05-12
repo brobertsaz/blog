@@ -1,0 +1,49 @@
+---
+layout: post
+title: Formatting Time and Date in Ruby on Rails Using strftime()
+date: 2014-03-13 21:24:44.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _publicize_pending: '1'
+  is_reblog: '1'
+  post_id: '721'
+  blog_id: '40540558'
+  _thumbnail_id: '1124'
+  reblog_snapshot: "O:8:\"stdClass\":8:{s:5:\"title\";s:58:\"Formatting Time and Date
+    in Ruby on Rails Using strftime()\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2014-03-13
+    06:48:50\";s:9:\"permalink\";s:93:\"http://blog.41studio.com/2014/03/13/formatting-time-and-date-in-ruby-on-rails-using-strftime/\";s:7:\"content\";s:1796:\"<div
+    class=\"reblogged-content\">By default Rails will display the time and date like
+    this: 2014-03-10 10:25:41 +0700. So how if we want to customize format of time
+    and date? In Ruby on Rails we can use strftime() method to format the time and
+    date in order to make it more readable. Example: March 10, 2014.\r\n\r\nIt's really
+    simple to use strftime() method, all we need to is give the object the time and
+    date format, i.g.:\r\n\r\n<pre>\r\ncurrent_time = Time.now\r\ncurrent_time.strftime(\"%B
+    %d, %Y\")\r\n=&gt; \"March 13, 2014\"\r\n</pre>\r\n\r\nWhere \"%b %d, %Y\" is
+    the format you want. Here's some of the commonly used formats:\r\n\r\n<pre>\r\n%a
+    - Short weekday name (“Sun”)\r\n\r\n%A - Full weekday name (“Sunday”)\r\n\r\n%b
+    - Short month name (“Jan”)\r\n\r\n%B - Full month name (“January”)\r\n\r\n%m -
+    Month of the year (01..12)\r\n\r\n%c - Preferred local date and time (\"Thu Mar
+    13 11:30:15 2014\")\r\n\r\n%d - Day of the month (01..31)\r\n\r\n%H - Hour of
+    the day, 24-hour clock (00..23)\r\n\r\n%I - Hour of the day, 12-hour clock (01..12)\r\n\r\n%M
+    - Minute of the hour (00..59)\r\n\r\n%p - Meridian indicator upcase (“AM” or “PM”)\r\n\r\n%P
+    - Meridian indicator downcase (“am” or “pm”)\r\n\r\n%S - Second of the minute
+    (00..60)\r\n\r\n%x - Simple date (\"03/13/14\")\r\n\r\n%X - Simple time (\"13:20:16\")\r\n\r\n%y
+    - Year without a century (00..99)\r\n\r\n%Y - Year with century (\"2014\")\r\n</pre>\r\n\r\nYou
+    can also use rails default rails \"created_at\" field like this:\r\n\r\n<pre>\r\n@post.created_at.strftime(\"Posted
+    on %B %d, %Y at %H:%M\")\r\n=&gt; \"Posted on March 13, 2014 at 13:45\"\r\n</pre>\r\n\r\n<hr>\n<em>Written
+    by <a href=\"http://twitter.com/irfan18s\" target=\"_blank\">Irfan Fadilah</a>
+    - Author at <a href=\"http://www.41studio.com/\" target=\"_blank\">41studio</a>\r\nReference
+    <a href=\"http://apidock.com/\" rel=\"nofollow\">http://apidock.com/</a></em>\n</div>\";s:15:\"images_mirrored\";i:1;}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+

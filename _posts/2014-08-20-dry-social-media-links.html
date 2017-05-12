@@ -1,0 +1,51 @@
+---
+layout: post
+title: DRY Social Media Links
+date: 2014-08-20 20:25:30.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  is_reblog: '1'
+  post_id: '150'
+  blog_id: '56099290'
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:22:\"DRY Social Media Links\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2014-08-19
+    14:23:12\";s:9:\"permalink\";s:55:\"http://pareidoliax.ca/2014/08/19/dry-social-media-links\";s:7:\"content\";s:2320:\"<div
+    class=\"reblogged-content\">\n\nI went a little crazy with social media links
+    last night. I wanted to make a nice <em>nav</em> element full of them. First I
+    found a great <a href=\"https://github.com/danleech/simple-icons\">github repository</a>
+    and <a href=\"http://simpleicons.org/\">site</a> for the images called <a href=\"http://simpleicons.org/\">simpleicons.org</a>.\r\n\r\nWith
+    all those great icon options I ended up wanting to make nine links but I wanted
+    to keep things <a href=\"http://en.wikipedia.org/wiki/Don't_repeat_yourself\">DRY</a>
+    so I used an array and a loop. I was pretty pleased with the result.\r\n\r\n<a
+    href=\"https://gist.github.com/PareidoliaX/fa6c2fb9493f4fe0ab69#file-_footer-html-erb\"><strong>_footer.html.erb</strong></a>\r\n[code
+    language=\"HTML\"]\r\n&lt;footer&gt;\r\n  &lt;% social_media = [\r\n    [\"Github\",
+    \"github-256.png\", \"https://github.com/PareidoliaX\"],\r\n    [\"LinkedIn\",
+    \"linkedin-256.png\", \"https://www.linkedin.com/pub/alexander-miller/2b/909/62b\"],\r\n
+    \   [\"CodeSchool\", \"codeschool-256.png\", \"https://www.codeschool.com/users/336826\"],\r\n
+    \   [\"Treehouse\", \"treehouse-256.png\", \"http://teamtreehouse.com/alexandermiller\"],\r\n
+    \   [\"Khan Academy\", \"khanacademy-256.png\", \"https://www.khanacademy.org/profile/PareidoliaX/\"],\r\n
+    \   [\"WordPress\", \"wordpress-256.png\", \"http://pareidoliax.ca/\"],\r\n    [\"Steam\",
+    \"steam-256.png\", \"http://steamcommunity.com/profiles/76561198025305101\"],\r\n
+    \   [\"Twitter\", \"twitter-256.png\", \"https://twitter.com/PareidoliaX\"],\r\n
+    \   [\"Facebook\", \"facebook-256.png\", \"https://www.facebook.com/xander.miller\"]\r\n
+    \   ] %&gt;\r\n    &lt;div class=\"row\"&gt;\r\n      &lt;nav&gt;\r\n        &lt;ul
+    id=\"social-media\"&gt;\r\n          &lt;% social_media.each do |media| %&gt;\r\n
+    \           &lt;li&gt;\r\n              &lt;%= link_to media[2] { image_tag(\"https://s3-us-west-2.amazonaws.com/xander-mind/#{media[1]}\",
+    alt: \"#{media[0]} Logo\")} %&gt;\r\n            &lt;/li&gt;\r\n          &lt;%
+    end %&gt;\r\n        &lt;/ul&gt;\r\n      &lt;/nav&gt;\r\n    &lt;/div&gt;\r\n
+    \ &lt;div class=\"row\"&gt;\r\n    &lt;p class=\"text-right\"&gt;&amp;copy; 2014
+    &lt;em&gt;Xander Miller&lt;/em&gt;&lt;/p&gt;\r\n  &lt;/div&gt;\r\n&lt;/footer&gt;\r\n[/code]\r\n\r\nThis
+    code is available in a <a href=\"https://gist.github.com/PareidoliaX/fa6c2fb9493f4fe0ab69#file-_footer-html-erb\">github
+    gist</a> for easy copying. Happy Coding!\r\n</div>\";}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>Nice idea.  You could go one step further and have the social_media as a variable in your controller.</p>

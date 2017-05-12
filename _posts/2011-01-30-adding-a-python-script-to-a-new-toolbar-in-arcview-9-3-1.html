@@ -1,0 +1,144 @@
+---
+layout: post
+title: Adding a Python Script to a new Toolbar in ArcView 9.3.1. tutorial
+date: 2011-01-30 17:16:16.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Geoprocessing with Python
+tags:
+- Python
+meta:
+  _wpas_done_twitter: '1'
+  _edit_last: '15714693'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p style="text-align:justify;"><span style="color:#555555;font-family:Verdana;font-size:10pt;">So you finished your <a class="zem_slink" title="Python (programming language)" rel="homepage" href="http://www.python.org/">Python</a> ArcToolbox tool and now you want to add a shortcut to the toolbar.  This tutorial is based on the assumption that you have already added your script to the ArcToolbox tools.  If not I will cover that in another tutorial. I will show how to add a button in addition to how to add a menu to <a class="zem_slink" title="ArcView" rel="homepage" href="http://www.esri.com/software/arcgis/arcview/index.html">ArcView</a> toolbar. Both are convenient ways to launch your Python script tools without having to open ArcToolbox.<br />
+</span></p>
+<p><span style="color:#555555;font-family:Verdana;font-size:10pt;">First we will create a button to launch your tool.<br />
+</span></p>
+<ul>
+<li>
+<div><span style="color:#555555;font-family:Verdana;font-size:10pt;">Go to Tools &gt; Customize<br />
+</span></div>
+<p><img src="{{ site.baseurl }}/assets/013111_0016_addingapyth1.png" alt="" /><span style="color:#555555;font-family:Verdana;font-size:10pt;"><br />
+</span></p>
+<ul>
+<li><span style="color:#555555;font-family:Verdana;font-size:10pt;">This will open up to the Toolbars tab. If you do not want to add your own Toolbar, skip this section.<br />
+</span></li>
+</ul>
+</li>
+<li>
+<div><span style="color:#555555;font-family:Verdana;font-size:10pt;">Click New for a new toolbar:<br />
+</span></div>
+<p><img src="{{ site.baseurl }}/assets/013111_0016_addingapyth2.png" alt="" /><span style="color:#555555;font-family:Verdana;font-size:10pt;"><br />
+</span></li>
+<li><span style="color:#555555;font-family:Verdana;font-size:10pt;">Name your toolbar<br />
+</span></li>
+</ul>
+<ul>
+<li>
+<div><span style="color:#555555;font-family:Verdana;font-size:10pt;">Save it to either the current project (the .mxd) or to the Normal.mxt for use in all projects.<br />
+</span></div>
+</li>
+<li>
+<div><span style="color:#555555;font-family:Verdana;font-size:10pt;">This will create an empty toolbar. Drag the toolbar to the top of ArcView.<br />
+</span></div>
+<p><img src="{{ site.baseurl }}/assets/013111_0016_addingapyth3.png" alt="" /><span style="color:#555555;font-family:Verdana;font-size:10pt;"><br />
+</span></li>
+</ul>
+<p><span style="color:#555555;font-family:Verdana;font-size:10pt;">Now that you have a new and empty toolbar we need to create the button for the Python tool.<br />
+</span></p>
+<ul>
+<li>
+<div><span style="color:#555555;font-family:Verdana;font-size:10pt;">Click on the Commands tab under Customize:<br />
+</span></div>
+<p><img src="{{ site.baseurl }}/assets/013111_0016_addingapyth4.png" alt="" /><span style="color:#555555;font-family:Verdana;font-size:10pt;"><br />
+</span></li>
+<li>
+<div><span style="color:#555555;font-family:Verdana;font-size:10pt;">Scroll to the bottom of the Categories window:<br />
+</span></div>
+<p><img src="{{ site.baseurl }}/assets/013111_0016_addingapyth5.png" alt="" /><span style="color:#555555;font-family:Verdana;font-size:10pt;"><br />
+</span></li>
+<li>
+<div><span style="color:#555555;font-family:Verdana;font-size:10pt;">Highlight [UIControls] and at the bottom click New UIControl<br />
+</span></div>
+<p><img src="{{ site.baseurl }}/assets/013111_0016_addingapyth6.png" alt="" /><span style="color:#555555;font-family:Verdana;font-size:10pt;"><br />
+</span></li>
+<li><span style="color:#555555;font-family:Verdana;font-size:10pt;">Select UIButtonControl and hit Create<br />
+</span></li>
+<li>
+<div><span style="color:#555555;font-family:Verdana;font-size:10pt;">Click in the box for the name if you wish to rename the tool<br />
+</span></div>
+<p><img src="{{ site.baseurl }}/assets/013111_0016_addingapyth7.png" alt="" /><span style="color:#555555;font-family:Verdana;font-size:10pt;"><br />
+</span></li>
+<li>
+<div><span style="color:#555555;font-family:Verdana;font-size:10pt;">Next, click and drag the new UIButtonControl1 to your toolbar that was just created.<br />
+</span></div>
+<p><img src="{{ site.baseurl }}/assets/013111_0016_addingapyth8.png" alt="" /><span style="color:#555555;font-family:Verdana;font-size:10pt;"><br />
+</span></li>
+</ul>
+<p><span style="color:#555555;font-family:Verdana;font-size:10pt;">Now that the button is one the toolbar, we need to set it up to launch your Python tool.<br />
+</span></p>
+<ul>
+<li><span style="color:#555555;font-family:Verdana;font-size:10pt;">Right click on the new button and you should see several options here.<br />
+</span></li>
+</ul>
+<p><img src="{{ site.baseurl }}/assets/013111_0016_addingapyth9.png" alt="" /><span style="color:#555555;font-family:Verdana;font-size:10pt;"><br />
+</span></p>
+<ul>
+<li><span style="color:#555555;font-family:Verdana;font-size:10pt;">You can change the button image to whatever you would like or you can just use "Text Only" for the name of the tool.<br />
+</span></li>
+</ul>
+<p><img src="{{ site.baseurl }}/assets/013111_0016_addingapyth10.png" alt="" /><span style="color:#555555;font-family:Verdana;font-size:10pt;"><br />
+</span></p>
+<p><span style="color:#555555;font-family:Verdana;font-size:10pt;">Now that we have the button on the toolbar and changed the way that it displays, it is time to add the Visual Basic snippet to launch the tool.<br />
+</span></p>
+<ul>
+<li><span style="color:#555555;font-family:Verdana;font-size:10pt;">Click on "View Source". This should open up the Microsoft Visual Basic editor:<br />
+</span></li>
+</ul>
+<p style="margin-left:36pt;"><img src="{{ site.baseurl }}/assets/013111_0016_addingapyth11.png" alt="" /><span style="color:#555555;font-family:Verdana;font-size:10pt;"><br />
+</span></p>
+<p style="margin-left:36pt;">&nbsp;</p>
+<p style="margin-left:36pt;">&nbsp;</p>
+<ul>
+<li><span style="color:#555555;font-family:Verdana;font-size:10pt;">Copy and Paste the following script between the <strong>Private Sub UIButtonControl1_Click() </strong>and <strong>End Sub:</strong></span></li>
+</ul>
+<p>[sourcecode language="VB"]</p>
+<p>Dim pUID As New UID<br />
+pUID = &quot;esriGeoprocessingUI.ArcToolboxExtension&quot;<br />
+Dim pGP As IGeoProcessor<br />
+Set pGP = New GeoProcessor<br />
+Dim pATBExt As IArcToolboxExtension<br />
+Set pATBExt = Application.FindExtensionByCLSID(pUID)<br />
+Dim pAtb As IArcToolbox<br />
+Set pAtb = pATBExt.ArcToolbox<br />
+Dim pTool As IGPTool<br />
+Set pTool = pAtb.GetToolbyNameString(&quot;mypythontoolname&quot;)<br />
+Dim pCommand As IGPToolCommandHelper<br />
+Set pCommand = New GPToolCommandHelper<br />
+pCommand.SetTool pTool<br />
+pCommand.Invoke Nothing&lt;/span&gt;</p>
+<p>[/sourcecode]</p>
+<ul>
+<li><span style="color:#555555;font-family:Verdana;font-size:10pt;">You will need to replace <span style="background-color:yellow;">"mypythontoolname"</span> with the name of your Python tool.<br />
+</span></li>
+<li><span style="color:#555555;font-family:Verdana;font-size:10pt;">Click the save button at the top of the VB editor.<br />
+</span></li>
+<li><span style="color:#555555;font-family:Verdana;font-size:10pt;">Click on your button and it should open.<br />
+</span></li>
+</ul>
+<p style="text-align:justify;"><span style="color:#555555;font-family:Verdana;font-size:10pt;">There are a few things that can cause the button not to open your Python tool. The most common that I have seen is that the Visual Basic reference is not selected as available for using the <span style="color:#2970a7;">ESRI <span style="color:#555555;">GeoprocessingUI Object Library.  This can be added by going into the Visual Basic editor again.  At the top there is an option for Tools and then select references.  Make sure that the ESRI GeoprocessingUI Object Library is checked.  If not, check it to make the library available.<br />
+</span></span></span></p>
+<p style="text-align:justify;"><span style="color:#555555;font-family:Verdana;font-size:10pt;">If you want to add a drop down menu for listing multiple Python tools the steps are mostly the same. After creating a new toolbar, you can create a new menu before you create the tool buttons.<br />
+</span></p>
+<p style="text-align:justify;"><span style="color:#555555;font-family:Verdana;font-size:10pt;">On the Customize &gt; Commands tab in the left hand pane there is an option for [New Menu].  Create the new menu in the same manner as creating the UIControls button.  Add the menu to the toolbar and then you can add tool buttons to the drop down menu by clicking and dragging them to the drop down.<br />
+</span></p>
+<p style="text-align:justify;"><span style="color:#555555;font-family:Verdana;font-size:10pt;">Hope that helps!</span></p>

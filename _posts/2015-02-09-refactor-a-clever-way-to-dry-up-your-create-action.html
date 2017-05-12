@@ -1,0 +1,52 @@
+---
+layout: post
+title: 'Refactor: A clever way to DRY up your create action'
+date: 2015-02-09 18:46:40.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _publicize_pending: '1'
+  is_reblog: '1'
+  post_id: '54'
+  blog_id: '69542792'
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:51:\"Refactor: A clever way
+    to DRY up your create action\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2015-01-02
+    19:40:46\";s:9:\"permalink\";s:81:\"http://briandear.co/2015/01/02/refactor-a-clever-way-to-dry-up-your-create-action\";s:7:\"content\";s:1644:\"<div
+    class=\"reblogged-content\">\n\nAnyone that has spent at least 5 minutes with
+    Ruby on Rails will recognize the following code:\r\n<pre>class PersonController\r\n\r\n
+    \ ...\r\n\r\n  def create\r\n    if person.save\r\n      flash[:success] = 'Person
+    saved!'\r\n      redirect_to person\r\n    else\r\n      flash[:error] = 'Person
+    not saved.'\r\n      render :new\r\n    end\r\n  end\r\n\r\n  ...\r\n\r\nend\r\n</pre>\r\nIt's
+    probably the single most common method in a rails controller and since it follows
+    the same pattern in each controller, it's ripe for DRYing up!\r\n\r\nHere's how:\r\n\r\nIn
+    your application_controller.rb add the following method:\r\n<pre>def save_and_redirect(new_object,
+    success_msg, error_msg, redirect_path)\r\n  if new_object.save\r\n    flash[:success]
+    = success_msg\r\n     redirect_to redirect_path\r\n  else\r\n    flash[:error]
+    = error_msg\r\n    render :new\r\n  end\r\nend\r\n</pre>\r\nThen in your controllers
+    call the method like this:\r\n<pre>def create\r\n save_and_redirect(person, 'Person
+    added!', 'Person not added.', person)\r\n end</pre>\r\nAnd that's how it's done.\r\n\r\nAlso,
+    in case anyone was wondering where my @person = Person.new(params[:person]) went
+    and why I don't use instance variables; I use Decent Exposure. <a href=\"https://github.com/hashrocket/decent_exposure\">Check
+    it out!</a>\r\n\r\nHowever, the above method will also work with the more conventional
+    create action. Simply change the controller method to this:\r\n<pre>def create\r\n
+    \ @person = Person.new(params[:person])\r\n  save_and_redirect(@person, 'Person
+    added!', 'Person not added.', person)\r\nend\r\n</pre>\r\n..and you're good to
+    go.\r\n\r\nDo you have any clever refactors? Share them in the comments below..</div>\";}"
+  publicize_twitter_user: bobr_az
+  publicize_twitter_url: http://t.co/CEs1Zg5DmW
+  _wpas_done_7641025: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:2516516912;b:1;}}
+  publicize_linkedin_url: ''
+  _wpas_done_7777887: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+

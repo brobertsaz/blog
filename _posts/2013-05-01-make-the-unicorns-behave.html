@@ -1,0 +1,41 @@
+---
+layout: post
+title: Making Unicorn behave....
+date: 2013-05-01 15:59:25.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags:
+- Sudo
+- Unicorn
+meta:
+  _edit_last: '15714693'
+  publicize_reach: a:2:{s:7:"twitter";a:1:{i:482036;i:239;}s:2:"wp";a:1:{i:0;i:28;}}
+  publicize_twitter_user: broberts_az
+  _wpas_done_482036: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:199393780;b:1;}}
+  _wpas_skip_482036: '1'
+  _oembed_04d7b89d5dd9662c3746d2e1a95701b9: "{{unknown}}"
+  _oembed_e1942134009a1e34c293fd7d7eec6a94: "{{unknown}}"
+  _oembed_6ed0dc1618f128ef9c7db1d459b63761: "{{unknown}}"
+  _oembed_ddc85da46c42664a929806d389736ca9: "{{unknown}}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>This one had me going for a bit so I figured that I would share my solution.....</p>
+<p>I am using <a href="https://github.com/mislav/git-deploy">git-deploy</a> for one of my clients for their two servers.  It is quite similar to <a class="zem_slink" title="Capistrano" href="http://https://github.com/capistrano/capistrano/wiki" target="_blank" rel="homepage">Capistrano</a> but I like it better.</p>
+<p>The <a href="https://github.com/mislav/git-deploy">git-deploy</a> uses 3 files for deployment; after_push, before_restart, and restart.  I needed to restart Unicorn after deployments but found that I could not do so without using sudo and the password for the user.  This didn't work in the "restart" file so I found myself manually restarting Unicorn after every deploy.  Pain in the ass......</p>
+<p>First run "<a class="zem_slink" title="Sudo" href="http://www.sudo.ws" target="_blank" rel="homepage">visudo</a>" from the server command line.  It may require using sudo first.  Then I added:</p>
+<pre>&lt;server_name&gt; ALL=NOPASSWD: /etc/init.d/unicorn restart, /etc/init.d/unicorn stop, /etc/init.d/unicorn start</pre>
+<p>This gave the &lt;server_user&gt; the privilege to run sudo  /etc/init.d/unicorn restart without having to enter the password.</p>
+<p>So I just needed to add run "sudo /etc/init.d/unicorn restart" to the git-deploy "restart file"</p>
+<h6 class="zemanta-related-title" style="font-size:1em;">Related articles</h6>
+<ul class="zemanta-article-ul">
+<li class="zemanta-article-ul-li"><a href="http://multiplethreads.wordpress.com/2013/04/16/setting-up-nginx-with-unicorn-for-rails/" target="_blank">Setting up Nginx with Unicorn for Rails</a> (multiplethreads.wordpress.com)</li>
+</ul>

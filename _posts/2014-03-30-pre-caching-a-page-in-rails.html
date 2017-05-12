@@ -1,0 +1,65 @@
+---
+layout: post
+title: Pre-Caching a page in Rails
+date: 2014-03-30 17:19:56.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _edit_last: '15714693'
+  _publicize_pending: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p style="text-align:justify;">I recently had to figure out how to basically freeze a page in a rails app so that any changes to the dynamic data would not change the front facing view.</p>
+<p style="text-align:justify;">The app has a “web page” that is created dynamically and is then “published” to the web on a weekly basis. As this is always the same view, I needed to figure out how to save the view from each week. StackOverflow led me to the best option being to cache the page.</p>
+<p style="text-align:justify;">Easy enough, but what happens if nobody visits the page for one week? It is never cached. So after some googling I found that I could curl the page from the app and that cur (<a href="http://linux.about.com/od/commands/l/blcmdl1_curl.htm"><b>curl</b></a> is a client to get documents/files from or send documents to a server, using any of the supported protocols (HTTP, HTTPS, FTP, GOPHER, DICT, TELNET, LDAP or FILE). The command is designed to work without user interaction or any kind of interactivity.) l would be sufficient enough to make the page cache.</p>
+<p style="text-align:justify;">I set the controller to caches_page on the show action. Then in the controller that performs the “publishing” I set it to clear the cached page. Nothing happened. I manually cleared the cache both in the project as well as in the browser and the page still displayed!</p>
+<p style="text-align:justify;">I finally found that the cached page was in my public folder and not the tmp folder. At first I thought that it was something that I set up incorrectly but then realized that it was how the page was setup in the first place. As this is a front facing page requiring no authentication it was named spaced in the controllers/public directory with the views in the /public directory. So that is why the cached pages were going to the public directory and not to the tmp directory as is the norm.</p>
+<p style="text-align:justify;">Now I had to manually find the cached copy and remove it.</p>
+<p style="text-align:justify;">As there really is not a need for the page to be instantly cached and no need to the user to wait for it, I moved it into a background job using Sidekiq.</p>
+<p style="text-align:justify;">So first I created a helper method to do some of the initial processing.  To the controller that does the publishing I need to add a couple of things:</p>
+<p>[code language="ruby"]</p>
+<p>include CacheHelper  ## this tells it to use the helper<br />
+update_web_cache     ## this is called in the action to publish</p>
+<p>[/code]</p>
+<p>So when the user publishes it will call the CacheHelper:</p>
+<p>[code language="ruby"]<br />
+## file cache_helper.rb<br />
+module CacheHelper</p>
+<p> def update_web_cache<br />
+   FileUtils.rm_rf(Dir[&quot;#{Rails.root}/public/path_to_cached_view.html&quot;])<br />
+   url = &quot;#{ENV['HOSTNAME']}&quot; + path_to_the_view_needed_to_be_cached<br />
+   CacheWorker.perform_async(url)<br />
+ end<br />
+end<br />
+[/code]</p>
+<p>First I had to manually remove the cached view and I did so using FileUtils. Then as this is in the helper I have access to my model and therefor I can get the path to the view based on the model. Last, I tell Sidekiq to do it's thing.</p>
+<p>OK, so to this point we have removed the old cache but now we need to create the new cache. After a lot more googling the only way I could figure out how to curl the page was with a rake task. Further down the rabbit hole...</p>
+<p>In the Sidekiq worker, I added the code to run the rake task. There were a few options to do this but I found the execute command to be the easiest and it worked.</p>
+<p>[code language="ruby"]<br />
+## file cache_worker.rb<br />
+class CacheWorker<br />
+  include Sidekiq::Worker</p>
+<p>  def perform(url)<br />
+   %x(bundle exec rake curl[&quot;#{url}&quot;])<br />
+ end<br />
+end<br />
+[/code]</p>
+<p>This then takes the url that it is passed and runs the rake task:</p>
+<p>[code language="ruby"]<br />
+## file lib/tasks/curl.rake<br />
+desc &quot;curl&quot;<br />
+task :curl, [:url] =&gt; :environment do |task, args|<br />
+ system &quot;curl #{args.url}&quot;<br />
+end<br />
+[/code]</p>
+<p>Bottom line, created a background job that calls a rake task to curl a page.<br />
+Now, if there is any easier way to do this I sure would love to know.</p>

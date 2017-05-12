@@ -1,0 +1,48 @@
+---
+layout: post
+title: Ruby .try method
+date: 2014-04-01 22:04:28.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _edit_last: '15714693'
+  post_id: '115'
+  blog_id: '62598923'
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:4:\".try\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2014-03-29
+    08:10:09\";s:9:\"permalink\";s:44:\"http://gemfile.wordpress.com/2014/03/26/try/\";s:7:\"content\";s:1688:\"<div
+    class=\"reblogged-content\">This Ruby method returns nil rather than raising an
+    exception when called on a non-existent object.\r\n\r\n[code language=\"bash\"]\r\n$
+    rails console\r\n\r\n2.1.0 :001 &gt; nil.admin?\r\nNoMethodError: undefined method
+    'admin?' for nil:NilClass\r\n... stack trace ...\r\n\r\n2.1.0 :002 &gt; nil.try(:admin)\r\n
+    =&gt; nil\r\n[/code]\r\n\r\n<!--more-->\r\n\r\nHere's a practical example: Is
+    the currently signed in user an admin? If so, he should see site admin links,
+    otherwise they should be hidden:\r\n\r\n<strong>any_view_file.html.erb:</strong>\r\n\r\n[code
+    gutter=\"false\" language=\"ruby\"]\r\n&lt;% if current_user.admin? %&gt;\r\n
+    \ Show links\r\n&lt;% end %&gt;\r\n[/code]\r\n\r\nThe above code breaks when the
+    page is viewed by a non-signed-in visitor and <strong>current_user</strong> is
+    not set (i.e. is nil).\r\n\r\nThe <strong>if</strong> statement can be augmented
+    to include two tests:\r\n\r\n[code gutter=\"false\" language=\"ruby\"]\r\n&lt;%
+    if current_user &amp;&amp; current_user.admin? %&gt;\r\n  Show links\r\n&lt;%
+    end %&gt;\r\n[/code]\r\n\r\nOr the <strong>try</strong> method can be used to
+    clean up the code:\r\n\r\n[code gutter=\"false\" language=\"ruby\"]\r\n&lt;% if
+    current_user.try(:admin) %&gt;\r\n  Show links\r\n&lt;% end %&gt;\r\n[/code]\r\n\r\nThe
+    <strong>if</strong> statement will return <strong>true</strong> if the currently
+    signed in user is an admin, <strong>false</strong> if he is not, and <strong>nil</strong>
+    if there is no signed in user. Since <strong>if nil</strong> evaluates to <strong>false</strong>,
+    the admin links remain nicely hidden.\r\n\r\n(This approach merely cleans up the
+    layout for unauthorized users. It should not be relied on to actually prevent
+    unauthorized access to controller actions.)</div>\";}"
+  is_reblog: '1'
+  _publicize_pending: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+

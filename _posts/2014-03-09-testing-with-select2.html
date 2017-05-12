@@ -1,0 +1,41 @@
+---
+layout: post
+title: Ruby on Rails testing with Select2
+date: 2014-03-09 18:31:59.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _edit_last: '15714693'
+  _publicize_pending: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>I posted a while back about using the select2-rails gem together with the select2-capistrano gem.  I recently upgraded an app and found that my tests that were using select2 were all failing.  I did some googling and it seems that the select2-capistrano gem is no longer active.</p>
+<p>Well, I went about it another way then.</p>
+<p>First off, I do not add the class to each drop-down select but rather I do it globally using a collection_select_input.rb file in app/inputs/ like so:</p>
+<p>[code language="ruby"]<br />
+    class CollectionSelectInput &amp;lt; SimpleForm::Inputs::CollectionSelectInput<br />
+      def input_html_classes<br />
+        super.push(&#039;chosen-select&#039;)<br />
+      end<br />
+    end<br />
+[/code]</p>
+<p>So when I started to have issues with capybara not being able to use the select2 drop-down my fix was to only use the global push if not in test environment:</p>
+<p>[code language="ruby"]<br />
+    class CollectionSelectInput &amp;lt; SimpleForm::Inputs::CollectionSelectInput<br />
+      unless Rails.env.test?<br />
+        def input_html_classes<br />
+          super.push(&#039;chosen-select&#039;)<br />
+        end<br />
+      end<br />
+    end<br />
+[/code]</p>
+<p>So now I have good old normal drop downs in test environment and the ever awesome select2 drop downs in production.</p>

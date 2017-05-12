@@ -1,0 +1,36 @@
+---
+layout: post
+title: Capistrano deployment for Rails
+date: 2014-02-07 17:30:37.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _edit_last: '15714693'
+  _publicize_pending: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>I think I have found my all time favorite gem; <a href="https://github.com/sosedoff/capistrano-unicorn">capistrano-unicorn</a></p>
+<p>Simply put, if you use Capistrano and Unicorn, you have to use this gem.  I have messed around with setting up init.d scripts for starting and stopping Unicorn and they have all been more trouble than help.</p>
+<p>All I had to do was add a couple of lines to my deploy.rb file:</p>
+<pre># Unicorn tasks
+require 'capistrano-unicorn'
+after 'deploy:restart', 'unicorn:reload'
+after 'deploy:restart', 'unicorn:restart'</pre>
+<p>I think that the best thing about this gem is the added cap tasks that can be run from your machine:</p>
+<pre>cap unicorn:add_worker               # Add a new worker
+cap unicorn:remove_worker            # Remove amount of workers
+cap unicorn:reload                   # Reload Unicorn
+cap unicorn:restart                  # Restart Unicorn
+cap unicorn:show_vars                # Debug Unicorn variables
+cap unicorn:shutdown                 # Immediately shutdown Unicorn
+cap unicorn:start                    # Start Unicorn master process
+cap unicorn:stop                     # Stop Unicorn</pre>

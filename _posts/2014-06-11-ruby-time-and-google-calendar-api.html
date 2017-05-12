@@ -1,0 +1,93 @@
+---
+layout: post
+title: Ruby time and Google Calendar API
+date: 2014-06-11 21:45:42.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _edit_last: '15714693'
+  geo_public: '0'
+  _wpas_skip_7641025: '1'
+  _oembed_0d58b095c30301c28be9f5467a488754: "{{unknown}}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>So Google Calendar is pretty picky when it comes to working with its API.  We have an application that will fetch the calendar events for a 2 month timeframe.  It will soon be changed to allow for a different start and end time.  So first of all lets look at what the URL must be formatted as:</p>
+<p style="padding-left:30px;">https://www.googleapis.com/calendar/v3/calendars/test%40gmail.com/events?key=&lt;your-api-key-goes-here&gt;&amp;timeMin=2014-06-11T12:00:00Z&amp;timeMax=2014-08-12T12:00:00Z&amp;orderBy=starttime&amp;singleEvents=true</p>
+<p>So notice that the timMin is the calendars start time and is formatted as such:</p>
+<p style="padding-left:30px;">2014-06-11T12:00:00Z</p>
+<p>This was a pain in the ass to convert correctly.  I never was able to completely get the format correctly using Ruby strftime but I got really close:</p>
+<p style="padding-left:30px;">Date.today.strftime("%Y-%m-%dT%l:%M:%S") == 2014-06-11T12:00:00</p>
+<p>So I cheated and did:</p>
+<p style="padding-left:30px;">Date.today.strftime("%Y-%m-%dT%l:%M:%S") + "Z"</p>
+<p>Now for the fun part.  I just refactored older code.  I just want to show the before and after for the fun of it!!!</p>
+<p><strong>BEFORE:</strong></p>
+<p>[sourcecode language="ruby"]</p>
+<p> def current_calendar<br />
+   @cal = nil<br />
+   @api_key = 'zzzzzzzz'</p>
+<p>   @cc_today = Time.now<br />
+   @cc_yr = @cc_today.year<br />
+   @cc_mth = @cc_today.month</p>
+<p>   # We want to get two mths of events<br />
+   # so create a Time for next month<br />
+   if @cc_mth == 12<br />
+     @cc_mth = 1<br />
+     @cc_yr += 1<br />
+   else<br />
+     @cc_mth += 1<br />
+   end</p>
+<p>   @cc_next_mth = Time.new(@cc_yr, @cc_mth, 1)<br />
+   @days_in_month = Time.days_in_month(@cc_mth)</p>
+<p>   @min_date = '%Y-%m-01'<br />
+   @max_date = '%Y-%m-'<br />
+   @max_date = @max_date + @days_in_month.to_s<br />
+   @timeMin = @cc_today.strftime(@min_date)<br />
+   @timeMax = @cc_next_mth.strftime(@max_date)</p>
+<p>   @timeMin = @timeMin + 'T00:00:01Z'<br />
+   @timeMax = @timeMax + 'T23:59:59Z'</p>
+<p>   @myString = '?'<br />
+   @myString = @myString + 'key='<br />
+   @myString = @myString + @api_key<br />
+   @myString = @myString + '&amp;'<br />
+   @myString = @myString + 'timeMin='<br />
+   @myString = @myString + @timeMin<br />
+   @myString = @myString + '&amp;'<br />
+   @myString = @myString + 'timeMax='<br />
+   @myString = @myString + @timeMax<br />
+   @myString = @myString + '&amp;'<br />
+   @myString = @myString + 'orderBy=starttime'<br />
+   @myString = @myString + '&amp;'<br />
+   @myString = @myString + 'singleEvents=true'</p>
+<p>   @email = self.url.gsub(/@/ , '%40')</p>
+<p>   @url_params = 'https://www.googleapis.com/calendar/v3/calendars/'<br />
+   @url_params = @url_params + @email<br />
+   @url_params = @url_params + '/events'<br />
+   @url_params = @url_params + @myString<br />
+   @response = HTTParty.get(@url_params)<br />
+   @cal = @response.parsed_response['items']<br />
+ end<br />
+[/sourcecode]</p>
+<p>&nbsp;</p>
+<p><strong>AND AFTER:</strong></p>
+<p>[sourcecode language="ruby"]</p>
+<p>def current_calendar<br />
+  api_key = 'zzzzzzzzz'</p>
+<p>  time_min = Date.today.strftime(&quot;%Y-%m-%dT%l:%M:%S&quot;) + &quot;Z&quot;<br />
+  time_max = (Date.today + 2.months + 1.day).strftime(&quot;%Y-%m-%dT%l:%M:%S&quot;) + &quot;Z&quot;</p>
+<p>  url = &quot;https://www.googleapis.com/calendar/v3/calendars/#{self.url.gsub(/@/ , '%40')}/events?key=&quot; +<br />
+  api_key + &quot;&amp;timeMin=&quot; + time_min + &quot;&amp;timeMax=&quot; + time_max + &quot;&amp;orderBy=starttime&amp;singleEvents=true&quot;</p>
+<p>  response = HTTParty.get(url)<br />
+  @cal = response.parsed_response['items']<br />
+ end</p>
+<p>[/sourcecode]</p>
+<p>Moral of the story ....</p>
+<p>Ruby is a fantastic language with methods for just about everything.  Why do things the hard way???</p>

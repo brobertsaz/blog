@@ -1,0 +1,95 @@
+---
+layout: post
+title: Simple Rails activity logging
+date: 2014-02-24 17:03:52.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  is_reblog: '1'
+  post_id: '44'
+  blog_id: '58890793'
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:29:\"Simple Rails activity
+    logging\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2014-02-17
+    21:21:42\";s:9:\"permalink\";s:78:\"http://julianrawcliffe.wordpress.com/2014/02/17/simple-rails-activity-logging/\";s:7:\"content\";s:5885:\"<div
+    class=\"reblogged-content\">One of the requirements of the projects I'm working
+    on is to keep an audit trail of who's doing what with the managed data.\r\n\r\nNow,
+    you'd expect there to a be a whole stack of gems to cover this and indeed there
+    are, but none of the quite fitted the bill for me: Papertrail (and others) while
+    very very comprehensive are overkill for my needs (I don't need model versioning)
+    and audited doesn't support Rails 4.\r\n\r\nSo I thought I'd have a bash at my
+    own approach, but based on the table structure in Papertrail, and do it manually
+    without the Rails helpers for models and controllers.\r\n\r\n1. Create the table
+    (okay, so I like the migration command)\r\n<pre>$ rails g migration create_activity_logs
+    item_type:string item_id:integer act_action:string updated_by:string activity:text
+    act_tstamp:datetime</pre>\r\n2. Edit the model to look like,\r\n<pre>class CreateActivityLogs
+    &lt; ActiveRecord::Migration\r\n  def change\r\n    create_table :activity_logs,
+    :options =&gt; 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|\r\n      t.string :item_type,
+    :limit =&gt; 64, :null =&gt; false, :default =&gt; 'Object'\r\n      t.integer
+    :item_id, :null =&gt; false\r\n      t.string :act_action, :default =&gt; 'update'\r\n     
+    t.string :updated_by, :limit =&gt; 32, :default =&gt; 'Anonymous'\r\n      t.text
+    :activity\r\n      t.datetime :act_tstamp, :default =&gt; Time.now\r\n    end\r\n 
+    end\r\nend</pre>\r\n(And I remove the options bit when using SQL Server database
+    in production)\r\n\r\n3. $ rake db:migrate\r\n\r\n4. Prepare a very simple controller,\r\n<pre>class
+    ActivityLogsController &lt; ApplicationController\r\n  protected\r\n  def new\r\n   
+    @activity_log = ActivityLog.new\r\n  end\r\n  def create\r\n    @activity_log
+    = ActivityLog.new(activity_log_params)\r\n  end\r\nend</pre>\r\nCan't get much
+    simpler than this, The protected statement says that the methods are only available
+    to other classes and are not routeable actions.\r\n\r\n5. And an equally simple
+    model,\r\n<pre>class ActivityLog &lt; ActiveRecord::Base\r\n  validates :item_type,
+    :item_id, :updated_by, :activity, :presence =&gt; true\r\nend</pre>\r\n6. Some
+    class methods in our other models to return the names of the items being acted
+    on,\r\n<pre>  def self.obj_name(id)\r\n    o = Object.find(id)\r\n    \"#{o.name}\"\r\n 
+    end</pre>\r\n7. We add log_update methods to our controllers to submit the log
+    requests.\r\n<pre>def log_update\r\n    oname = Object.obj_name(@thingy.id)\r\n   
+    log_msg = \"id: #{@thingy.id}n#{oname}ndescription: #{@thingy.description}\"\r\n   
+    ActivityLog.create(:item_type =&gt; controller_name.classify, :item_id =&gt; @thingy.id,
+    :act_action =&gt; action_name, :updated_by =&gt; current_user.username, :activity
+    =&gt; log_msg, :act_tstamp =&gt; Time.now)\r\n  end</pre>\r\nNote here that we
+    have <em>current_user.username,</em> in the updated_by column. I've configured
+    Devise with ldap_authentication (against an Active Directory server - another
+    post, maybe?) to maintain the user sessions.\r\n\r\n8. Update our controllers
+    to indicate when we want activities to be logged,\r\n<pre>after_action :log_update,
+    only: [:create, :update, :destroy]</pre>\r\n9. Getting ambitious, we can even
+    log the successful login and logout events (following the advice at <a title=\"Devise
+    logging login failure - StackOverflow\" href=\"http://stackoverflow.com/questions/12873957/devise-log-after-auth-failure/12877182#12877182\"
+    target=\"_blank\">http://stackoverflow.com/questions/12873957/devise-log-after-auth-failure/12877182#12877182</a>
+    and  <a title=\"Overriding Devise session controller - StackOverflow\" href=\"http://stackoverflow.com/questions/13836139/rails-how-to-override-devise-sessionscontroller-to-perform-specific-tasks-when\"
+    target=\"_blank\">http://stackoverflow.com/questions/13836139/rails-how-to-override-devise-sessionscontroller-to-perform-specific-tasks-when</a>,
+    I can't guarantee to fully understand the warden stuff - I only do the easy bits!\r\n<pre>class
+    SessionsController &lt; Devise::SessionsController\r\n  before_filter :log_logout,
+    :only =&gt; :destroy  #add this at the top with the other filters\r\n  after_filter
+    :log_failed_login, :only =&gt; [:new, :create]\r\n\r\n  def create\r\n    super\r\n   
+    username = params[:user][\"username\"]\r\n    log_msg = \"Successful login for
+    #{username}\"\r\n    ActivityLog.create(:item_type =&gt; controller_name.classify,
+    :item_id =&gt; 0, :act_action =&gt; action_name, :updated_by =&gt; params[:user][\"username\"],
+    :activity =&gt; log_msg, :act_tstamp =&gt; Time.now)\r\n  end\r\n private\r\n 
+    def log_failed_login\r\n    Rails.logger.debug \"n***nFailed login with username
+    : #{request.parameters[\"username\"]}n***n\" if failed_login?\r\n  end\r\n\r\n 
+    def failed_login?\r\n    (options = env[\"warden.options\"]) &amp;&amp; options[:action]
+    == \"unauthenticated\"\r\n  end\r\n\r\n  def log_logout\r\n    log_msg = \"Logging
+    out : #{current_user.username}\"\r\n    ActivityLog.create(:item_type =&gt; controller_name.classify,
+    :item_id =&gt; 0, :act_action =&gt; action_name, :updated_by =&gt; current_user.username,
+    :activity =&gt; log_msg, :act_tstamp =&gt; Time.now)\r\n  end\r\nend</pre>\r\n10.
+    Update the routes to include the sessions controller override,\r\n<pre>devise_for
+    :users, controllers: {sessions: \"sessions\"}, :path_names =&gt; { :sign_in =&gt;
+    \"login\", :sign_out =&gt; \"logout\" }</pre>\r\nSo all this, combined with CanCan
+    for authorization, means I have a standard way of providing role-based, directory-authenticated
+    access to a web application with logging of user actions. I had no problems adding
+    this to a second project and will do so with others.\r\n\r\nMy next project is
+    to turn at least some of this into a gem for easy deployment in a project; I've
+    started with the update_logger. I may blog on progress with this.\r\n\r\nIf I
+    ever do need model versioning, Papertrail will be the way to go. I so wanted it
+    to work with my project.</div>\";}"
+  _publicize_pending: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>Nice write up.  We did something very similar as well for a project.  Never even heard of Papertrail but I guess it is too late anyhow!! LOL</p>

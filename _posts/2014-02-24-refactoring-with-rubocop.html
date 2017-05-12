@@ -1,0 +1,102 @@
+---
+layout: post
+title: Refactoring with Rubocop
+date: 2014-02-24 17:09:27.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  is_reblog: '1'
+  post_id: '1461'
+  blog_id: '57073557'
+  _publicize_pending: '1'
+  reblog_snapshot: "O:8:\"stdClass\":8:{s:5:\"title\";s:24:\"Refactoring with Rubocop\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2014-02-03
+    21:09:04\";s:9:\"permalink\";s:70:\"http://projectramon.wordpress.com/2014/02/03/refactoring-with-rubocop/\";s:7:\"content\";s:6461:\"<div
+    class=\"reblogged-content\">\n<a href=\"http://bobspython.files.wordpress.com/2014/02/lunch_panoply6_header_img_prod.jpg\"><img
+    src=\"http://bobspython.files.wordpress.com/2014/02/lunch_panoply6_header_img_prod.jpg\"
+    alt=\"lunch_panoply6_header_img_prod\" width=\"553\" height=\"956\" class=\"aligncenter
+    size-full wp-image-1477\" data-originalSrc=\"http://projectramon.files.wordpress.com/2014/02/lunch_panoply6_header_img_prod.jpg\"
+    data-rehosted=\"1\"></a>\r\n\r\nHello and happy Monday!\r\n\r\nI first wanted
+    to thank the various people who have showed support for my TDD series last week,
+    I sincerely appreciate the re-tweets and favorites!\r\n\r\nOver the weekend, while
+    perusing the web I stumbled upon <a href=\"https://github.com/bbatsov/rubocop\"
+    target=\"_blank\">Rubocop</a>. Running Rubocop looks a lot like running Rspec
+    or Test::Unit in our terminal. Instead of running our specs though, Rubocop will
+    generate 'cops' alerting us to various style-guide offenses, the gem even has
+    an auto correct feature in experimentation at the moment. My thoughts in two words
+    or less about Rubocop, pretty sweet! Lets take a look at how to use Rubocop as
+    I attempt to refactor lunch_panoply and see if we can't clean up some of the rough
+    edges.\r\n<h3>Rubocop Setup</h3>\r\nThe setup is extremely easy, all we do is
+    type <code>gem install rubocop</code> from our command-line, or if you're using
+    Bundler you can add <code>gem 'rubocop'</code> to your Gemfile, and install it
+    by typing <code>bundle install</code> in your terminal.\r\n\r\nIn order to run
+    Rubocop on a specific file, we can just pass the path to file after the <code>rubocop</code>
+    command like so:  <code>rubocop models/model_name.rb</code>.\r\n\r\nThats all
+    there is to it! To run Rubocop, we can think of how we run Zeus or Rspec in our
+    terminal. From our application's root in the terminal we type <code>rubocop</code>
+    to find out what our offenses will be. \r\n\r\n<a href=\"http://bobspython.files.wordpress.com/2014/02/lunch_panoply6_img1.jpg\"><img
+    src=\"http://bobspython.files.wordpress.com/2014/02/lunch_panoply6_img1.jpg\"
+    alt=\"lunch_panoply6_img1\" width=\"535\" height=\"70\" class=\"aligncenter size-full
+    wp-image-1462\" data-originalSrc=\"http://projectramon.files.wordpress.com/2014/02/lunch_panoply6_img1.jpg\"
+    data-rehosted=\"1\"></a>\r\n\r\nRunning the command above generates offenses.\r\n\r\n<a
+    href=\"http://bobspython.files.wordpress.com/2014/02/lunch_panoply6_img2.jpg\"><img
+    src=\"http://bobspython.files.wordpress.com/2014/02/lunch_panoply6_img2.jpg\"
+    alt=\"lunch_panoply6_img2\" width=\"601\" height=\"271\" class=\"aligncenter size-full
+    wp-image-1463\" data-originalSrc=\"http://projectramon.files.wordpress.com/2014/02/lunch_panoply6_img2.jpg\"
+    data-rehosted=\"1\"></a>\r\n\r\n<h3>And The... Law Won</h3>\r\n\r\nLooks like
+    Rubocop had a field day with my <code>venue_spec</code> file. Lets get on top
+    of addressing a few of these. Rubocop has 3 different types of 'cops'. I think
+    of cops as specs, but instead of creating them myself as I test-drive, they're
+    already built into the gem and alert us to three things about our code.\r\n\r\n<ol>\n<li>Style</li>\r\n<li>Lint</li>\r\n<li>Rails</li>\r\n</ol>\n<strong>Style</strong>:
+    Style cops check for stylistics problems in our code, nearly all of these are
+    based on the <a href=\"https://github.com/bbatsov/ruby-style-guide\" target=\"_blank\">Ruby
+    Style Guide.</a>\r\n<strong>Lint</strong>: Lint cops check for bad practices and
+    errors in our code. \r\n<strong>Rails</strong>: Rails cops are specific to the
+    Rails framework. These are the only cops not used by default. \r\n\r\nWe can single
+    out Lint cops when desiring to discover offenses by passing in an <code> -l </code>
+    argument when entering the <code>rubocop</code> command like \r\nso: <code>rubocop
+    -l spec/models/venue_spec.rb</code>\r\n\r\nRails cops aren't used by default when
+    entering the <code>rubocop</code> command, in order to add them to the party,
+    we must specifically request them like so: \r\n<code>rubocop -R models/model_name.rb</code>\r\n\r\n<h3>Rubocop
+    in Action</h3>\r\n\r\nNow that we have some of the basics covered lets take this
+    out for a spin. \r\n\r\n<a href=\"http://bobspython.files.wordpress.com/2014/02/lunch_panoply6_img3.jpg\"><img
+    src=\"http://bobspython.files.wordpress.com/2014/02/lunch_panoply6_img3.jpg\"
+    alt=\"lunch_panoply6_img3\" width=\"649\" height=\"213\" class=\"aligncenter size-full
+    wp-image-1471\" data-originalSrc=\"http://projectramon.files.wordpress.com/2014/02/lunch_panoply6_img3.jpg\"
+    data-rehosted=\"1\"></a>\r\n\r\n230 offenses detected Yuck! As we can see from
+    the image above, all of these offenses are due to the <code>style</code> cops
+    not aren't happy about tabs being used instead of spaces. I have my sublime text
+    2 formatted to spaces already as far as I know, so I'm not sure as to why we're
+    generating fake offenses. Luckily we can run the same command again with our <code>Lint</code>
+    argument to gain a clear picture of the error-related offenses only. Typing <code>rubocop
+    -l spec/models/menu_item_spec.rb</code> returns the following output:\r\n\r\n<a
+    href=\"http://bobspython.files.wordpress.com/2014/02/lunch_panoply6_img4.jpg\"><img
+    src=\"http://bobspython.files.wordpress.com/2014/02/lunch_panoply6_img4.jpg\"
+    alt=\"lunch_panoply6_img4\" width=\"676\" height=\"105\" class=\"aligncenter size-full
+    wp-image-1472\" data-originalSrc=\"http://projectramon.files.wordpress.com/2014/02/lunch_panoply6_img4.jpg\"
+    data-rehosted=\"1\"></a>\r\n\r\n<h3>Consensus</h3>\r\n\r\nMy first impression
+    of this gem is thumbs up! There are a few things I'd like to look into about reducing
+    or eliminating false offenses being generated on the style front, but overall
+    Rubocop is an extremely easy to setup, and quick to implement way to deoderize
+    your code base. \r\n\r\nRubocop shouldn't overshadow the <a href=\"https://github.com/bbatsov/ruby-style-guide\"
+    target=\"_blank\">Ruby Style Guide</a> created with community input and put together
+    by <a href=\"https://twitter.com/bbatsov\" target=\"_blank\">Bozhidar Batsov</a>.
+    \r\n\r\nIt really makes my day when I run across other developer's creations,
+    especially ones that aid with my goal for me of becoming competent enough for
+    employment with a company that values the ongoing process of learning. Keeping
+    our code neat and tidy, is one of many things that I am hoping will allow me to
+    appear desirable as I look for entry-level work.\r\n\r\nIf you find yourself desiring
+    to improve the way your code appears to others, take some time and check out <a
+    href=\"https://github.com/bbatsov/rails-style-guide\" target=\"_blank\">Bozhidar's
+    Github page</a>.</div>\";s:15:\"images_mirrored\";i:5;}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>Awesome, awesome, awesome.  I thought it was going to be a pun.  Thanks for enlightening me to Rubocop!!</p>

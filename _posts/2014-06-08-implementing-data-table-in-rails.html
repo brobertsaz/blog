@@ -1,0 +1,59 @@
+---
+layout: post
+title: Implementing Data Table In Rails
+date: 2014-06-08 12:30:02.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _publicize_pending: '1'
+  is_reblog: '1'
+  post_id: '87'
+  blog_id: '55709321'
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:32:\"Implementing Data Table
+    In Rails\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2013-10-04
+    17:48:11\";s:9:\"permalink\";s:77:\"http://deepakrip007.wordpress.com/2013/10/04/implementing-data-table-in-rails\";s:7:\"content\";s:2699:\"<div
+    class=\"reblogged-content\">\n\n<strong>Data Table</strong> help us to turn a
+    plain HTML table into one with pagination, sorting and searching and all through
+    JavaScript. It has better user interface and provides many options to the user.\r\n\r\nYou 
+    can learn more about data tables from its official website <em><strong>http://datatables.net
+    .</strong></em><strong> </strong>Here is a simple example of integrating data
+    table in your rails app.\r\n\r\n<strong><span style=\"text-decoration:underline;\">Step
+    1</span></strong>\r\n\r\nAdd the gem in your gem file\r\n<pre><strong><em><code
+    style=\"font-size:18px;\">gem 'jquery-datatables-rails', git: 'git://github.com/rweng/jquery-datatables-rails.git'</code></em></strong></pre>\r\nRun
+    the bundle install.\r\n\r\n<strong><span style=\"text-decoration:underline;\">Step
+    2</span></strong>\r\n\r\nWe can now set DataTables up with the asset pipeline.\r\n\r\nIn
+    your <strong>application.js</strong><em> add the following line</em>\r\n<pre><strong><em><code
+    style=\"font-size:18px;\">//= require dataTables/jquery.dataTables</code></em></strong></pre>\r\nIn
+    your <strong>application.css</strong><em> add the following line</em>\r\n<pre><strong><em><code
+    style=\"font-size:18px;\">*= require dataTables/jquery.dataTables</code></em></strong></pre>\r\n<strong><span
+    style=\"text-decoration:underline;\">Step 3</span></strong>\r\n\r\nNow we have
+    installed the data table in the application.In order to display the data table
+    effect in your listing page ,modify it like below\r\n<div>\r\n<div>\r\n<pre><strong>&lt;table
+    id=\"product_lists\"&gt;\r\n&lt;thead&gt;\r\n  &lt;tr&gt;\r\n    &lt;th&gt;Product
+    Name&lt;/th&gt;\r\n    &lt;th&gt;Category&lt;/th&gt;\r\n    &lt;th&gt;Price&lt;/th&gt;\r\n 
+    &lt;/tr&gt;\r\n&lt;/thead&gt;\r\n&lt;tbody&gt;\r\n  &lt;% @products.each do |product|
+    %&gt;\r\n    &lt;tr&gt;\r\n      &lt;td&gt;&lt;%= link_to(product.name, product)
+    %&gt;&lt;/td&gt;\r\n      &lt;td&gt;&lt;%= product.category %&gt;&lt;/td&gt;\r\n     
+    &lt;td&gt;&lt;%= product.price %&gt;&lt;/td&gt;\r\n    &lt;/tr&gt;\r\n  &lt;%
+    end %&gt;\r\n&lt;/tbody&gt;\r\n&lt;/table&gt;</strong></pre>\r\n</div>\r\n</div>\r\n<strong><span
+    style=\"text-decoration:underline;\">Step 4</span></strong>\r\n\r\nNow go to the
+    coffee script file <strong>product.js.coffee</strong><em> and add the following
+    block.</em>\r\n<pre><strong><em><code style=\"font-size:18px;\">\r\njQuery -&gt;\r\n
+    \ $(\"#product_lists\").dataTable()</code></em></strong></pre>\r\nYou can set
+    more config options from data tables offical site <strong>http://datatables.net</strong>
+    like sorting specific columns,disable sorting from columns and may more.\r\nWhen
+    you reload the page,you can see your listing page in better UI with sorting,searching
+    and pagination functionality.</div>\";}"
+  _oembed_1b671010f7f27b95ecc38f370dcd211d: "{{unknown}}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>Nice writeup of using Datatables in Rails app.  I use this gem myself in a CRM.  Easy to use and looks great out of the box.  I just wish it would work with mongodb :(</p>

@@ -1,0 +1,234 @@
+---
+layout: post
+title: Ubuntu 12.04 Rails, Nginx, Unicorn and Capistrano ('2.15.5') Server Setup
+date: 2014-01-27 17:57:59.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _edit_last: '15714693'
+  _publicize_pending: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<pre>Check out the <a href="https://gist.github.com/brobertsaz/8660415">gist</a>
+
+
+Ubuntu Precise Rails, Nginx, Unicorn and Capistrano ('2.15.5') Server Setup
+=============================
+
+I originally tried to use the ~&gt; 3.0 version of Capistrano, but fell back to the 2.15.5 version.  There were a lot of changes in the new version that I did not feel like learning right at the moment...
+
+### 1. Setup deploy user
+
+First we will create a new user for deployment:
+
+    $  ssh into your server
+    $  sudo adduser deploy
+
+Accept the defaults.
+
+Add new user to staff and sudo groups:
+
+    $  sudo usermod -a -G staff deploy
+    $  sudo usermod -a -G sudo deploy
+
+Switch user:
+
+    $  su deploy
+    $  cd ~
+
+Update and Install Ubuntu dependencies:
+
+    $  sudo apt-get -y update
+    $  sudo apt-get -y install build-essential zlib1g-dev libssl-dev libreadline-dev libyaml-dev libcurl4-openssl-dev curl git-core python-software-properties libxslt1-dev libxml2-dev libmysqlclient-dev libsqlite3-dev nodejs imagemagick graphicsmagick-libmagick-dev-compat git-core mongodb
+
+To make life easier, lets go ahead and add our ssh keys to the new server so that we do not have to sign in every time.
+
+Add ssh keys:
+
+    $  mkdir ~/.ssh (on the server)
+    $  cat ~/.ssh/id_rsa.pub | ssh deploy@IPaddress "cat &gt;&gt; ~/.ssh/authorized_keys" (from your machine)
+
+### From here you should be ssh'ing into the server as the deploy user......
+
+### 2. Install Ruby and gems's
+
+Now let's install Ruby, and we use a specific version for the may_app_name app.
+We need the url to get the source and a directory to build in:
+
+    $  wget http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p374.tar.gz
+    $  tar -zxvf ruby-1.9.3-p374.tar.gz
+    $  cd ruby-1.9.3-p374
+    $  echo "gem: --no-ri --no-rdoc" &gt;&gt; ~/.gemrc
+    $  ./configure --prefix=/usr/local
+    $  make
+    $  sudo make install
+    $  sudo gem install bundler
+
+### 3. Unicorn &amp; Nginx
+
+    $  sudo apt-get install nginx
+
+The Nginx configuration is the trickiest part of the set up.  This file needs to go in the config file that was created with the Nginx install:
+
+    $  cd /etc/nginx
+    $  sudo vim nginx.conf (delete the contents and paste in the code from the Nginx.conf file.  (Attachment A)
+
+You will need to edit the IP address on line 22:
+
+    server @IPaddress:8080
+
+The Unicorn configuration consists of the unicorn.rb file in the config directory.
+
+### 4. Deployment Setup
+
+On the server we need to create a directory for the project:
+
+    $  sudo mkdir /var/www
+    $  sudo chown deploy:deploy /var/www
+
+We are going to use Capistrano for deployment.  Capistrano is able to deploy to different environments such a Production, Staging, and Development.  Make sure that you have the folloeing in your Gemfile:
+
+    gem 'capistrano',  '2.15.5'
+    and under group :development
+      gem 'capistrano-unicorn', :require =&gt; false
+
+Make sure you bundle install after adding these gems.
+
+To install Capistrano:
+
+    $ capify .
+
+This creates a config/deploy.rb file
+
+The main Capistrano settings are in the config/deploy.rb file.  Additionally there is also a config/deploy/ directory and within that directory there may should be files for the different environments e.g. production.rb, staging.rb, etc.
+
+It should be noted that there are different environments for Capistrano but these as not the same as the Rails environments that are available on a server.  We currently have both beta and live servers running in 'Production' Rails environment.  Think of the Capistrano envirement as simply the remote name for deployment purposes.
+
+Capistrano will use the file in config/deploy that matches the cap deploy.  For example "cap development deploy", will use the config/deploy/development.rb file.
+
+The way that Capistrano works is that the main settings are in the config/deply.rb file:
+
+    my_app_name deploy.rb file:
+    set :default_stage, 'development'
+    set :stages, %w(production staging development)
+    require 'capistrano/ext/multistage'
+    require 'bundler/capistrano'
+
+    set :application, "may_app_name"
+    set :repository,  "git@github.com:my_github/my_app_name.git"
+    set :deploy_to, '/var/www/may_app_name'
+    set :scm, :git
+    set :branch, 'master'
+    set :user, 'deploy'
+    set :deploy_via, :copy
+    set :keep_releases, 5
+    set :use_sudo, false
+    set :ssh_options, {:forward_agent =&gt; true}
+
+    after "deploy:restart", "deploy:cleanup"
+
+    namespace :deploy do
+
+      desc "symlink shared files"
+      task :symlink_shared, :roles =&gt; :app do
+        run "ln -nfs #{shared_path}/system/mongoid.yml #{release_path}/config/mongoid.yml"
+        run "ln -nfs #{shared_path}/system/application.yml #{release_path}/config/application.yml"
+      end
+
+      task :restart, :roles =&gt; :app, :except =&gt; { :no_release =&gt; true } do
+        run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
+      end
+
+    end
+    before "deploy:assets:precompile", "deploy:symlink_shared"
+
+    # Unicorn
+    require 'capistrano-unicorn'
+    after 'deploy:restart', 'unicorn:reload'    # app IS NOT preloaded
+    after 'deploy:restart', 'unicorn:restart'   # app preloaded
+
+The default_stage is the environment that will be run if not other options are passed to the 'cap deploy' call.  The stages list the 3 possible stages that we can use.  These will then coincide with the files in the config/deploy/ directory.
+
+You will have to create each of these files to update with the new IP address or DNS name.  Here is an example of staging.rb:
+
+    server "staging.example.com", :app, :web, :db, primary: true
+    set :rails_env, 'staging'
+
+First we need to setup the Capistrano:
+
+    $  cap staging deploy:setup (or whatever server you are deploying to)
+
+Next we will copy over a couple of configuration files to the shared directory on the server:
+
+    $  scp config/mongoid.yml deploy@IPAddress://var/www/may_app_name/shared/system
+    $  scp config/application.yml deploy@IPAddress://var/www/may_app_name/shared/system
+
+If there were no errors, you can now deploy using:
+
+    $  cap staging deploy:cold (or whatever server you are deploying to)
+
+For more documentation on Capistrano see: http://guides.beanstalkapp.com/deployments/deploy-with-capistrano.html
+
+### 5. Deployment
+
+After all changes are pushed to the master repository and merged, deployment is as follows:
+
+    $  cap staging deploy
+    $  cap production deploy
+
+### Attachment A
+
+    worker_processes 1;
+    user deploy; # for systems with a "nogroup"
+
+    pid /tmp/nginx.pid;
+    error_log /var/www/may_app_name/shared/log/nginx.error.log;
+
+    events {
+      worker_connections 1024; # increase if you have lots of clients
+      accept_mutex off; # "on" if nginx worker_processes &gt; 1
+    }
+
+    http {
+      include mime.types;
+      default_type application/octet-stream;
+      access_log /var/www/may_app_name/shared/log/nginx.access.log combined;
+      sendfile on;
+      tcp_nopush on; # off may be better for *some* Comet/long-poll stuff
+      tcp_nodelay off; # on may be better for some Comet/long-poll stuff
+      &lt;!-- types_hash_max_size 2048; --&gt;
+
+      upstream app_server {
+        server 192.168.6.38:8080;
+      }
+
+      server {
+        client_max_body_size 4G;
+        server_name *.example.com;
+        keepalive_timeout 600s;
+        root /var/www/may_app_name/current/public;
+        try_files $uri/index.html $uri.html $uri @app;
+
+        location @app {
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header Host $http_host;
+          proxy_redirect off;
+          proxy_pass http://app_server;
+        }
+
+        # Rails error pages
+        error_page 500 502 503 504 /500.html;
+        location = /500.html {
+          root /var/www/may_app_name/current/public;
+        }
+      }
+    }</pre>

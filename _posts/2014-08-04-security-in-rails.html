@@ -1,0 +1,269 @@
+---
+layout: post
+title: security in rails
+date: 2014-08-04 20:35:34.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  is_reblog: '1'
+  post_id: '2157'
+  blog_id: '40528223'
+  reblog_snapshot: "O:8:\"stdClass\":8:{s:5:\"title\";s:17:\"security in rails\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2014-08-04
+    12:43:06\";s:9:\"permalink\";s:66:\"http://codedecoder.wordpress.com/2014/08/04/security-in-ruby-rails\";s:7:\"content\";s:20666:\"<div
+    class=\"reblogged-content\">\n\nAny thing on the net is vulnerable to attack.
+    The threat can be at any layer: <strong>database</strong>,Â  <strong>web server</strong>
+    or <strong>web application</strong>. Some of the common security threat are :
+    <span style=\"color:#ff0000;\"><strong>Cross Site Scripting (XSS)</strong></span>,
+    <span style=\"color:#ff0000;\"><strong>Cross Site Request Forgery (CSRF, XSRF)</strong></span>,
+    <strong><span style=\"color:#ff0000;\">Man in the Middle (MITM)</span></strong>,Â 
+    <strong>SQL Injection (SQLI)</strong>,Â  <strong><span style=\"color:#ff0000;\">Mass
+    Assignment &amp; Parameter Injection</span></strong> etc . There is nothing like
+    complete protection. There is a proverb in hindi \"<strong><span style=\"color:#ff0000;\">taala
+    sarifon k liae hota hai...choron k liae nahi</span></strong>\" , means \"<span
+    style=\"color:#ff0000;\"><strong>Lock on the door can prevent good peoples from
+    entering the house not the thieves</strong></span>\". But at least the lock can
+    make the thieve to struggle for entry and provide <span style=\"color:#003300;\"><strong>60%
+    security</strong></span> to our house.\r\n\r\nRails framework, provide <strong><span
+    style=\"color:#003300;\">70% inbuilt security</span></strong> if you use all its
+    feature properly and adhere to its <a title=\"security in rails\" href=\"http://guides.rubyonrails.org/security.html\"
+    target=\"_blank\">security guideline</a> . Web Security is a wide field in itself.
+    I will keep updating this blog as I keep exploring, new <strong><span style=\"color:#003300;\">security
+    measure</span></strong> . Meanwhile If you want to explore it yourself, you can
+    read the below resource :\r\n\r\n<span style=\"color:#003300;\"><strong>=&gt;</strong></span>
+    <a title=\"rails guide on security\" href=\"http://guides.rubyonrails.org/security.html\"
+    target=\"_blank\">Ruby on Rails Security Guide</a>\r\n<strong><span style=\"color:#003300;\">=&gt;</span></strong>
+    <a title=\"ruby official security page\" href=\"https://www.ruby-lang.org/en/security/\"
+    target=\"_blank\">Ruby official Security page</a>\r\n<strong><span style=\"color:#003300;\">=&gt;</span></strong>
+    <a title=\"rails security google group\" href=\"https://groups.google.com/forum/#!forum/rubyonrails-security\"
+    target=\"_blank\">Rubyon Rails Security mailer list</a>\r\n\r\n<strong><span style=\"color:#003300;\">Defence
+    1 : Protection against Mass Assignment attack.</span></strong>\r\n\r\nMany a time,
+    you have used <span style=\"color:#003366;\">@user = params[:user]</span> in your
+    code . This is a case of <strong>mass assignment</strong> i,e any thing coming
+    in<span style=\"color:#003366;\"> params[:user]</span> will be assigned to object
+    <span style=\"color:#003366;\">@user</span> and when you save the object all of
+    them get saved into database. Now here a attacker come, will modify the form in
+    firefox console and add another input field for user with <span style=\"color:#003366;\">:admin
+    =&gt; true</span> , now when you do <span style=\"color:#003366;\">@user = params[:user]</span>
+    and save the object , he will get admin privilege and can do any thing now onward.\r\n\r\n<span
+    style=\"color:#ff0000;\"><strong>So simple to break in ..right ??</strong></span>\r\n\r\nNot
+    so easy with rails 3 and upper version. Now attributes are prevented from mass
+    assignment by default. So you have to explicitly define the list of attributes
+    which are eligible for mass assignment with <span style=\"color:#003366;\"><strong><code>attr_protected</code></strong></span>,
+    or <strong><span style=\"color:#003366;\"><code>attr_accessible</code></span></strong>
+    .\r\n\r\n<strong><span style=\"color:#003366;\"><code>attr_accessible</code> :name,
+    :age</span></strong> # it is white listing of attributes for mass assignment\r\n\r\nIt
+    means only name and age can be mass assigned, if <span style=\"color:#003366;\">params[:user]</span>
+    cantain any attributes say <span style=\"color:#003366;\">:admin =&gt; true</span>
+    , it will throw error.\r\n\r\n<strong><span style=\"color:#003366;\"><code>attr_protected</code>
+    :admin</span></strong> # it is blacklisting of attributes for mass assignment\r\n\r\nIt
+    means any attribute other then :admin can be mass assigned.\r\n\r\nI suggest you
+    to use <span style=\"color:#003366;\"><strong><code>attr_accessible</code></strong></span>
+    approach. I feel it is more safe. say you add a new attribute<span style=\"color:#003366;\">
+    salary</span> in the user table but forgot to modify your model, it will automatically
+    become eligible for mass assignment with <span style=\"color:#003366;\"><strong><code>attr_protected</code></strong></span>
+    approach, but with <strong><span style=\"color:#003366;\"><code>attr_accessible</code></span></strong>
+    approach it will throw error. Now if you feel salary safe to be mass assigned,
+    you can add it to <span style=\"color:#003366;\"><strong><code>attr_accessible</code></strong></span>
+    list.\r\n\r\n \r\n\r\n<span style=\"color:#003300;\"><strong>Defence 2 : protection
+    against cross site scripting (XSS) .</strong></span>\r\n\r\nOh..! You havenâ\x80\x99t
+    heard about <span style=\"color:#ff0000;\"><strong>cross site scripting (XSS)</strong></span>
+    ...Read it <a title=\"cross site scripting\" href=\"http://en.wikipedia.org/wiki/Cross-site_scripting\"
+    target=\"_blank\">here</a> . In short, It is execution of script by attacker on
+    your page which may stole cookies session or any other information or break your
+    application.\r\n\r\nLet us see a simple example :\r\n\r\nlet you have a application
+    in which <strong>person1</strong> , input a message for <strong>person2</strong>,
+    which get stored in db,when <strong>person2</strong> open his account the message
+    displayed on his page with the code <span style=\"color:#003366;\">&lt;%= @message
+    %&gt;</span> . But <strong>person1</strong> is a bad Guy(remember, mom use to
+    remind us - world is full of bad people) . He entered the message <span style=\"color:#003366;\">\"&lt;script&gt;alert('Iam
+    virus, Iam in..I will break your code')&lt;/script&gt;\"</span> .\r\n\r\nWhen
+    <strong>person2</strong> open his page, what he will see. He will see the message<span
+    style=\"color:#003366;\"> \"&lt;script&gt;alert('Iam virus, Iam in..I will break
+    your code')&lt;/script&gt;\"</span> . <strong>No harm occur. Person1 must be cursing
+    Rails</strong>.<span style=\"color:#333300;\"><strong> With Rails3 any HTML character
+    in input will automatically escaped</strong></span>, in older version you have
+    to use h() explicitly i,e the input code is <span style=\"color:#003366;\">&lt;%=h
+    text_field_tag \"message\" %&gt;</span> . More detail on escaping HTML is available
+    <a title=\"escaping html in rails\" href=\"http://stackoverflow.com/questions/698700/escaping-html-in-rails\"
+    target=\"_blank\">here</a> . So the ill conceived message of <strong>person1</strong>
+    get passed to db in harmless form as <span style=\"color:#003366;\">\"&amp;lt;script&amp;gt;alert('Iam
+    virus, Iam in..I will break your code')&amp;lt;/script&amp;gt;\"</span> .\r\n\r\nNow
+    say, <strong>person1</strong> is big crook and able to insert the message<span
+    style=\"color:#003366;\"> \"&lt;script&gt;alert('Iam virus, Iam in..I will break
+    your code')&lt;/script&gt;\"</span> in db. But <strong>person2</strong> is again
+    not harmed, as not only input but <span style=\"color:#333300;\"><strong>Rails
+    escape any HTML in the ruby code</strong></span>. But what if you do not want
+    to escape the html tag in the message. You want the message to be displayed as
+    such, because <strong>Person3</strong> is a nice person and he send a well decorated
+    message <span style=\"color:#003366;\">\"Arun &lt;strong&gt;I Love You&lt;/strong&gt;\"</span>
+    , in which <strong>I love you</strong> is highlighted . You want it to display
+    as <span style=\"color:#003366;\">\"Arun<strong> I Love You</strong>\"</span>,
+    rather than <span style=\"color:#003366;\">\"Arun &lt;strong&gt;I Love You&lt;/strong&gt;\"</span>
+    . So you need to override the Rails default escaping behaviour. below will do
+    that\r\n\r\n<strong><span style=\"color:#003366;\">&lt;%=rawÂ  @message %&gt;</span></strong>\r\n\r\ngreat,
+    person3 message look great, but what is this <strong>person1</strong> ill conceived
+    message also get executed, you see the alert box below\r\n\r\n[caption id=\"attachment_2209\"
+    align=\"aligncenter\" width=\"611\"]<a href=\"http://bobspython.files.wordpress.com/2014/08/virus.png\"><img
+    class=\"size-full wp-image-2209\" src=\"http://bobspython.files.wordpress.com/2014/08/virus.png\"
+    alt=\"xss example\" width=\"611\" height=\"166\" data-originalSrc=\"http://codedecoder.files.wordpress.com/2014/08/virus.png\"
+    data-rehosted=\"1\"></a> xss example[/caption]\r\n\r\nSo, person2 has succeeded
+    in attacking your application .<span style=\"color:#ff0000;\"><strong> using raw
+    for rendering is risky...will you use that???</strong></span>...I don't think
+    so . If you still want bolded <strong>I Love You</strong>, try other alternative
+    than raw : <a title=\"sanitize\" href=\"http://apidock.com/rails/ActionView/Helpers/SanitizeHelper/sanitize\"
+    target=\"_blank\">sanitize</a> .\r\n\r\n \r\n\r\n<strong><span style=\"color:#003300;\">Â Defence
+    3 : Protection against CROSS SITE REQUEST FORGERY(CSRF) .</span></strong>\r\n\r\nA
+    good example of <span style=\"color:#ff0000;\"><strong>CSRF</strong></span> is
+    available <a title=\"CSRF\" href=\"https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29\"
+    target=\"_blank\">here</a> . The detail documentation of preventing CSRF attack
+    is available <a title=\"CSRF protection guide\" href=\"https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29_Prevention_Cheat_Sheet\"
+    target=\"_blank\">here</a> . So it is more like attack through chat messages,
+    email, images etc. This attack is mostly executed on Authenticated i,e logedIn
+    users. Basically, the cross site scripting attack happen due to your trust on
+    the website, which is not fulfilled while the Cross Site request forgery attack
+    occur due to website trust on you. Website trust you with using it properly, identifying
+    its purpose, content, flow etc. It do not expect you to click on the link like
+    \"HOT babes\", \"Free tour package\", \"your own FB profile link with friend request
+    from a sweet girl\" etc. If they are not part of the website on your earlier website,
+    there is great chance that some one attempting CSRF attack.But we are INNOCENT
+    people, we are oblivion of any such attack. Rails come to your rescue.\r\n\r\nIf
+    you are using rails version 3 or above, you can see below within head tag of layout
+    generated by default.\r\n\r\n<strong><span style=\"color:#003366;\">&lt;%= csrf_meta_tags
+    %&gt;</span></strong>\r\n\r\nThis line will create a secret token for each user
+    session. If you see the page source, you can see the below line generated by the
+    above code.\r\n\r\n<span style=\"color:#003366;\">&lt;meta content=\"sptmtpH+EZYnhrfwPplCQkATltqeHwaBAOJAgyj8CII=\"
+    name=\"csrf-token\" /&gt;</span>\r\n\r\nThe above token value is stored in a hidden
+    filed within each form. It look as below in one of my form for the current session.\r\n\r\n<span
+    style=\"color:#003366;\">&lt;input type=\"hidden\" value=\"sptmtpH+EZYnhrfwPplCQkATltqeHwaBAOJAgyj8CII=\"
+    name=\"authenticity_token\"&gt;</span>\r\n\r\nWhen, my session expire and I log
+    in again, this token will change. attacker can never know this secret as it is
+    generated on fly.<strong>So attacker can disguise you to submit a form which look
+    like a form of your web application, but he can't bypass the authenticity token
+    and rail will throw an error</strong>, saving us from the attack.\r\n\r\nYou can
+    bypass the above default security measure of rails with below line of code, if
+    you find any reason to do so.\r\n<pre class=\"highlight ruby\"><strong><span class=\"s2\"
+    style=\"color:#003366;\">Â skip_before_filter :verify_authenticity_token</span></strong></pre>\r\nBut
+    it is like \"<span style=\"color:#ff0000;\">Going to war without a shield</span>\"
+    .will you do that...??.. NO...I know you are mature enough.\r\n\r\nAlso, <span
+    style=\"color:#003300;\"><strong>always submit form with post method</strong></span>.
+    Get method is too easy to attack. Post is also not fool proof, but is harder to
+    attack.\r\n\r\n<span style=\"color:#003366;\">match \"/launch_all_the_missiles\"
+    =&gt; \"missiles#launch_all\", :method =&gt; :get</span>\r\n\r\nlook crazy...look
+    like any one can destroy the world. post provide better protection against attack.
+    If you want such route in your application write it as post method\r\n\r\n<span
+    style=\"color:#003366;\">match \"/launch_all_the_missiles\" =&gt; \"missiles#launch_all\",
+    :method =&gt; :post</span>\r\n\r\n \r\n\r\n<span style=\"color:#003300;\"><strong>Defence
+    4 : protection against Packet Sniffing (MITM).</strong></span>\r\n\r\n<strong><span
+    style=\"color:#ff0000;\">Packet Sniffing</span></strong> is also known as <span
+    style=\"color:#ff0000;\"><strong>Man IN The Middle</strong></span> attack. It
+    is same as, you written all your secret in a letter , posted it to your lover,
+    but postman read it before delivering. There are many software like <a title=\"fireship\"
+    href=\"http://en.wikipedia.org/wiki/Firesheep\" target=\"_blank\">FireShip</a>
+    , whichÂ  can track the bits crossing the wire, and if the data is in plain text..your
+    game is over. Isn't good to write the letter in encrypted word before posting,
+    the postman would not have know the secret even if he manage to open the letter.
+    Rails do that encryption for you if you set below configuration in your environment
+    file.\r\n<div class=\"line number1 index0 alt2\"><span style=\"color:#003366;\"><strong><code
+    class=\"ruby plain\">config.force_ssl = </code><code class=\"ruby keyword\">true</code></strong></span></div>\r\n<div
+    class=\"line number1 index0 alt2\"></div>\r\n<div class=\"line number1 index0
+    alt2\">\n<strong>It will Force all access to the app over SSL, use Strict-Transport-Security,
+    and use secure cookies. Now data will be send in encrypted form</strong>.</div>\r\n \r\n\r\n \r\n\r\n<span
+    style=\"color:#003300;\"><strong>Defence 5: protection against SQL injection</strong></span>\r\nThis
+    is one of the most common and abused attack on any web application, and involve
+    hijacking sql command. let us take a example of a banking application, which allow
+    a loged in user to see all the loan he has applied for. When a user click on any
+    of the listed loan, your application show the details of that loan. Let the user
+    is genuine one, who do not alter the params. let <span style=\"color:#003366;\">params[loan_id]
+    = \"23239\"</span>\r\n\r\nBeing a Rails developer, you may use where clause of
+    Active::Record to retrieve the detail. But, you can construct a where clause in
+    three ways as below.\r\n\r\n<strong><span style=\"color:#800000;\">1.9.3-p194
+    :021 &gt; @loan = Loan.where(\"loan_id = ? \" ,params[:loan_id])</span></strong>\r\n<span
+    style=\"color:#ff6600;\"><strong>Loan Load (0.1ms)Â  SELECT `loans`.* FROM `loans`
+    WHERE (loan_id = '23239' )</strong></span>\r\n<span style=\"color:#ff6600;\">
+    =&gt; [#&lt;Loan id: 376, user_id: 41, loan_number: \"100150\", status: \"Declined\",
+    app_name: \"Pisa Productions\", app_date: \"2014-11-24 08:00:00\", relationship_manager:
+    \"\", primary_borrower: nil, owner: nil, guarantor_1: nil, guarantor_2: nil, product:
+    nil, loan_amt: 100000, business_type: nil, finance_rate: nil, payment_amt: nil,
+    years_in_business: nil, terms: nil, created_at: \"2014-01-02 11:06:08\", updated_at:
+    \"2014-01-02 11:06:08\", sales_force_application_id: \"006d000000Gj5n5AAB\", loan_id:
+    \"23239\", dealership_name: \"Pisa Productions\"&gt;]</span>\r\n\r\n<span style=\"color:#800000;\"><strong>1.9.3-p194
+    :020 &gt; @loan = Loan.where(\"loan_id = ? \" ,params[:loan_id])</strong></span>\r\n<span
+    style=\"color:#ff6600;\"><strong>Loan Load (0.4ms)Â  SELECT `loans`.* FROM `loans`
+    WHERE (loan_id = '23239' )</strong></span>\r\n<span style=\"color:#ff6600;\">
+    =&gt; [#&lt;Loan id: 376, user_id: 41, loan_number: \"100150\", status: \"Declined\",
+    app_name: \"Pisa Productions\", app_date: \"2014-11-24 08:00:00\", relationship_manager:
+    \"\", primary_borrower: nil, owner: nil, guarantor_1: nil, guarantor_2: nil, product:
+    nil, loan_amt: 100000, business_type: nil, finance_rate: nil, payment_amt: nil,
+    years_in_business: nil, terms: nil, created_at: \"2014-01-02 11:06:08\", updated_at:
+    \"2014-01-02 11:06:08\", sales_force_application_id: \"006d000000Gj5n5AAB\", loan_id:
+    \"23239\", dealership_name: \"Pisa Productions\"&gt;]</span>\r\n\r\n<span style=\"color:#800000;\"><strong>1.9.3-p194
+    :022 &gt; @loan = Loan.where(\"loan_id = '#{params[:loan_id]}' \")</strong></span>\r\n<span
+    style=\"color:#ff6600;\"><strong>Loan Load (0.2ms)Â  SELECT `loans`.* FROM `loans`
+    WHERE (loan_id = '23239' )</strong></span>\r\n<span style=\"color:#ff6600;\">
+    =&gt; [#&lt;Loan id: 376, user_id: 41, loan_number: \"100150\", status: \"Declined\",
+    app_name: \"Pisa Productions\", app_date: \"2014-11-24 08:00:00\", relationship_manager:
+    \"\", primary_borrower: nil, owner: nil, guarantor_1: nil, guarantor_2: nil, product:
+    nil, loan_amt: 100000, business_type: nil, finance_rate: nil, payment_amt: nil,
+    years_in_business: nil, terms: nil, created_at: \"2014-01-02 11:06:08\", updated_at:
+    \"2014-01-02 11:06:08\", sales_force_application_id: \"006d000000Gj5n5AAB\", loan_id:
+    \"23239\", dealership_name: \"Pisa Productions\"&gt;]</span>\r\n\r\nSo, the sql
+    query generated by Active::Record for the different syntax of where clause is
+    same. <strong>But under the hood, the third form of where clause is vulnerable
+    to sql attack but not the first two</strong>. Now say the bad guy enter, and he
+    want to know the loan detail of any other person. He will just change the params[:loan
+    id] to make a sql attack. This will do the trick for him.\r\n\r\n<span style=\"color:#003366;\"><strong>params[:loan_id]
+    = \"' OR 1=1--'\"</strong></span>\r\n\r\n<strong>The above is a sql injection
+    code, you can easily see that, it will always return true as even if all other
+    condition return false 1=1 will definitely going to return true true making the
+    OR to return true at the end.</strong>\r\n\r\nAgain run the above in console.
+    You will get below result.\r\n\r\n<span style=\"color:#800000;\"><strong>1.9.3-p194
+    :024 &gt; @loan = Loan.where(:loan_id =&gt; params[:loan_id])</strong></span>\r\n<span
+    style=\"color:#ff6600;\"><strong>Loan Load (0.3ms)Â  SELECT `loans`.* FROM `loans`
+    WHERE `loans`.`loan_id` = '' OR 1=1--''</strong></span>\r\n<span style=\"color:#ff6600;\">
+    =&gt; []</span>\r\n<span style=\"color:#800000;\"><strong>1.9.3-p194 :025 &gt;
+    @loan = Loan.where(\"loan_id = ? \" ,params[:loan_id])</strong></span>\r\n<span
+    style=\"color:#ff6600;\"><strong>Loan Load (0.4ms)Â  SELECT `loans`.* FROM `loans`
+    WHERE (loan_id = '' OR 1=1--'' )</strong></span>\r\n<span style=\"color:#ff6600;\">
+    =&gt; []</span>\r\n<span style=\"color:#800000;\"><strong>1.9.3-p194 :026 &gt;
+    @loan = Loan.where(\"loan_id = '#{params[:loan_id]}' \")</strong></span>\r\n<span
+    style=\"color:#ff6600;\"><strong>Loan Load (0.3ms)Â  SELECT `loans`.* FROM `loans`
+    WHERE (loan_id = '' OR 1=1--'' )</strong></span>\r\n<span style=\"color:#ff6600;\">
+    =&gt;Â  =&gt; [#&lt;Loan id: 376, user_id: 41, loan_number: \"100150\", status:
+    \"Declined\", app_name: \"Pisa Productions\", app_date: \"2014-11-24 08:00:00\",
+    relationship_manager: \"\", primary_borrower: nil, owner: nil, guarantor_1: nil,
+    guarantor_2: nil, product: nil, loan_amt: 100000, business_type: nil, finance_rate:
+    nil, payment_amt: nil, years_in_business: nil, terms: nil, created_at: \"2014-01-02
+    11:06:08\", updated_at: \"2014-01-02 11:06:08\", sales_force_application_id: \"006d000000Gj5n5AAB\",
+    loan_id: \"23239\", dealership_name: \"Pisa Productions\"&gt;,</span>\r\n<span
+    style=\"color:#ff6600;\"> ..all othe records]</span>\r\n\r\nSo you can see that,
+    the first two syntax escape the special character while generating the sql query,
+    thus preventing from sql injection but the last one do not.\r\n\r\nAlways, be
+    careful while writing your where clause.\r\n\r\nTake another example, this is
+    serious one, with your negligence any one can bypass your authentication system.
+    You are stubborn to my advice and goes with your old way of writing the where
+    clause.\r\n\r\n<span style=\"color:#003366;\"><strong>User.where(\"email = '#{params[:email]}'
+    AND encrypted_password = '#{params[:password]}'\")</strong></span>\r\n\r\nOn your
+    login page the user just need to enter<span style=\"color:#ff0000;\"><strong>
+    ' OR 1=1--'</strong></span> in both email and password field, and he will be loged
+    in.\r\n\r\nBut Rails also not provide full protection against SQL injection, may
+    be they get corrected in upcoming version, but currently, like where, if you not
+    use properly all the following methods are vulnerable to sql injection( <a title=\"rails
+    sql injection\" href=\"http://rails-sqli.org/\" target=\"_blank\">READ THE DETAIL
+    HERE</a>) : <strong>average ,calculate ,count , maximum ,minimum , sum, delete_all,
+    exists?, find, find_by,join, pluck</strong> etc\r\n\r\n \r\n\r\n \r\n\r\nREFERENCE
+    :\r\n\r\n<a title=\"rails sql injection\" href=\"http://rails-sqli.org/\" target=\"_blank\">http://rails-sqli.org/</a>\r\n\r\n<a
+    title=\"security in rails\" href=\"http://guides.rubyonrails.org/security.html\"
+    target=\"_blank\">http://guides.rubyonrails.org/security.html</a>\r\n\r\n \r\n\r\n \r\n<div
+    class=\"container\"></div>\n</div>\";s:15:\"images_mirrored\";i:1;}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>Great info here for securing Rails site.  Did not know of sanitize but I am going to use it.  Thanks :)</p>

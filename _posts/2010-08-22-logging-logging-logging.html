@@ -1,0 +1,37 @@
+---
+layout: post
+title: Logging, logging, logging……
+date: 2010-08-22 18:50:18.000000000 -05:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags:
+- wxPython
+meta:
+  _edit_last: '15714693'
+  _wp_old_slug: ''
+  _wpas_skip_twitter: '1'
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>So with a lot of help from friends and a programmer that works with us, we have just about completed our first <a class="zem_slink" title="WxPython" rel="wikipedia" href="http://en.wikipedia.org/wiki/WxPython">wxPython</a> <a class="zem_slink" title="Graphical user interface" rel="wikipedia" href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a> that we are going to use for a clients interface.  For those that have a clue about basic programming (which I did NOT) I am sure that you are familiar with setting break points to troubleshoot your code.  Even better than this (in my opinion and easier as well) is the use of logging.  Using logging statements all over your code in areas that may be giving you problems, you can see where the issue may be occurring.</p>
+<p>[sourcecode language="Python"]</p>
+<p>import logging</p>
+<p>logging.basicConfig(filename='dev.log',level=logging.DEBUG,filemode='w',<br />
+ format='%(filename)s::%(module)s::%(funcName)s::%(lineno)d %(levelname)s %(message)s'<br />
+ )</p>
+<p># above is the config/setup. Put at top of file.</p>
+<p># here's some examples using it.<br />
+ # look in &quot;dev.log&quot; for output!</p>
+<p>def blah() :<br />
+ logging.debug(&quot;starting blah!&quot;)</p>
+<p>logging.debug(&quot;finished blah!&quot;)<br />
+ blah()</p>
+<p>[/sourcecode]</p>
+<p>Now when you run your process you can check your dev.log to see if all of your logging statement are there.  If they are not all there, then you can see where the last statement was and it helps to zero in on your problem.</p>

@@ -1,0 +1,154 @@
+---
+layout: post
+title: Creating a Simple Form with Rails
+date: 2014-12-26 17:53:50.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags: []
+meta:
+  _publicize_pending: '1'
+  _oembed_0541122a46a71df0d2c6eb96964ed2df: "{{unknown}}"
+  is_reblog: '1'
+  post_id: '122'
+  blog_id: '80171830'
+  reblog_snapshot: "O:8:\"stdClass\":7:{s:5:\"title\";s:33:\"Creating a Simple Form
+    with Rails\";s:4:\"type\";s:4:\"post\";s:9:\"mime_type\";s:0:\"\";s:6:\"format\";b:0;s:12:\"modified_gmt\";s:19:\"2014-12-10
+    20:24:43\";s:9:\"permalink\";s:82:\"https://cindiwritescode.wordpress.com/2014/12/10/creating-a-simple-form-with-rails\";s:7:\"content\";s:10466:\"<div
+    class=\"reblogged-content\">\n\nForm helpers are designed to make working with
+    resources much easier compared to plain HTML.\r\n\r\nhttp://guides.rubyonrails.org/form_helpers.html\r\nhttp://api.rubyonrails.org/
+    - search for \"form_for\" to find under ActionView::Helpers::FormHelper\r\n\r\nWe
+    can use a <strong>form builder</strong> to create a form within an .erb template.
+    The main form builder for Rails is provided by a helper method called \"form_for\". 
+    Example code:\r\n\r\n[code]\r\n&lt;%= form_for :article do |f| %&gt;\r\n           
+    &lt;p&gt;\r\n                        &lt;%= f.label :title %&gt;&lt;br&gt;\r\n                       
+    &lt;%= f.text_field :title %&gt;\r\n            &lt;/p&gt;\r\n            &lt;p&gt;\r\n                       
+    &lt;%= f.label :text %&gt;&lt;br&gt;\r\n                        &lt;%= f.text_area
+    :text %&gt;\r\n            &lt;/p&gt;\r\n            &lt;p&gt;\r\n                       
+    &lt;%= f.submit %&gt;\r\n            &lt;/p&gt;\r\n&lt;% end %&gt;\r\n[/code]\r\n\r\nThe
+    <strong>form_for</strong> helper creates a form that allows the user to create
+    or update the attributes of a specific model object.\r\n\r\nThe method can be
+    used in several slightly different ways, depending on how much you wish to rely
+    on Rails to infer automatically from the model how the form should be constructed.
+    For a generic model object, a form can be created by passing form_for a string
+    or symbol representing the object we are concerned with.\r\n\r\nIn the example
+    above, we are passing in the article object (\":article\").\r\n\r\nThe variable
+    f yielded to the block is a FormBuilder object that incorporates the knowledge
+    about the model object represented by :article passed to form_for.\r\n\r\nMethods
+    defined on the FormBuilder are used to generate fields bound to this model. Thus,
+    for example,\r\n\r\n&lt;%= f.text_field :title %&gt;\r\n\r\nwill get expanded
+    to\r\n\r\n&lt;%= text_field :article, :title %&gt;\r\n\r\nwhich results in an
+    html &lt;input&gt; tag whose name attribute is article[title]. This means that
+    when the form is submitted, the value entered by the user will be available in
+    the controller as params[:article][:title].\r\n\r\nThe code listed above generates
+    the following HTML code source on my local dev:\r\n\r\n[code]\r\n&lt;form accept-charset=\"UTF-8\"
+    action=\"/articles/new\" method=\"post\"&gt;&lt;div style=\"display:none\"&gt;&lt;input
+    name=\"utf8\" type=\"hidden\" value=\"?\" /&gt;&lt;input name=\"authenticity_token\"
+    type=\"hidden\" value=\"lltuS9krcq8mW/Zm3j8f8SR7rTbkqdc7pWMfQZEUQtc=\" /&gt;&lt;/div&gt;\r\n           
+    &lt;p&gt;\r\n                        &lt;label for=\"article_title\"&gt;Title&lt;/label&gt;&lt;br&gt;\r\n                       
+    &lt;input id=\"article_title\" name=\"article[title]\" type=\"text\" /&gt;\r\n           
+    &lt;/p&gt;\r\n            &lt;p&gt;\r\n                        &lt;label for=\"article_text\"&gt;Text&lt;/label&gt;&lt;br&gt;\r\n                       
+    &lt;textarea id=\"article_text\" name=\"article[text]\"&gt;&lt;/textarea&gt;\r\n           
+    &lt;/p&gt;\r\n            &lt;p&gt;\r\n                        &lt;input name=\"commit\"
+    type=\"submit\" value=\"Save Article\" /&gt;\r\n            &lt;/p&gt;\r\n&lt;/form&gt;\r\n[/code]\r\n\r\nYou
+    will see that the action attribute for the form is pointing at /articles/new.
+    This is a problem because this route goes to the very page that you're on right
+    at the moment, and that route should only be used to <strong>display</strong>
+    the form for a new article.\r\n\r\nThe form needs to use a different URL in order
+    to go somewhere else. This can be done quite simply with the <strong>:url</strong>
+    option of form_for. Typically in Rails, the action that is used for new form submissions
+    like this is called \"create\", and so the form should be pointed to that action.\r\n\r\nWe'll
+    update the code to look like this on the first line:\r\n\r\n[code]\r\n&lt;%= form_for
+    :article, url: articles_path do |f| %&gt;\r\n[/code]\r\n\r\nThat passes the articles_path
+    helper to the :url option. The articles_path helper tells Rails to point the form
+    to the URI Pattern associated with the articles prefix; and the form will (by
+    default) send a POST request to that route. This is associated with the create
+    action of the current controller, the ArticlesController.\r\n\r\nIf you run \"rake
+    routes\", you can see this association:\r\n\r\nPOST   /articles(.:format)         
+    articles#create\r\n\r\nNow we need to create an action in the ArticlesController
+    for this create action to work. You can define a create action within the ArticlesController
+    class in app/controllers/articles_controller.rb.\r\n\r\n[code]\r\nclass ArticlesController
+    &lt; ApplicationController\r\n  def new\r\n  end\r\n\r\n  def create\r\n  end\r\nend\r\n[/code]\r\n\r\nIf
+    you re-submit the form after defining the \"create\" action in the ArticlesController,
+    you'll see an error that a template is missing, but that is alright because the
+    create action should be saving the new article to the database, not displaying
+    a view template.\r\n\r\nFields of the form are sent to Rails as parameters and
+    these parameters can then be referenced inside the controller actions. For example:\r\n\r\n[code]\r\ndef
+    create\r\n  render plain: params[:article].inspect\r\nend\r\n[/code]\r\n\r\nResubmitting
+    the form after adding that line to the create action in the ArticlesController
+    outputs this on the web page:\r\n\r\n{\"title\"=&gt;\"Cindi\", \"text\"=&gt;\"Test\"}\r\n\r\nThis
+    action is now displaying the parameters for the article that are coming in from
+    the form. We still need to do something useful with the form values, right now
+    it's only displaying them.\r\n\r\n<strong>Creating the Model</strong>\r\n\r\nModels
+    in Rails are singular and the corresponding database table should be plural. For
+    example\r\n\r\nModel name: Article\r\nDatabase table name: Articles\r\n\r\nRails
+    has a generator for creating models, which you can use by running the following
+    command in terminal or command prompt:\r\n\r\nrails generate model Article title:string
+    text:text\r\n\r\nThat tells Rails that we want an Article model with a <strong>title</strong>
+    attribute of type string and a <strong>text</strong> attribute of type text. Those
+    attributes are automatically added to the articles table in the database and mapped
+    to the Article model. From this command, Rails will create several files. Here
+    is sample output from the command line:\r\n\r\ninvoke  active_record\r\n\r\ncreate   
+    db/migrate/20141210195344_create_articles.rb\r\n\r\ncreate    app/models/article.rb\r\n\r\ninvoke   
+    test_unit\r\n\r\ncreate      test/models/article_test.rb\r\n\r\ncreate      test/fixtures/articles.yml\r\n\r\nNow
+    we'll take a look at these two files:\r\n\r\napp/models/article.rb\r\n/migrate/20141210195344_create_articles.rb
+    - this file creates the database structure\r\n\r\nNote that Active Record knows
+    how to automatically map column names to model attributes, so you don't have to
+    declare attributes inside of Rails models.\r\n\r\n<strong>What is a Migration?</strong>\r\n\r\nMigrations
+    are Ruby classes that are designed to make it simple to create and modify database
+    tables. Migration filenames include a timestamp to ensure they are processed in
+    the order that they are created.\r\n\r\nExample migration file: /migrate/20141210195344_create_articles.rb\r\n\r\n[code]\r\nclass
+    CreateArticles &lt; ActiveRecord::Migration\r\n  def change\r\n    create_table
+    :articles do |t|\r\n      t.string :title\r\n      t.text :text\r\n      t.timestamps\r\n   
+    end\r\n  end\r\nend\r\n[/code]\r\n\r\nThis migration class contains a method named
+    \"change\" which will be called when you run the migration. It will create an
+    \"articles\" table with one string column and a text column, It will also create
+    two timestamp fields to all Rails to track article creation and update times.\r\n\r\nThere
+    is much more to cover on Rails Database Migrations which I will review at a later
+    date. That is the basics of what happens within this file though.\r\n\r\nNow that
+    we have a migration file, we can use a rake command to run the migration:\r\n\r\nrake
+    db:migrate\r\n\r\nNow that we have the articles table in the database, we'll need
+    to modify the ArticlesController to save the data in the database.\r\n\r\nEdit
+    app/controllers/articles_controller.rb and update the \"create\" action to look
+    as follows:\r\n\r\n[code]\r\ndef create\r\n            @article = Article.new(article_params)\r\n           
+    @article.save\r\n            redirect_to @article\r\nend\r\n\r\nprivate\r\n           
+    def article_params\r\n                        params.require(:article).permit(:title,
+    :text)\r\n            end\r\n[/code]\r\n\r\nHere we define exactly what params
+    can be passed through when initializing the new Article object (see the \"permit\"
+    arguments, then calling the save method on it, then redirecting to the created
+    article. The definition of the private method keeps hackers from setting the model's
+    attributes by manipulating the hash passed to the model. It's one of several security
+    features that help you write secure applications.\r\n\r\n<strong>Showing Articles</strong>\r\n\r\nWe'll
+    also have to add the \"show\" action to the controller. As we saw in the output
+    of \"rake routes\", the route for the \"show\" action expects an \":id\" parameter,
+    which in this case is the id of the article. Add the show action/method to the
+    articles controller file.\r\n\r\n[code]\r\ndef show\r\n  @article = Article.find(params[:id])\r\nend\r\n[/code]\r\n\r\nUse
+    Article.find to find the article we are looking for, passing in \"params[:id]\"
+    to get the :id parameter from the request. We are also using an instance variable
+    (@article) to hold a reference to the article object because Rails will pass all
+    instance variables to the view.\r\n\r\nNow, we have to create a new file /app/views/articles/show.html.erb
+    with the following content:\r\n\r\n[code]\r\n&lt;p&gt;\r\n            &lt;strong&gt;Title:&lt;/strong&gt;\r\n           
+    &lt;%= @article.title %&gt;\r\n&lt;/p&gt;\r\n&lt;p&gt;\r\n            &lt;strong&gt;Text:&lt;/strong&gt;\r\n           
+    &lt;%= @article.text %&gt;\r\n&lt;/p&gt;\r\n[/code]\r\n\r\nNow, when we submit
+    the form, it will save the article data to the database and go to the newly created
+    article ID: http://localhost:3000/articles/1 and display the HTML code that we
+    set up in the show.html.erb file.</div>\";}"
+  _oembed_8a26850fd8c6ba21241a51e4a19f12e1: "{{unknown}}"
+  _oembed_d5d9b4bd2358c99cf98e5c3dc04a382c: "{{unknown}}"
+  publicize_twitter_user: bobr_az
+  publicize_twitter_url: http://t.co/4ZvSatIOXY
+  _wpas_done_7641025: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:2516516912;b:1;}}
+  publicize_linkedin_url: ''
+  _wpas_done_7777887: '1'
+  _oembed_8186afa2405aa4f1d33f1a038e9bd158: "{{unknown}}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>This is a great write up that I thought that I would share ;)</p>

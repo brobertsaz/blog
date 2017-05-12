@@ -1,0 +1,29 @@
+---
+layout: post
+title: Dealing with Ruby time
+date: 2013-12-12 19:20:17.000000000 -06:00
+type: post
+published: true
+status: publish
+categories:
+- Ruby on Rails
+tags:
+- Programming
+- Ruby
+meta:
+  _edit_last: '15714693'
+  _publicize_pending: '1'
+  _oembed_d58c0b7ab543a574650f5b482ca9d5aa: "{{unknown}}"
+author:
+  login: broberts65
+  email: broberts_az@yahoo.com
+  display_name: Bob Roberts
+  first_name: ''
+  last_name: ''
+---
+<p>I saw this code the other day:</p>
+<p>- tempDate = "#{my_object_date.to_date}"<br /> - displayDate = tempDate[5,2]<br /> - displayDate += "/"<br /> - displayDate += tempDate[8,2]<br /> - displayDate += "/"<br /> - displayDate += tempDate[0,4]<br /> = displayDate</p>
+<p>The result of this code is MM/DD/YY.</p>
+<p>What the hell?  I am pretty sure that just about every computer language out there has ways to deal with dates.  For Ruby it is strftime.</p>
+<p>Check out this awesome tool for dealing with dates and time in Ruby: <a href="http://www.foragoodstrftime.com/" target="_blank">http://www.foragoodstrftime.com/</a></p>
+<p>And when in doubt, google it!!</p>
